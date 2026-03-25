@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting System — SPCA</title>
+<style>
+:root{
+  --bg:#f5f5f0;--surface:#ffffff;--surface2:#f0efea;--border:#e2e1db;--border2:#cccbc4;
+  --text:#1a1a18;--text2:#6b6b67;--text3:#9e9d99;
+  --purple:#534AB7;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+  --teal:#0F6E56;--teal-light:#E1F5EE;
+  --amber:#854F0B;--amber-light:#FAEEDA;
+  --blue:#185FA5;--blue-light:#E6F1FB;
+  --green:#1D9E75;--red:#E24B4A;
+  --radius:10px;--radius-sm:6px;
+  --fs:15px;--fs-sm:13px;--fs-xs:11px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1a1a18;--surface:#242422;--surface2:#2e2e2b;--border:#3a3a36;--border2:#4e4e4a;
+    --text:#e8e7e2;--text2:#9e9d99;--text3:#6b6b67;
+    --purple-light:#2a2660;--purple-dark:#AFA9EC;
+    --teal-light:#0a2e26;--amber-light:#2e1e06;--blue-light:#0a1e36;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:var(--fs);min-height:100vh;padding:20px 16px 60px}
+.app{max-width:600px;margin:0 auto}
+h1{font-size:22px;font-weight:600;margin-bottom:4px}
+.subtitle{font-size:var(--fs-sm);color:var(--text2);margin-bottom:20px}
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab{padding:9px 16px;font-size:var(--fs-sm);font-weight:500;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;background:none;border-top:none;border-left:none;border-right:none}
+.tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+.panel{display:none}.panel.active{display:block}
+.sec-label{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--text3);margin-bottom:8px;margin-top:18px}
+.sec-label:first-child{margin-top:0}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.field label{font-size:var(--fs-sm);color:var(--text2)}
+.field input,.field select,.field textarea{font-size:var(--fs-sm);padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);outline:none;width:100%;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--purple)}
+.field textarea{resize:vertical;line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.btn{padding:9px 18px;border-radius:var(--radius-sm);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn.teal{background:var(--teal);border-color:var(--teal);color:#fff}
+.btn.sm{padding:5px 12px;font-size:var(--fs-xs)}
+.btn:active{transform:scale(.97)}
+.out-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:14px}
+.out-card.purple{border-left:4px solid var(--purple);border-radius:0 var(--radius) var(--radius) 0}
+.out-card.teal{border-left:4px solid var(--teal);border-radius:0 var(--radius) var(--radius) 0}
+.out-card.amber{border-left:4px solid #BA7517;border-radius:0 var(--radius) var(--radius) 0}
+.out-label{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.09em;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.out-body{font-size:var(--fs-sm);color:var(--text);line-height:1.8;white-space:pre-wrap;font-family:monospace}
+.action-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.action-row:last-child{border-bottom:none}
+.cb{width:22px;height:22px;min-width:22px;border-radius:5px;border:2px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cb.done{background:var(--purple);border-color:var(--purple)}
+.cb.done svg{display:block}.cb svg{display:none;width:11px;height:11px}
+.action-text{font-size:var(--fs-sm);flex:1;min-width:0;color:var(--text)}
+.action-text.done{text-decoration:line-through;color:var(--text3)}
+.owner-tag{font-size:var(--fs-xs);padding:2px 8px;border-radius:12px;background:var(--purple-light);color:var(--purple);flex-shrink:0}
+.due-tag{font-size:var(--fs-xs);color:var(--text3);flex-shrink:0}
+.add-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.add-row input,.add-row select{font-size:var(--fs-sm);padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);outline:none}
+.add-row input{flex:1;min-width:120px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.stat{background:var(--surface2);border-radius:var(--radius-sm);padding:12px;text-align:center}
+.stat-n{font-size:20px;font-weight:600;color:var(--text)}
+.stat-l{font-size:var(--fs-xs);color:var(--text3);margin-top:2px}
+.empty{font-size:var(--fs-sm);color:var(--text3);font-style:italic;padding:10px 0}
+.sync-bar{display:flex;align-items:center;gap:6px;margin-bottom:16px}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.sdot.synced{background:var(--green)}.sdot.syncing{background:var(--amber);animation:pulse 1s infinite}
+.sdot.error{background:var(--red)}.sdot.offline{background:var(--text3)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.slabel{font-size:var(--fs-xs);color:var(--text3)}
+.hidden{display:none}
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:8px 16px;gap:8px;justify-content:center}
+.nav-link{font-size:var(--fs-xs);color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:20px;border:1px solid var(--border)}
+.nav-link:hover{background:var(--surface2)}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Meeting system</h1>
+<div class="subtitle">SPCA Selangor — pre · during · post</div>
+<div class="sync-bar"><div class="sdot offline" id="sdot"></div><div class="slabel" id="slabel">Loading…</div></div>
+
+<div class="tab-row">
+  <button class="tab active" onclick="sw('pre')">Pre-meeting</button>
+  <button class="tab" onclick="sw('mid')">During</button>
+  <button class="tab" onclick="sw('post')">Post-meeting</button>
+  <button class="tab" onclick="sw('tracker')">Action tracker</button>
+</div>
+
+<!-- PRE -->
+<div class="panel active" id="panel-pre">
+  <div class="grid2">
+    <div class="field"><label>Meeting title</label><input id="p-title" placeholder="e.g. DBKL PoRo proposal"/></div>
+    <div class="field"><label>Type</label>
+      <select id="p-type"><option value="committee">Committee</option><option value="gov">Government</option><option value="sponsor">Sponsor</option><option value="ops">Operations</option><option value="internal">Internal</option></select>
+    </div>
+  </div>
+  <div class="grid3">
+    <div class="field"><label>Date & time</label><input type="datetime-local" id="p-date"/></div>
+    <div class="field"><label>Duration (min)</label><input type="number" id="p-dur" value="60"/></div>
+    <div class="field"><label>Location / platform</label><input id="p-loc" placeholder="e.g. DBKL HQ"/></div>
+  </div>
+  <div class="field"><label>Attendees</label><input id="p-att" placeholder="e.g. Kelvin, Puan Siti (DBKL)"/></div>
+  <div class="field"><label>Objective — what must be decided</label><input id="p-obj" placeholder="e.g. Get DBKL approval for Q3 PoRo"/></div>
+  <div class="field"><label>Agenda items (one per line)</label><textarea id="p-agenda" rows="4" placeholder="1. Present PoRo 6.0 results&#10;2. Propose Q3 locations&#10;3. Discuss budget&#10;4. Agree next steps"></textarea></div>
+  <div class="field"><label>Materials to prepare</label><textarea id="p-mat" rows="2" placeholder="PoRo 6.0 report, cost breakdown, location map"></textarea></div>
+  <div class="field"><label>Questions I need answered</label><textarea id="p-qs" rows="2" placeholder="What is their budget ceiling?&#10;Who has final sign-off?"></textarea></div>
+  <button class="btn primary" onclick="genPre()" style="margin-top:6px">Generate pre-meeting brief</button>
+  <div id="pre-out" class="hidden">
+    <div class="out-card purple">
+      <div class="out-label" style="color:var(--purple)">Pre-meeting brief <button class="btn sm" onclick="copyEl('pre-body')">Copy</button></div>
+      <div class="out-body" id="pre-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DURING -->
+<div class="panel" id="panel-mid">
+  <div class="field"><label>Meeting title</label><input id="m-title" placeholder="Copy from pre-meeting"/></div>
+  <div class="field"><label>Key discussion points & decisions</label><textarea id="m-notes" rows="6" placeholder="— DBKL confirmed RM80k for Q3&#10;— Cheras shortlisted as first location&#10;— Proposal due 15 April"></textarea></div>
+  <div class="field"><label>Decisions confirmed</label><textarea id="m-dec" rows="3" placeholder="— Approved: proceed with PoRo Q3 Cheras&#10;— Budget: RM80k DBKL + org covers remaining"></textarea></div>
+  <div class="field"><label>Blockers / issues</label><textarea id="m-block" rows="2" placeholder="e.g. Permit may take 3 weeks"></textarea></div>
+
+  <div class="sec-label">Action items</div>
+  <div id="mid-actions"></div>
+  <div class="add-row">
+    <input id="a-text" placeholder="Action item…" style="flex:2"/>
+    <input id="a-owner" placeholder="Owner" style="flex:1;min-width:80px"/>
+    <input id="a-due" type="date" style="flex:1;min-width:110px"/>
+    <button class="btn primary sm" onclick="addAction()">+ Add</button>
+  </div>
+
+  <button class="btn primary" onclick="genMid()" style="margin-top:14px">Generate meeting notes</button>
+  <div id="mid-out" class="hidden">
+    <div class="out-card teal">
+      <div class="out-label" style="color:var(--teal)">Meeting notes <button class="btn sm" onclick="copyEl('mid-body')">Copy</button></div>
+      <div class="out-body" id="mid-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- POST -->
+<div class="panel" id="panel-post">
+  <div class="field"><label>Meeting title</label><input id="po-title" placeholder="e.g. DBKL PoRo Proposal Discussion"/></div>
+  <div class="field"><label>Outcome</label>
+    <select id="po-out"><option value="successful">Successful — objective achieved</option><option value="partial">Partial — follow-up needed</option><option value="blocked">Blocked — decision deferred</option><option value="info">Informational only</option></select>
+  </div>
+  <div class="field"><label>Summary (2–3 sentences for people not there)</label><textarea id="po-sum" rows="3" placeholder="DBKL confirmed RM80k budget for Q3. Cheras selected as first location. Proposal due 15 April."></textarea></div>
+  <div class="field"><label>What went well</label><textarea id="po-well" rows="2" placeholder="DBKL team very receptive, came with budget approved"></textarea></div>
+  <div class="field"><label>What to improve</label><textarea id="po-imp" rows="2" placeholder="Should have brought location maps"></textarea></div>
+  <div class="field"><label>Follow-up email needed?</label>
+    <select id="po-email"><option value="yes">Yes — send summary + actions to attendees</option><option value="internal">Internal only</option><option value="no">No follow-up needed</option></select>
+  </div>
+  <button class="btn primary" onclick="genPost()" style="margin-top:6px">Generate post-meeting pack</button>
+  <div id="post-out" class="hidden">
+    <div class="out-card" style="border-left:4px solid #BA7517;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:10px">
+      <div class="out-label" style="color:#BA7517">Follow-up email <button class="btn sm" onclick="copyEl('po-email-body')">Copy</button></div>
+      <div class="out-body" id="po-email-body"></div>
+    </div>
+    <div class="out-card purple">
+      <div class="out-label" style="color:var(--purple)">Notion record <button class="btn sm" onclick="copyEl('po-notion-body')">Copy</button></div>
+      <div class="out-body" id="po-notion-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div class="panel" id="panel-tracker">
+  <div class="stat-grid" id="tracker-stats"></div>
+  <div class="sec-label">All open actions</div>
+  <div id="tracker-list"></div>
+  <div id="tracker-empty" class="empty hidden">No actions yet — add them in the During tab.</div>
+</div>
+
+</div>
+
+<nav style="margin-top:28px;padding:16px 0 8px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+  <a style="font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit" href="dashboard.html">Daily</a>
+  <a style="font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit" href="email.html">Email</a>
+  <a style="font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit" href="reports.html">Reports</a>
+  <a style="font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit" href="social.html">Social</a>
+</nav>
+
+<script>
+const SUPA_URL='https://ityciofmpvqsqhonhxvd.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eWNpb2ZtcHZxc3Fob25oeHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MzMwMDgsImV4cCI6MjA5MDAwOTAwOH0.Wnh0a1xPBogKuMdj3O658Tz7DCRnXpgE7Tapkq32Tj4';
+const H={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
+
+let actions=[];
+let meetingRowId=null;
+let saveT=null;
+
+function setSS(state,msg){
+  document.getElementById('sdot').className='sdot '+state;
+  document.getElementById('slabel').textContent=msg;
+}
+
+async function loadActions(){
+  setSS('syncing','Loading…');
+  try{
+    const r=await fetch(`${SUPA_URL}/rest/v1/meeting_actions?select=*&order=created_at.desc`,{headers:H});
+    if(!r.ok)throw new Error();
+    const rows=await r.json();
+    actions=rows.map(r=>({id:r.id,text:r.text,owner:r.owner,due:r.due,done:r.done}));
+    setSS('synced','Synced');renderTracker();
+  }catch{setSS('error','Offline mode');renderTracker();}
+}
+
+async function saveAction(a){
+  try{
+    if(a.id&&a.id.length>10){
+      await fetch(`${SUPA_URL}/rest/v1/meeting_actions?id=eq.${a.id}`,{method:'PATCH',headers:H,body:JSON.stringify({done:a.done})});
+    } else {
+      const r=await fetch(`${SUPA_URL}/rest/v1/meeting_actions`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify({text:a.text,owner:a.owner,due:a.due||null,done:false})});
+      if(r.ok){const d=await r.json();if(d[0])a.id=d[0].id;}
+    }
+    setSS('synced','Synced — '+new Date().toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}));
+  }catch{setSS('error','Save failed');}
+}
+
+function sw(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+  if(t==='tracker')renderTracker();
+}
+
+function v(id){return(document.getElementById(id)?.value||'').trim();}
+
+function genPre(){
+  const title=v('p-title')||'Meeting';
+  const type={committee:'Committee',gov:'Government',sponsor:'Sponsor',ops:'Operations',internal:'Internal'}[v('p-type')]||'Meeting';
+  const date=v('p-date')?new Date(v('p-date')).toLocaleString('en-MY',{dateStyle:'medium',timeStyle:'short'}):'TBC';
+  const body=`PRE-MEETING BRIEF\n${title}\n${'─'.repeat(44)}\nType:      ${type}\nDate:      ${date}\nDuration:  ${v('p-dur')||'60'} mins\nLocation:  ${v('p-loc')||'TBC'}\nAttendees: ${v('p-att')||'—'}\n\nOBJECTIVE\n${v('p-obj')||'—'}\n\nAGENDA\n${v('p-agenda')||'—'}\n\nMATERIALS TO PREPARE\n${v('p-mat')||'—'}\n\nQUESTIONS I NEED ANSWERED\n${v('p-qs')||'—'}\n\n${'─'.repeat(44)}\n[ ] Review materials 30 mins before\n[ ] Send agenda to attendees\n[ ] Confirm location / dial-in`;
+  document.getElementById('pre-body').textContent=body;
+  document.getElementById('pre-out').classList.remove('hidden');
+}
+
+function addAction(){
+  const text=document.getElementById('a-text').value.trim();
+  const owner=document.getElementById('a-owner').value.trim()||'Me';
+  const due=document.getElementById('a-due').value;
+  if(!text)return;
+  const a={id:Date.now().toString(),text,owner,due,done:false};
+  actions.push(a);
+  document.getElementById('a-text').value='';
+  document.getElementById('a-owner').value='';
+  document.getElementById('a-due').value='';
+  renderMidActions();
+  saveAction(a);
+}
+
+function renderMidActions(){
+  const el=document.getElementById('mid-actions');
+  if(!actions.length){el.innerHTML='<div class="empty">No actions yet</div>';return;}
+  el.innerHTML=actions.filter(a=>!a.done).map((a,i)=>`
+    <div class="action-row">
+      <div class="cb" onclick="toggleA('${a.id}')"><svg viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="action-text">${esc(a.text)}</div>
+      <span class="owner-tag">${esc(a.owner)}</span>
+      ${a.due?`<span class="due-tag">${a.due}</span>`:''}
+    </div>`).join('');
+}
+
+function toggleA(id){
+  const a=actions.find(x=>x.id===id);
+  if(!a)return;
+  a.done=!a.done;
+  renderMidActions();renderTracker();
+  saveAction(a);
+}
+
+function genMid(){
+  const title=v('m-title')||'Meeting';
+  const actionList=actions.length?actions.map(a=>`[ ] ${a.text} — ${a.owner}${a.due?' (by '+a.due+')':''}`).join('\n'):'None captured';
+  const body=`MEETING NOTES\n${title}\n${'─'.repeat(44)}\nDate: ${new Date().toLocaleDateString('en-MY',{dateStyle:'medium'})}\n\nKEY DISCUSSION POINTS\n${v('m-notes')||'—'}\n\nDECISIONS CONFIRMED\n${v('m-dec')||'—'}\n\nBLOCKERS / ISSUES\n${v('m-block')||'None'}\n\nACTION ITEMS\n${actionList}`;
+  document.getElementById('mid-body').textContent=body;
+  document.getElementById('mid-out').classList.remove('hidden');
+}
+
+function genPost(){
+  const title=v('po-title')||'Meeting';
+  const outcome={successful:'Successful',partial:'Partial — follow-up needed',blocked:'Blocked — deferred',info:'Informational'}[v('po-out')]||'';
+  const actionList=actions.length?actions.map(a=>`• ${a.text} — ${a.owner}${a.due?' by '+a.due:''}`).join('\n'):'No actions captured';
+  const emailBody=`Hi [Name],\n\nThank you for your time today for ${title}.\n\n${v('po-sum')}\n\nACTION ITEMS\n${actionList}\n\nPlease let me know if I've missed anything.\n\nWarm regards,\nKelvin`;
+  const notionBody=`MEETING RECORD — ${title}\n${'─'.repeat(44)}\nDate:    ${new Date().toLocaleDateString('en-MY',{dateStyle:'medium'})}\nOutcome: ${outcome}\n\nSUMMARY\n${v('po-sum')||'—'}\n\nWHAT WENT WELL\n${v('po-well')||'—'}\n\nWHAT TO IMPROVE\n${v('po-imp')||'—'}\n\nACTIONS\n${actionList}`;
+  document.getElementById('po-email-body').textContent=emailBody;
+  document.getElementById('po-notion-body').textContent=notionBody;
+  document.getElementById('post-out').classList.remove('hidden');
+}
+
+function renderTracker(){
+  const open=actions.filter(a=>!a.done);
+  const done=actions.filter(a=>a.done);
+  const overdue=open.filter(a=>a.due&&new Date(a.due)<new Date());
+  document.getElementById('tracker-stats').innerHTML=`
+    <div class="stat"><div class="stat-n">${open.length}</div><div class="stat-l">open</div></div>
+    <div class="stat"><div class="stat-n" style="color:${overdue.length?'var(--red)':'var(--text)'}">${overdue.length}</div><div class="stat-l">overdue</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--green)">${done.length}</div><div class="stat-l">done</div></div>`;
+  const el=document.getElementById('tracker-list');
+  const empty=document.getElementById('tracker-empty');
+  if(!actions.length){el.innerHTML='';empty.classList.remove('hidden');return;}
+  empty.classList.add('hidden');
+  const sorted=[...actions].sort((a,b)=>{if(a.done!==b.done)return a.done?1:-1;if(a.due&&b.due)return new Date(a.due)-new Date(b.due);return 0;});
+  el.innerHTML=sorted.map(a=>{
+    const ov=!a.done&&a.due&&new Date(a.due)<new Date();
+    return`<div class="action-row" style="${ov?'background:#FCEBEB;border-radius:6px;padding:6px 8px;margin:2px 0':''}">
+      <div class="cb ${a.done?'done':''}" onclick="toggleA('${a.id}')"><svg viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="action-text ${a.done?'done':''}">${esc(a.text)}</div>
+      <span class="owner-tag">${esc(a.owner)}</span>
+      ${a.due?`<span class="due-tag" style="${ov?'color:var(--red);font-weight:600':''}">${a.due}</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+function esc(t){return(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function copyEl(id){const el=document.getElementById(id);if(!el)return;navigator.clipboard.writeText(el.textContent).then(()=>{event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);});}
+
+// Create table if needed and load
+async function init(){
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/meeting_actions?limit=1`,{headers:H});
+    loadActions();
+  }catch{setSS('error','Offline');renderTracker();}
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media — SPCA</title>
+<style>
+:root{
+  --bg:#f5f5f0;--surface:#fff;--surface2:#f0efea;--border:#e2e1db;--border2:#cccbc4;
+  --text:#1a1a18;--text2:#6b6b67;--text3:#9e9d99;
+  --purple:#534AB7;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+  --teal:#0F6E56;--teal-light:#E1F5EE;
+  --amber:#854F0B;--amber-light:#FAEEDA;
+  --blue:#185FA5;--blue-light:#E6F1FB;
+  --pink:#993556;--pink-light:#FBEAF0;
+  --green:#1D9E75;--red:#E24B4A;
+  --radius:10px;--radius-sm:6px;
+  --fs:15px;--fs-sm:13px;--fs-xs:11px;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#1a1a18;--surface:#242422;--surface2:#2e2e2b;--border:#3a3a36;--border2:#4e4e4a;--text:#e8e7e2;--text2:#9e9d99;--text3:#6b6b67;--purple-light:#2a2660;--teal-light:#0a2e26;--amber-light:#2e1e06;--blue-light:#0a1e36;--pink-light:#2a1020;}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:var(--fs);min-height:100vh;padding:20px 16px 60px}
+.app{max-width:600px;margin:0 auto}
+h1{font-size:22px;font-weight:600;margin-bottom:4px}
+.subtitle{font-size:var(--fs-sm);color:var(--text2);margin-bottom:20px}
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab{padding:9px 14px;font-size:var(--fs-sm);font-weight:500;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;background:none;border-top:none;border-left:none;border-right:none}
+.tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+.panel{display:none}.panel.active{display:block}
+.sec-label{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--text3);margin:16px 0 8px}
+.sec-label:first-child{margin-top:0}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:10px}
+.field label{font-size:var(--fs-sm);color:var(--text2)}
+.field input,.field select,.field textarea{font-size:var(--fs-sm);padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);outline:none;width:100%;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--purple)}
+.field textarea{resize:vertical;line-height:1.6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{padding:9px 18px;border-radius:var(--radius-sm);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn.sm{padding:5px 12px;font-size:var(--fs-xs)}
+.btn:active{transform:scale(.97)}
+.type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.type-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;cursor:pointer;transition:all .15s}
+.type-card.sel{border-color:var(--purple);background:var(--purple-light)}
+.type-card.sel .tc-title{color:var(--purple)}
+.tc-title{font-size:var(--fs-sm);font-weight:600;color:var(--text);margin-bottom:2px}
+.tc-desc{font-size:var(--fs-xs);color:var(--text3)}
+.plat-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.plat-btn{padding:5px 12px;border-radius:20px;font-size:var(--fs-xs);font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s}
+.plat-btn.on{border-width:1.5px}
+.post-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.post-plat{font-size:var(--fs-xs);font-weight:700;padding:3px 9px;border-radius:20px;display:inline-block;margin-bottom:10px}
+.post-body{font-size:var(--fs-sm);color:var(--text);line-height:1.8;white-space:pre-wrap}
+.post-actions{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.char-count{font-size:var(--fs-xs);color:var(--text3)}
+.idea-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
+.idea-card:hover{border-color:var(--purple)}
+.idea-title{font-size:var(--fs-sm);font-weight:600;color:var(--text);margin-bottom:3px}
+.idea-detail{font-size:var(--fs-xs);color:var(--text2);line-height:1.5}
+.idea-tags{display:flex;gap:5px;margin-bottom:6px;flex-wrap:wrap}
+.sched-row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border)}
+.sched-row:last-child{border-bottom:none}
+.sched-day{font-size:var(--fs-sm);font-weight:600;color:var(--text);min-width:80px;flex-shrink:0}
+.sched-detail{flex:1;font-size:var(--fs-xs);color:var(--text2);line-height:1.6}
+.htag-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.htag-cat{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;display:flex;justify-content:space-between}
+.htag-tags{font-size:var(--fs-sm);color:var(--text);line-height:1.8}
+.tag-pill{font-size:var(--fs-xs);padding:3px 8px;border-radius:12px;font-weight:600;display:inline-block}
+.hidden{display:none}
+.empty{font-size:var(--fs-sm);color:var(--text3);font-style:italic;padding:10px 0}
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;padding:8px 16px;gap:8px;justify-content:center}
+.nav-link{font-size:var(--fs-xs);color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:20px;border:1px solid var(--border)}
+.nav-link:hover{background:var(--surface2)}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Social media</h1>
+<div class="subtitle">SPCA Selangor — generate · plan · publish</div>
+
+<div class="tab-row">
+  <button class="tab active" onclick="sw('generate')">Generate</button>
+  <button class="tab" onclick="sw('ideas')">Ideas bank</button>
+  <button class="tab" onclick="sw('schedule')">Schedule</button>
+  <button class="tab" onclick="sw('hashtags')">Hashtags</button>
+</div>
+
+<!-- GENERATE -->
+<div class="panel active" id="panel-generate">
+  <div class="sec-label">Content type</div>
+  <div class="type-grid" id="type-grid"></div>
+
+  <div class="sec-label">Platforms</div>
+  <div class="plat-row" id="plat-row"></div>
+
+  <div class="grid2">
+    <div class="field"><label>Topic / hook</label><input id="g-topic" placeholder="e.g. PoRo 6.0 wrapped — 680 animals"/></div>
+    <div class="field"><label>Key stat</label><input id="g-stat" placeholder="e.g. RM143/animal, 45 volunteers"/></div>
+  </div>
+  <div class="field"><label>Story or human angle (optional)</label>
+    <textarea id="g-story" rows="2" placeholder="e.g. One elderly lady in Ampang finally has peace of mind after PoRo"></textarea></div>
+  <div class="grid2">
+    <div class="field"><label>Call to action</label>
+      <select id="g-cta">
+        <option value="volunteer">Volunteer with us</option>
+        <option value="donate">Donate / support</option>
+        <option value="share">Share this post</option>
+        <option value="host">Host a PoRo campaign</option>
+        <option value="learn">Learn more</option>
+        <option value="none">No CTA</option>
+      </select>
+    </div>
+    <div class="field"><label>Language</label>
+      <select id="g-lang">
+        <option value="en">English</option>
+        <option value="bm">Bahasa Malaysia</option>
+        <option value="mixed">Mixed EN + BM</option>
+      </select>
+    </div>
+  </div>
+  <button class="btn primary" onclick="generatePosts()">Generate posts</button>
+  <div id="gen-out" style="margin-top:14px"></div>
+</div>
+
+<!-- IDEAS -->
+<div class="panel" id="panel-ideas">
+  <div class="grid2" style="margin-bottom:14px">
+    <div class="field"><label>Filter by type</label>
+      <select id="idea-type" onchange="renderIdeas()">
+        <option value="all">All types</option>
+        <option value="impact">Impact / results</option>
+        <option value="story">Story / emotional</option>
+        <option value="education">Education</option>
+        <option value="volunteer">Volunteer</option>
+        <option value="behind">Behind the scenes</option>
+        <option value="campaign">Campaign / urgent</option>
+      </select>
+    </div>
+    <div class="field"><label>Filter by platform</label>
+      <select id="idea-plat" onchange="renderIdeas()">
+        <option value="all">All platforms</option>
+        <option value="instagram">Instagram</option>
+        <option value="facebook">Facebook</option>
+        <option value="tiktok">TikTok</option>
+        <option value="threads">Threads</option>
+        <option value="linkedin">LinkedIn</option>
+      </select>
+    </div>
+  </div>
+  <div id="idea-list"></div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="panel" id="panel-schedule">
+  <div class="sec-label">Recommended weekly rhythm</div>
+  <div id="sched-display"></div>
+  <div class="sec-label" style="margin-top:20px">Best posting times — Malaysia (KL timezone)</div>
+  <div id="times-display"></div>
+  <div class="sec-label" style="margin-top:20px">Weekly content mix</div>
+  <div id="mix-display"></div>
+</div>
+
+<!-- HASHTAGS -->
+<div class="panel" id="panel-hashtags">
+  <div id="htag-display"></div>
+</div>
+
+</div>
+
+<nav style="margin-top:28px;padding:16px 0 8px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+  <a style="font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit" href="dashboard.html">Daily</a>
+  <a style="font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit" href="meetings.html">Meetings</a>
+  <a style="font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit" href="email.html">Email</a>
+  <a style="font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:inherit" href="reports.html">Reports</a>
+</nav>
+
+<script>
+const TYPES=[
+  {id:'impact',label:'Impact',desc:'Numbers, results'},
+  {id:'story',label:'Story',desc:'Real moments'},
+  {id:'education',label:'Education',desc:'Why TNR works'},
+  {id:'volunteer',label:'Volunteer',desc:'Join us'},
+  {id:'behind',label:'Behind scenes',desc:'Day in the life'},
+  {id:'campaign',label:'Campaign',desc:'Fundraising, urgent'},
+];
+const PLATFORMS=[
+  {id:'instagram',label:'Instagram',col:'#993556',bg:'#FBEAF0'},
+  {id:'facebook',label:'Facebook',col:'#185FA5',bg:'#E6F1FB'},
+  {id:'tiktok',label:'TikTok',col:'#1a1a18',bg:'#f0efea'},
+  {id:'threads',label:'Threads',col:'#444441',bg:'#F1EFE8'},
+  {id:'linkedin',label:'LinkedIn',col:'#0C447C',bg:'#E6F1FB'},
+  {id:'whatsapp',label:'WhatsApp',col:'#085041',bg:'#E1F5EE'},
+];
+const CTAS={volunteer:'Volunteer with us → link in bio',donate:'Support our work → [DONATE LINK]',share:'Share this to help us reach more people',host:'Want to host a PoRo? DM us',learn:'Learn more → link in bio',none:''};
+const IDEAS=[
+  {type:'impact',plats:['instagram','facebook','threads'],title:'Campaign wrap — X animals in Y days',detail:'Post immediately after a PoRo campaign. Lead with total, break down cats vs dogs, name the location. Use exact numbers.'},
+  {type:'impact',plats:['instagram','facebook','linkedin'],title:'Monthly stats roundup',detail:'First week of every month — total enquiries, animals helped, volunteers deployed. Simple graphic with 3–4 numbers.'},
+  {type:'impact',plats:['instagram','tiktok'],title:'Milestone — 5,000th animal neutered',detail:'Track your cumulative total. Hit a round number? Make a big deal of it. These get high organic reach.'},
+  {type:'story',plats:['instagram','facebook','tiktok'],title:'Before/after colony story',detail:'Community had 30 strays, now 8 managed ones. The caregiver\'s face tells the story. Caption explains how TNR worked.'},
+  {type:'story',plats:['instagram','tiktok'],title:'Meet [animal name] — surgery day',detail:'Follow one animal through a PoRo day. Name them, show recovery. People connect with individuals, not numbers.'},
+  {type:'story',plats:['facebook','instagram'],title:'Volunteer spotlight',detail:'Feature one volunteer every 2–3 weeks. Their story, motivation, what they do on campaign day. Quote + photo.'},
+  {type:'story',plats:['instagram','tiktok','threads'],title:'Senior caregiver story',detail:'Feature an elderly person who cares for a colony. Their relief after PoRo is genuine and moving.'},
+  {type:'education',plats:['instagram','tiktok','threads'],title:'Why TNR beats culling',detail:'3-panel carousel or 30-second explainer. "Culling costs RM350/animal, population rebounds. TNR costs RM143 and it\'s permanent."'},
+  {type:'education',plats:['instagram','facebook'],title:'What happens on PoRo day',detail:'Step by step of a campaign day — trapping, surgery, recovery, release. Demystifies the process.'},
+  {type:'education',plats:['instagram','tiktok'],title:'Myth busting — stray animals',detail:'3 myths, 3 facts format. Works well for carousels and TikTok. e.g. "Myth: removing strays solves the problem."'},
+  {type:'volunteer',plats:['instagram','facebook','tiktok'],title:'Open call — next campaign date',detail:'2–3 weeks before a campaign, post a volunteer call. Date, location, what to expect, how to sign up.'},
+  {type:'volunteer',plats:['linkedin','facebook'],title:'Corporate CSR spotlight',detail:'Feature a company that sent a team. Tag them. Quote their team lead. Social proof for other companies.'},
+  {type:'volunteer',plats:['instagram','tiktok'],title:'Day in the life — volunteer POV',detail:'Give a volunteer a phone to document their day. Raw, authentic content. Performs well on Reels and TikTok.'},
+  {type:'behind',plats:['instagram','tiktok'],title:'Setting up a campaign site',detail:'The chaos and hustle of Day 0 — trucks, equipment, tents going up. Shows scale and effort.'},
+  {type:'behind',plats:['instagram','tiktok','threads'],title:'What\'s in our vet kit',detail:'Walk through the equipment. Educational + behind-scenes in one. Vet or volunteer does the walkthrough.'},
+  {type:'campaign',plats:['instagram','facebook','whatsapp'],title:'Fundraising push — X animals need help',detail:'"We need RM15,000 to neuter 100 animals in Ampang next month." Specific is more compelling than general.'},
+  {type:'campaign',plats:['instagram','facebook'],title:'Sponsor match challenge',detail:'"Every ringgit you donate, [Sponsor] matches it. Until [date]." Urgency + leverage.'},
+];
+
+let selType='impact';
+let selPlats=['instagram','facebook'];
+
+function sw(t){
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+  if(t==='ideas')renderIdeas();
+  if(t==='schedule')renderSchedule();
+  if(t==='hashtags')renderHashtags();
+}
+
+function renderTypes(){
+  document.getElementById('type-grid').innerHTML=TYPES.map(t=>`
+    <div class="type-card ${selType===t.id?'sel':''}" onclick="selType='${t.id}';renderTypes()">
+      <div class="tc-title">${t.label}</div>
+      <div class="tc-desc">${t.desc}</div>
+    </div>`).join('');
+}
+
+function renderPlats(){
+  document.getElementById('plat-row').innerHTML=PLATFORMS.map(p=>`
+    <div class="plat-btn ${selPlats.includes(p.id)?'on':''}" style="${selPlats.includes(p.id)?'background:'+p.bg+';color:'+p.col+';border-color:'+p.col:''}" onclick="togglePlat('${p.id}')">${p.label}</div>`).join('');
+}
+
+function togglePlat(id){
+  const i=selPlats.indexOf(id);
+  if(i>-1)selPlats.splice(i,1);else selPlats.push(id);
+  renderPlats();
+}
+
+function v(id){return(document.getElementById(id)?.value||'').trim();}
+
+function getHashtags(type){
+  const banks={
+    impact:'#SPCA #SPCASelangor #PoRo #TNR #NeuteringMatters #Malaysia #StrayAnimals #PotongRoyong',
+    story:'#SPCA #AnimalStories #RescueAnimals #MalaysiaAnimals #CatsOfMalaysia #DogsOfMalaysia #Compassion',
+    education:'#AnimalWelfare #TNR #TrapNeuterReturn #StrayManagement #Malaysia #WhyTNR #PoRo',
+    volunteer:'#Volunteer #VolunteerMalaysia #CSR #CommunityService #SPCA #BudiPenyayang #GiveBack',
+    behind:'#BehindTheScenes #SPCALife #AnimalCare #TeamWork #DayInTheLife #Malaysia',
+    campaign:'#HelpNow #Donate #AnimalWelfare #SPCA #Malaysia #Fundraising #MakeADifference',
+  };
+  return banks[type]||banks.impact;
+}
+
+function generatePosts(){
+  const topic=v('g-topic')||'our latest campaign';
+  const stat=v('g-stat');
+  const story=v('g-story');
+  const cta=CTAS[v('g-cta')||'share'];
+  const lang=v('g-lang')||'en';
+  const isBM=lang==='bm'||lang==='mixed';
+  const tags=getHashtags(selType);
+
+  if(!selPlats.length){alert('Select at least one platform.');return;}
+
+  function post(pid){
+    const p=PLATFORMS.find(x=>x.id===pid);if(!p)return'';
+    let body='';
+    if(pid==='instagram'||pid==='threads'){
+      body=isBM
+        ?`${topic}${stat?'\n\n'+stat:''}${story?'\n\n'+story:''}\n\n${cta||'Tolong share kepada rakan-rakan yang prihatin.'}\n\n${tags}`
+        :`${topic}${stat?'\n\n'+stat:''}${story?'\n\n'+story:''}\n\n${cta||'Share this to spread the word.'}\n\n${tags}`;
+    } else if(pid==='facebook'){
+      body=isBM
+        ?`${topic}\n\n${stat?stat+'\n\n':''}${story?story+'\n\n':''}Nombor-nombor ini mewakili haiwan sebenar, komuniti sebenar, dan perubahan yang nyata.\n\n${cta||'Kongsikan jika anda ambil berat.'}\n\n${tags}`
+        :`${topic}\n\n${stat?stat+'\n\n':''}${story?story+'\n\n':''}These numbers represent real animals, real communities, and real change.\n\n${cta||'Share if this resonated with you.'}\n\n${tags}`;
+    } else if(pid==='tiktok'){
+      body=`SCRIPT FOR TIKTOK\n\n[0–3s] Hook: "${topic.split(' ').slice(0,6).join(' ')}…"\n[3–8s] Show footage / photos\n[8–15s] "${story||stat||'This is what humane stray management looks like.'}"\n[15–20s] CTA: "${cta||'Follow for more'}"\n\nCAPTION:\n${topic}${stat?'\n'+stat:''}\n\n${tags} #fyp #Malaysia`;
+    } else if(pid==='linkedin'){
+      body=`${topic}\n\n${stat?stat+'\n\n':''}${story?story+'\n\n':''}At SPCA Selangor, our PoRo programme delivers community neutering at scale — a proven, humane alternative to culling.\n\n${cta||'Interested in corporate partnership? DM us.'}\n\n#AnimalWelfare #CSR #Malaysia #SPCA #Sustainability`;
+    } else if(pid==='whatsapp'){
+      body=isBM
+        ?`*${topic}*\n\n${stat||''}${story?'\n\n'+story:''}\n\n${cta||'Sebarkan kepada kawan-kawan!'}`
+        :`*${topic}*\n\n${stat||''}${story?'\n\n'+story:''}\n\n${cta||'Please share with friends who care about animals!'}`;
+    }
+    return{pid,p,body};
+  }
+
+  const outs=selPlats.map(post).filter(Boolean);
+  document.getElementById('gen-out').innerHTML=outs.map((o,i)=>`
+    <div class="post-card">
+      <span class="post-plat" style="background:${o.p.bg};color:${o.p.col}">${o.p.label} — ${TYPES.find(t=>t.id===selType)?.label||selType}</span>
+      <div class="post-body" id="pb-${i}">${o.body}</div>
+      <div class="post-actions">
+        <span class="char-count">${o.body.length} chars</span>
+        <button class="btn sm" onclick="copyPost(${i})">Copy</button>
+      </div>
+    </div>`).join('');
+}
+
+function copyPost(i){
+  const el=document.getElementById('pb-'+i);if(!el)return;
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    const btns=document.querySelectorAll('.post-actions .btn.sm');
+    if(btns[i]){btns[i].textContent='Copied!';setTimeout(()=>btns[i].textContent='Copy',1500);}
+  });
+}
+
+function renderIdeas(){
+  const tf=document.getElementById('idea-type')?.value||'all';
+  const pf=document.getElementById('idea-plat')?.value||'all';
+  const filtered=IDEAS.filter(i=>(tf==='all'||i.type===tf)&&(pf==='all'||i.plats.includes(pf)));
+  const typeColors={impact:['#EEEDFE','#534AB7'],story:['#E1F5EE','#0F6E56'],education:['#FAEEDA','#854F0B'],volunteer:['#FAECE7','#993C1D'],behind:['#E6F1FB','#0C447C'],campaign:['#FCEBEB','#791F1F']};
+  document.getElementById('idea-list').innerHTML=filtered.map((idea,i)=>{
+    const [bg,col]=typeColors[idea.type]||typeColors.impact;
+    const idx=IDEAS.indexOf(idea);
+    return`<div class="idea-card" onclick="useIdea(${idx})">
+      <div class="idea-tags">
+        <span class="tag-pill" style="background:${bg};color:${col}">${idea.type}</span>
+        ${idea.plats.slice(0,3).map(pid=>{const pl=PLATFORMS.find(x=>x.id===pid);return pl?`<span class="tag-pill" style="background:${pl.bg};color:${pl.col}">${pl.label}</span>`:''}).join('')}
+      </div>
+      <div class="idea-title">${idea.title}</div>
+      <div class="idea-detail">${idea.detail}</div>
+    </div>`;
+  }).join('')||'<div class="empty">No ideas match this filter.</div>';
+}
+
+function useIdea(i){
+  const idea=IDEAS[i];
+  selType=idea.type;
+  selPlats=idea.plats.slice(0,2);
+  document.getElementById('g-topic').value=idea.title;
+  renderTypes();renderPlats();
+  document.querySelectorAll('.tab').forEach((el,i)=>{if(i===0)el.classList.add('active');else el.classList.remove('active');});
+  document.querySelectorAll('.panel').forEach((p,i)=>{if(i===0)p.classList.add('active');else p.classList.remove('active');});
+}
+
+function renderSchedule(){
+  const sched=[
+    {day:'Monday',detail:'30 min planning session — pick 3–4 content ideas, generate all posts, schedule via Meta Business Suite and Buffer.',plats:['instagram','facebook']},
+    {day:'Wednesday',detail:'Post goes live — educational or story content. Best time: 12pm or 7pm.',plats:['instagram','threads','tiktok']},
+    {day:'Friday',detail:'Post goes live — impact / results / volunteer call. Best time: 6–8pm (end of work week, high engagement).',plats:['facebook','instagram','linkedin']},
+    {day:'Sunday',detail:'Optional 4th post — community story or behind the scenes. Best time: 8–10pm.',plats:['instagram','tiktok']},
+  ];
+  document.getElementById('sched-display').innerHTML=sched.map(s=>`
+    <div class="sched-row">
+      <div class="sched-day">${s.day}</div>
+      <div class="sched-detail">${s.detail}<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${s.plats.map(pid=>{const p=PLATFORMS.find(x=>x.id===pid);return p?`<span style="font-size:10px;padding:2px 7px;border-radius:12px;background:${p.bg};color:${p.col};font-weight:600">${p.label}</span>`:''}).join('')}</div></div>
+    </div>`).join('');
+
+  document.getElementById('times-display').innerHTML=`
+    <div class="sched-row"><div class="sched-day" style="min-width:100px"><span style="font-size:var(--fs-xs);padding:3px 9px;border-radius:12px;background:#FBEAF0;color:#993556;font-weight:600">Instagram</span></div><div class="sched-detail">12pm, 6pm, 9pm — Tue/Wed/Fri best</div></div>
+    <div class="sched-row"><div class="sched-day" style="min-width:100px"><span style="font-size:var(--fs-xs);padding:3px 9px;border-radius:12px;background:#E6F1FB;color:#185FA5;font-weight:600">Facebook</span></div><div class="sched-detail">1pm, 7–9pm — Wed/Thu/Fri best</div></div>
+    <div class="sched-row"><div class="sched-day" style="min-width:100px"><span style="font-size:var(--fs-xs);padding:3px 9px;border-radius:12px;background:#f0efea;color:#1a1a18;font-weight:600">TikTok</span></div><div class="sched-detail">7–9pm, 10pm–midnight — Fri/Sat/Sun best</div></div>
+    <div class="sched-row"><div class="sched-day" style="min-width:100px"><span style="font-size:var(--fs-xs);padding:3px 9px;border-radius:12px;background:#F1EFE8;color:#444441;font-weight:600">Threads</span></div><div class="sched-detail">8am, 1pm, 9pm — any day</div></div>
+    <div class="sched-row"><div class="sched-day" style="min-width:100px"><span style="font-size:var(--fs-xs);padding:3px 9px;border-radius:12px;background:#E6F1FB;color:#0C447C;font-weight:600">LinkedIn</span></div><div class="sched-detail">8–9am, 12pm — Tue/Wed/Thu only</div></div>`;
+
+  const mix=[
+    {label:'Impact / results',n:'1×/week',pct:25,col:'#534AB7',bg:'#EEEDFE'},
+    {label:'Story / emotional',n:'1×/week',pct:25,col:'#0F6E56',bg:'#E1F5EE'},
+    {label:'Education',n:'1×/week',pct:25,col:'#854F0B',bg:'#FAEEDA'},
+    {label:'Volunteer / behind scenes',n:'0–1×/week',pct:25,col:'#993C1D',bg:'#FAECE7'},
+  ];
+  document.getElementById('mix-display').innerHTML=mix.map(m=>`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:var(--fs-xs);font-weight:600;min-width:180px;padding:3px 8px;border-radius:12px;background:${m.bg};color:${m.col}">${m.label}</span>
+      <div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="width:${m.pct}%;height:100%;background:${m.col};border-radius:4px"></div></div>
+      <span style="font-size:var(--fs-xs);color:var(--text3);min-width:60px">${m.n}</span>
+    </div>`).join('');
+}
+
+function renderHashtags(){
+  const banks=[
+    {cat:'General SPCA / brand',tags:'#SPCASelangor #SPCA #SPCAMalaysia #AnimalWelfare #MalaysiaAnimals #HelpAnimals'},
+    {cat:'PoRo / TNR campaigns',tags:'#PoRo #PotongRoyong #TNR #TrapNeuterReturn #NeuteringMatters #TNRM #ManageStrays'},
+    {cat:'Cats',tags:'#CatsOfMalaysia #KucingMalaysia #FeralCats #CommunityCAts #Kucing #CatRescue #CatWelfare'},
+    {cat:'Dogs',tags:'#DogsOfMalaysia #AnjingMalaysia #StreetDogs #CommunityDogs #DogRescue #DogWelfare #Anjing'},
+    {cat:'Volunteering / CSR',tags:'#VolunteerMalaysia #CSRMalaysia #CommunityService #BudiPenyayang #GiveBack'},
+    {cat:'Fundraising',tags:'#DonateMalaysia #HelpAnimals #GiveAsia #CharityMalaysia #Donate #AnimalCharity'},
+    {cat:'TikTok (add to every TikTok post)',tags:'#fyp #foryoupage #foryou #MalaysiaTikTok #TikTokMalaysia #viral'},
+    {cat:'Location tags — KL / Selangor',tags:'#KualaLumpur #Selangor #PetalingJaya #ShahAlam #Ampang #Cheras #KlangValley #Malaysia'},
+  ];
+  document.getElementById('htag-display').innerHTML=banks.map((b,i)=>`
+    <div class="htag-card">
+      <div class="htag-cat">${b.cat} <button class="btn sm" onclick="copyHtag(${i})">Copy</button></div>
+      <div class="htag-tags" id="ht-${i}">${b.tags}</div>
+    </div>`).join('');
+  window._htags=banks;
+}
+
+function copyHtag(i){
+  navigator.clipboard.writeText(window._htags[i].tags).then(()=>{
+    event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);
+  });
+}
+
+renderTypes();renderPlats();
+</script>
+</body>
+</html>
