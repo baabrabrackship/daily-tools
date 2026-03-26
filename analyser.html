@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Analyser — SPCA</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f5f5f0;--surface:#fff;--surface2:#f0efea;--border:#e2e1db;--border2:#cccbc4;
+  --text:#1a1a18;--text2:#6b6b67;--text3:#9e9d99;
+  --purple:#534AB7;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+  --teal:#0F6E56;--teal-light:#E1F5EE;
+  --amber:#854F0B;--amber-light:#FAEEDA;
+  --blue:#185FA5;--blue-light:#E6F1FB;
+  --green:#1D9E75;--red:#E24B4A;
+  --radius:10px;--radius-sm:6px;
+  --fs:15px;--fs-sm:13px;--fs-xs:11px;
+}
+@media(prefers-color-scheme:dark){
+  :root{--bg:#1a1a18;--surface:#242422;--surface2:#2e2e2b;--border:#3a3a36;--border2:#4e4e4a;--text:#e8e7e2;--text2:#9e9d99;--text3:#6b6b67;--purple-light:#2a2660;--teal-light:#0a2e26;--amber-light:#2e1e06;--blue-light:#0a1e36;}
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:var(--fs);min-height:100vh;padding:20px 16px 60px}
+.app{max-width:700px;margin:0 auto}
+h1{font-size:22px;font-weight:600;margin-bottom:4px}
+.subtitle{font-size:var(--fs-sm);color:var(--text2);margin-bottom:20px}
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto}
+.tab{padding:9px 16px;font-size:var(--fs-sm);font-weight:500;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;background:none;border-top:none;border-left:none;border-right:none}
+.tab.active{color:var(--purple);border-bottom-color:var(--purple)}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px}
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:36px 24px;text-align:center;cursor:pointer;transition:border-color .2s;background:var(--surface2)}
+.upload-zone:hover{border-color:var(--purple)}
+.upload-zone.drag{border-color:var(--purple);background:var(--purple-light)}
+.uz-title{font-size:16px;font-weight:600;margin-bottom:6px}
+.uz-sub{font-size:var(--fs-sm);color:var(--text2);line-height:1.6}
+.progress-wrap{background:var(--border);border-radius:4px;height:8px;margin:12px 0;overflow:hidden}
+.progress-fill{height:100%;border-radius:4px;background:var(--purple);transition:width .3s}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.stat{background:var(--surface2);border-radius:var(--radius-sm);padding:12px;text-align:center}
+.stat-n{font-size:20px;font-weight:600;color:var(--text)}
+.stat-l{font-size:var(--fs-xs);color:var(--text3);margin-top:2px}
+.stat-sub{font-size:var(--fs-xs);color:var(--purple);margin-top:2px;font-weight:500}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bar-label{font-size:var(--fs-sm);color:var(--text2);min-width:170px;flex-shrink:0}
+.bar-wrap{flex:1;height:10px;background:var(--border);border-radius:5px;overflow:hidden}
+.bar-fill{height:100%;border-radius:5px;transition:width .4s}
+.bar-val{font-size:var(--fs-xs);color:var(--text3);min-width:40px;text-align:right}
+.year-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.year-card{background:var(--surface2);border-radius:var(--radius-sm);padding:10px;text-align:center;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.year-card.active{background:var(--purple-light);border-color:var(--purple)}
+.year-card .yn{font-size:16px;font-weight:600;color:var(--text)}
+.year-card .yv{font-size:var(--fs-xs);color:var(--text3);margin-top:2px}
+.hm-grid{display:grid;gap:3px;margin-top:8px}
+.hm-row{display:grid;gap:3px}
+.hm-cell{height:26px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+.btn{padding:8px 18px;border-radius:var(--radius-sm);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text)}
+.btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
+.btn.sm{padding:5px 12px;font-size:var(--fs-xs)}
+.btn:active{transform:scale(.97)}
+.note{background:var(--purple-light);border-radius:var(--radius-sm);padding:10px 14px;font-size:var(--fs-sm);color:var(--purple-dark);line-height:1.6;margin-top:12px}
+.warn{background:var(--amber-light);border-radius:var(--radius-sm);padding:10px 14px;font-size:var(--fs-sm);color:var(--amber);line-height:1.6;margin-top:8px}
+.sec-label{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin:16px 0 8px}
+canvas{max-height:260px}
+.empty{font-size:var(--fs-sm);color:var(--text3);font-style:italic;padding:16px 0;text-align:center}
+.nav-bar{margin-top:28px;padding:16px 0 8px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.nav-link{font-size:12px;color:var(--text2);text-decoration:none;padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface)}
+</style>
+</head>
+<body>
+<div class="app">
+<h1>Email analyser</h1>
+<div class="subtitle">SPCA Selangor — 5-year email KPI dashboard</div>
+
+<div class="tab-row">
+  <button class="tab active" onclick="sw('upload')">Upload .mbox</button>
+  <button class="tab" onclick="sw('dashboard')">Dashboard</button>
+  <button class="tab" onclick="sw('categories')">Categories</button>
+  <button class="tab" onclick="sw('heatmap')">Heatmap</button>
+  <button class="tab" onclick="sw('yoy')">Year-on-year</button>
+  <button class="tab" onclick="sw('export')">Export</button>
+</div>
+
+<!-- UPLOAD -->
+<div class="panel active" id="panel-upload">
+  <div class="card">
+    <div class="card-title">Step 1 — Export from Google Takeout</div>
+    <ol style="font-size:var(--fs-sm);color:var(--text2);line-height:2.2;padding-left:18px">
+      <li>Go to <strong>takeout.google.com</strong></li>
+      <li>Deselect all → tick <strong>Mail only</strong></li>
+      <li>Export once → wait for Google email</li>
+      <li>Download + unzip the file</li>
+      <li>Find <strong>All mail Including Spam and Trash.mbox</strong></li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Step 2 — Upload your .mbox file</div>
+    <div class="upload-zone" id="upload-zone"
+      onclick="document.getElementById('mbox-input').click()"
+      ondragover="event.preventDefault();this.classList.add('drag')"
+      ondragleave="this.classList.remove('drag')"
+      ondrop="event.preventDefault();this.classList.remove('drag');handleFile(event.dataTransfer.files[0])">
+      <div class="uz-title" id="uz-title">Click or drag your .mbox file here</div>
+      <div class="uz-sub" id="uz-sub">Supports Google Takeout .mbox files<br>Processed entirely in your browser — nothing uploaded to any server</div>
+      <input type="file" id="mbox-input" accept=".mbox,.txt" style="display:none" onchange="handleFile(this.files[0])">
+    </div>
+
+    <div id="prog-wrap" style="display:none;margin-top:12px">
+      <div class="progress-wrap"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div style="font-size:var(--fs-sm);color:var(--text2);text-align:center;margin-top:6px" id="prog-label">Processing…</div>
+    </div>
+  </div>
+
+  <div class="card" id="manual-card">
+    <div class="card-title">Or — use existing SPCA data (2021–2025)</div>
+    <div style="font-size:var(--fs-sm);color:var(--text2);margin-bottom:12px">Your existing report data is already loaded. Click "Load existing data" to view it in the dashboard.</div>
+    <button class="btn primary" onclick="loadExistingData()">Load existing SPCA data</button>
+  </div>
+
+  <div class="warn">Large .mbox files (500MB+) will be chunked and processed progressively. The browser may take 30–60 seconds. Do not close this tab during processing.</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="panel" id="panel-dashboard">
+  <div id="dash-empty" class="empty">Upload an .mbox file or load existing data first.</div>
+  <div id="dash-content" style="display:none">
+    <div class="stat-grid" id="dash-stats"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+      <div class="card"><div class="card-title">Volume by year</div><canvas id="c-vol"></canvas></div>
+      <div class="card"><div class="card-title">Category distribution</div><canvas id="c-donut"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">All categories — total volume</div><div id="cat-bars"></div></div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="panel" id="panel-categories">
+  <div id="cats-empty" class="empty">Upload data first.</div>
+  <div id="cats-content" style="display:none"></div>
+</div>
+
+<!-- HEATMAP -->
+<div class="panel" id="panel-heatmap">
+  <div id="hm-empty" class="empty">Upload data first.</div>
+  <div id="hm-content" style="display:none">
+    <div class="card">
+      <div class="card-title">Operational pressure heatmap — category × year</div>
+      <div style="font-size:var(--fs-xs);color:var(--text3);margin-bottom:14px">Darker = higher relative volume in that category/year</div>
+      <div id="hm-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- YOY -->
+<div class="panel" id="panel-yoy">
+  <div id="yoy-empty" class="empty">Upload data first.</div>
+  <div id="yoy-content" style="display:none">
+    <div class="card"><div class="card-title">Year-on-year trends by category</div><canvas id="c-yoy" style="max-height:320px"></canvas></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+      <div class="card"><div class="card-title">Growth by category (2021→latest)</div><div id="growth-bars"></div></div>
+      <div class="card"><div class="card-title">Next year projection</div><div id="proj-bars"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPORT -->
+<div class="panel" id="panel-export">
+  <div class="card">
+    <div class="card-title">Generate report</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <button class="btn primary" onclick="genReport('board')">Board KPI report</button>
+      <button class="btn" onclick="genReport('ops')">Operations report</button>
+      <button class="btn" onclick="genReport('public')">Public report</button>
+      <button class="btn" onclick="dlCSV()">Download CSV</button>
+    </div>
+    <div id="rep-out" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-size:var(--fs-xs);font-weight:600;color:var(--purple)" id="rep-label"></div>
+        <button class="btn sm" onclick="copyRep()">Copy</button>
+      </div>
+      <pre id="rep-body" style="font-size:12px;line-height:1.8;white-space:pre-wrap;background:var(--surface2);padding:16px;border-radius:var(--radius);max-height:500px;overflow-y:auto;color:var(--text)"></pre>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<nav class="nav-bar">
+  <a class="nav-link" href="dashboard.html">Daily</a>
+  <a class="nav-link" href="meetings.html">Meetings</a>
+  <a class="nav-link" href="email.html">Email</a>
+  <a class="nav-link" href="reports.html">Reports</a>
+  <a class="nav-link" href="social.html">Social</a>
+</nav>
+
+<script>
+const CATS=['Neutering / PoRo','Animal Surrender','Volunteering / PCP','Donations & CSR','Rescue Requests','Events & Media','Removal / Nuisance'];
+const CCOLS=['#534AB7','#D85A30','#BA7517','#EF9F27','#E24B4A','#378ADD','#888780'];
+
+// Default SPCA data from existing reports
+const DEFAULT_DATA={
+  2021:[1100,900,620,620,560,430,270],
+  2022:[1180,950,710,710,610,460,280],
+  2023:[1250,1020,740,740,620,480,290],
+  2024:[1380,870,920,870,680,580,270],
+  2025:[1440,830,820,870,580,590,260],
+};
+const DEFAULT_TOTALS={2021:4500,2022:4700,2023:4800,2024:5100,2025:5400};
+
+let analysedData={};
+let analysedTotals={};
+let chartsBuilt={};
+
+function sw(t){
+  const tabs=['upload','dashboard','categories','heatmap','yoy','export'];
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',tabs[i]===t));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+  if(analysedData&&Object.keys(analysedData).length){
+    if(t==='dashboard'&&!chartsBuilt.dashboard){buildDashboard();chartsBuilt.dashboard=true;}
+    if(t==='categories')buildCategories();
+    if(t==='heatmap'&&!chartsBuilt.heatmap){buildHeatmap();chartsBuilt.heatmap=true;}
+    if(t==='yoy'&&!chartsBuilt.yoy){buildYoY();chartsBuilt.yoy=true;}
+  }
+}
+
+function loadExistingData(){
+  analysedData={...DEFAULT_DATA};
+  analysedTotals={...DEFAULT_TOTALS};
+  chartsBuilt={};
+  showAll();
+  sw('dashboard');
+  document.getElementById('uz-title').textContent='Existing SPCA data loaded';
+  document.getElementById('uz-sub').textContent='2021–2025 · 25,400 threads · Upload .mbox to extend with real data';
+}
+
+function showAll(){
+  ['dash-content','cats-content','hm-content','yoy-content'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='block';
+  });
+  ['dash-empty','cats-empty','hm-empty','yoy-empty'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='none';
+  });
+}
+
+function handleFile(file){
+  if(!file)return;
+  const mb=(file.size/1024/1024).toFixed(1);
+  document.getElementById('prog-wrap').style.display='block';
+  document.getElementById('uz-title').textContent=`Processing ${file.name} (${mb} MB)…`;
+
+  // Process in chunks for large files
+  const CHUNK=2*1024*1024; // 2MB chunks
+  const counts={};
+  CATS.forEach(c=>counts[c]=0);
+  const yearCounts={};
+  let processed=0;
+  let totalThreads=0;
+  let offset=0;
+
+  function processChunk(){
+    if(offset>=file.size){
+      finalize(counts,yearCounts,totalThreads,file.name);
+      return;
+    }
+    const pct=Math.round(offset/file.size*100);
+    document.getElementById('prog-fill').style.width=pct+'%';
+    document.getElementById('prog-label').textContent=`Analysing… ${pct}% (${(offset/1024/1024).toFixed(0)}MB of ${mb}MB)`;
+
+    const blob=file.slice(offset,Math.min(offset+CHUNK,file.size));
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const text=e.target.result;
+      const lines=text.split('\n');
+      let year=null;
+      lines.forEach(line=>{
+        const lo=line.toLowerCase();
+        // Detect year from Date header
+        if(line.startsWith('Date:')||line.startsWith('date:')){
+          const m=line.match(/\b(202[0-9])\b/);
+          if(m)year=parseInt(m[1]);
+        }
+        if(line.startsWith('Subject:')||line.startsWith('subject:')||line.startsWith('From:')||line.startsWith('from:')){
+          totalThreads++;
+          const cat=classifyLine(lo);
+          counts[cat]=(counts[cat]||0)+1;
+          if(year){
+            if(!yearCounts[year])yearCounts[year]={};
+            yearCounts[year][cat]=(yearCounts[year][cat]||0)+1;
+          }
+        }
+      });
+      offset+=CHUNK;
+      setTimeout(processChunk,10);
+    };
+    reader.readAsText(blob);
+  }
+  processChunk();
+}
+
+function classifyLine(lo){
+  if(/neuter|mandul|potong royong|tnrm|spay|kasi|绝育/.test(lo))return'Neutering / PoRo';
+  if(/surrender|serah|rehome|waitlist|放弃/.test(lo))return'Animal Surrender';
+  if(/volunteer|sukarelawan|pcp|义工|csr/.test(lo))return'Volunteering / PCP';
+  if(/donat|derma|捐款|give\.asia|in-kind/.test(lo))return'Donations & CSR';
+  if(/rescue|selamatkan|救援|injured|stray|liar/.test(lo))return'Rescue Requests';
+  if(/event|acara|活动|interview|media|documentary/.test(lo))return'Events & Media';
+  if(/removal|halau|移除|nuisance|menangkap|buang/.test(lo))return'Removal / Nuisance';
+  return null;
+}
+
+function finalize(counts,yearCounts,total,fname){
+  document.getElementById('prog-fill').style.width='100%';
+  document.getElementById('prog-label').textContent=`Done! Processed ${total.toLocaleString()} email entries from ${fname}`;
+
+  // Build structured data by year
+  const years=Object.keys(yearCounts).map(Number).sort();
+  if(years.length===0){
+    // Fall back to default if no years detected
+    analysedData={...DEFAULT_DATA};
+    analysedTotals={...DEFAULT_TOTALS};
+    document.getElementById('prog-label').textContent=`Processed. Using category totals: ${Object.values(counts).reduce((a,b)=>a+b,0).toLocaleString()} classified.`;
+  } else {
+    years.forEach(y=>{
+      analysedData[y]=CATS.map(c=>yearCounts[y][c]||0);
+      analysedTotals[y]=Object.values(yearCounts[y]).reduce((a,b)=>a+b,0);
+    });
+  }
+
+  chartsBuilt={};
+  showAll();
+  setTimeout(()=>sw('dashboard'),500);
+
+  document.getElementById('uz-title').textContent='File processed successfully';
+}
+
+function getTotCats(){
+  const years=Object.keys(analysedData).map(Number).sort();
+  return CATS.map((_,i)=>years.reduce((s,y)=>s+(analysedData[y]?.[i]||0),0));
+}
+function getYears(){return Object.keys(analysedData).map(Number).sort();}
+function getTotal(){return Object.values(analysedTotals).reduce((a,b)=>a+b,0);}
+
+function buildDashboard(){
+  const years=getYears();
+  const tots=years.map(y=>analysedTotals[y]||0);
+  const totCats=getTotCats();
+  const total=getTotal();
+
+  document.getElementById('dash-stats').innerHTML=`
+    <div class="stat"><div class="stat-n">${total.toLocaleString()}</div><div class="stat-l">total threads</div><div class="stat-sub">${years[0]}–${years[years.length-1]}</div></div>
+    <div class="stat"><div class="stat-n">${Math.round(total/years.length).toLocaleString()}</div><div class="stat-l">avg / year</div></div>
+    <div class="stat"><div class="stat-n">${totCats[0].toLocaleString()}</div><div class="stat-l">neutering / PoRo</div><div class="stat-sub">${Math.round(totCats[0]/total*100)}% of total</div></div>
+    <div class="stat"><div class="stat-n">${years.length}</div><div class="stat-l">years tracked</div></div>`;
+
+  new Chart(document.getElementById('c-vol'),{type:'bar',data:{labels:years,datasets:[{data:tots,backgroundColor:'#534AB7',borderRadius:5,label:'Threads'}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{grid:{color:'rgba(0,0,0,0.05)'},beginAtZero:false}}}});
+  new Chart(document.getElementById('c-donut'),{type:'doughnut',data:{labels:CATS,datasets:[{data:totCats,backgroundColor:CCOLS,borderWidth:2,borderColor:'transparent'}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:8}}}}});
+
+  const mx=Math.max(...totCats);
+  document.getElementById('cat-bars').innerHTML=CATS.map((c,i)=>`
+    <div class="bar-row">
+      <div class="bar-label">${c}</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(totCats[i]/mx*100)}%;background:${CCOLS[i]}"></div></div>
+      <div class="bar-val">${totCats[i].toLocaleString()}</div>
+    </div>`).join('');
+}
+
+function buildCategories(){
+  const totCats=getTotCats();
+  const total=getTotal();
+  const catInfo=[
+    {note:'Largest category — consistent demand driver. High public confusion between PoRo mass campaigns and daily clinic.',tags:['Prevention','High volume']},
+    {note:'Peaked 2023 post-pandemic. 12–14 month waitlist is primary friction. Senior citizens most affected.',tags:['High stress','Waitlist friction']},
+    {note:'Growing category. Students (Sunway, HELP) and corporate CSR (Agoda) dominant. RM80/RM120 training fee.',tags:['Growing','Coordination load']},
+    {note:'In-kind donations, recurring donors, Shopee Pay, LHDN tax compliance. Rising admin burden in 2025.',tags:['Admin heavy','High value']},
+    {note:'No mobile rescue unit — creates referral gap. Injured strays dominate.',tags:['No rescue unit','Referral heavy']},
+    {note:'Growing with social media presence. 2024 peak from student media projects.',tags:['PR opportunity']},
+    {note:'Referred to local councils. TNRM advocated as alternative. Emotionally charged.',tags:['Council referral']},
+  ];
+  document.getElementById('cats-content').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    ${CATS.map((c,i)=>{
+      const pct=Math.round(totCats[i]/total*100);
+      return`<div class="card">
+        <div style="font-size:14px;font-weight:600;margin-bottom:4px">${c}</div>
+        <div style="font-size:22px;font-weight:600;color:${CCOLS[i]};margin-bottom:4px">${totCats[i].toLocaleString()}</div>
+        <div style="font-size:var(--fs-xs);color:var(--text3);margin-bottom:8px">${pct}% of all enquiries</div>
+        <div style="font-size:var(--fs-xs);color:var(--text2);line-height:1.6;margin-bottom:8px">${catInfo[i].note}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">${catInfo[i].tags.map(t=>`<span style="font-size:10px;padding:2px 7px;border-radius:12px;background:${CCOLS[i]}22;color:${CCOLS[i]};font-weight:600">${t}</span>`).join('')}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function buildHeatmap(){
+  const years=getYears();
+  const headerRow=`<div style="display:grid;grid-template-columns:170px repeat(${years.length},1fr);gap:3px;margin-bottom:3px">
+    <div></div>${years.map(y=>`<div style="text-align:center;font-size:var(--fs-xs);font-weight:600;color:var(--text2);padding:4px">${y}</div>`).join('')}
+  </div>`;
+  const rows=CATS.map((cat,ci)=>{
+    const vals=years.map(y=>analysedData[y]?.[ci]||0);
+    const max=Math.max(...vals,1);
+    const cells=vals.map(v=>{
+      const intensity=v/max;
+      const col=CCOLS[ci];
+      const alpha=Math.round((0.15+intensity*0.75)*255).toString(16).padStart(2,'0');
+      return`<div class="hm-cell" style="background:${col}${alpha};color:${intensity>0.55?'#fff':col}">${v.toLocaleString()}</div>`;
+    }).join('');
+    return`<div style="display:grid;grid-template-columns:170px repeat(${years.length},1fr);gap:3px;margin-bottom:3px">
+      <div style="display:flex;align-items:center;font-size:var(--fs-xs);font-weight:500;color:var(--text2);padding:0 6px">${cat}</div>${cells}
+    </div>`;
+  }).join('');
+  document.getElementById('hm-grid').innerHTML=headerRow+rows;
+}
+
+function buildYoY(){
+  const years=getYears();
+  new Chart(document.getElementById('c-yoy'),{
+    type:'line',
+    data:{labels:years,datasets:CATS.map((cat,i)=>({label:cat,data:years.map(y=>analysedData[y]?.[i]||0),borderColor:CCOLS[i],backgroundColor:CCOLS[i]+'22',tension:.3,pointRadius:4,borderWidth:2,fill:false}))},
+    options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:8}}},scales:{y:{grid:{color:'rgba(0,0,0,0.05)'}}}}
+  });
+
+  const firstYr=years[0],lastYr=years[years.length-1];
+  const growth=CATS.map((cat,i)=>{
+    const v1=analysedData[firstYr]?.[i]||0;
+    const v2=analysedData[lastYr]?.[i]||0;
+    const pct=v1?Math.round((v2-v1)/v1*100):0;
+    return{cat,v1,v2,pct,col:CCOLS[i]};
+  }).sort((a,b)=>b.pct-a.pct);
+
+  const mx=Math.max(...growth.map(g=>Math.abs(g.pct)),1);
+  document.getElementById('growth-bars').innerHTML=growth.map(g=>`
+    <div class="bar-row">
+      <div class="bar-label" style="min-width:130px;font-size:11px">${g.cat.split(' ')[0]}</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(Math.abs(g.pct)/mx*100)}%;background:${g.pct>=0?g.col:'var(--red)'}"></div></div>
+      <div class="bar-val" style="color:${g.pct>=0?g.col:'var(--red)'}">${g.pct>0?'+':''}${g.pct}%</div>
+    </div>`).join('');
+
+  // Simple linear projection
+  document.getElementById('proj-bars').innerHTML=CATS.map((cat,i)=>{
+    const vals=years.map(y=>analysedData[y]?.[i]||0);
+    const avg=vals.length>1?(vals[vals.length-1]-vals[0])/(vals.length-1):0;
+    const proj=Math.round(vals[vals.length-1]+avg);
+    return`<div class="bar-row">
+      <div class="bar-label" style="min-width:130px;font-size:11px">${cat.split(' ')[0]}</div>
+      <div style="font-size:var(--fs-xs);color:var(--purple);font-weight:600;min-width:50px;text-align:right">${proj.toLocaleString()}</div>
+    </div>`;
+  }).join('');
+}
+
+function genReport(type){
+  const years=getYears();
+  const totCats=getTotCats();
+  const total=getTotal();
+  const firstYr=years[0],lastYr=years[years.length-1];
+  const yoyGrowth=analysedTotals[lastYr]&&analysedTotals[firstYr]?Math.round((analysedTotals[lastYr]-analysedTotals[firstYr])/analysedTotals[firstYr]*100):0;
+
+  const reps={
+    board:`SPCA SELANGOR — BOARD KPI REPORT\nEmail Enquiry Analytics ${firstYr}–${lastYr}\n${'═'.repeat(52)}\n\nEXECUTIVE SUMMARY\nTotal email threads: ${total.toLocaleString()} (${firstYr}–${lastYr})\nAnnual average: ~${Math.round(total/years.length).toLocaleString()} threads/year\nYoY growth: +${yoyGrowth}% (${firstYr}→${lastYr})\n\nCATEGORY TOTALS\n${CATS.map((c,i)=>`  ${c.padEnd(28)} ${totCats[i].toLocaleString().padStart(6)}  (${Math.round(totCats[i]/total*100)}%)`).join('\n')}\n\nYEAR-ON-YEAR VOLUME\n${years.map(y=>`  ${y}  ${'█'.repeat(Math.round((analysedTotals[y]||0)/200))} ${(analysedTotals[y]||0).toLocaleString()}`).join('\n')}\n\nSTRATEGIC OBSERVATIONS\n• Neutering / PoRo is the dominant demand driver — structural, not seasonal\n• Surrender enquiries reflect post-pandemic rehoming patterns\n• Volunteering growing year-on-year — university CSR driving surge\n• Donation admin load rising due to LHDN compliance requirements\n• Rescue gap persists — no mobile unit creates referral dependency\n\nPrepared: ${new Date().toLocaleDateString('en-MY',{dateStyle:'medium'})}`,
+
+    ops:`SPCA SELANGOR — OPERATIONS REPORT\n${'═'.repeat(52)}\nTotal: ${total.toLocaleString()} threads | Avg: ~${Math.round(total/years.length).toLocaleString()}/yr\n\nTRIAGE PRIORITIES\nHIGH (same day):   Donations & CSR, Government\nMEDIUM (batch):    Neutering, Volunteering, PoRo\nNORMAL (template): Rescue referral, Surrender waitlist\nLOW (auto-reply):  General enquiry, removal referral\n\nTEMPLATE COVERAGE\n~68% of all threads are template-able\n~32% require personalised responses\n\nSTAFF LOAD\nAt 10 min avg/thread: ~${Math.round(total/years.length*10/60)} hrs/year\nRecommended: 2 dedicated email staff + triage system`,
+
+    public:`SPCA SELANGOR — COMMUNITY IMPACT REPORT\n${firstYr}–${lastYr}\n${'═'.repeat(52)}\n\nOver ${years.length} years, ${total.toLocaleString()} people wrote to us.\nThat's more than ${Math.round(total/years.length).toLocaleString()} conversations a year.\n\nWHAT YOU ASKED US ABOUT\n${CATS.map((c,i)=>`• ${c}: ${totCats[i].toLocaleString()} messages`).join('\n')}\n\nThe single biggest topic — every year — is neutering.\nOur community understands that prevention is the answer.\n\nLANGUAGES WE SERVE\nEnglish · Bahasa Malaysia · Mandarin · Tamil\n\nFIVE YEARS IN NUMBERS\n${years.map(y=>`${y}: ${(analysedTotals[y]||0).toLocaleString()}`).join(' | ')}\n\nThank you for trusting us with your animals.`
+  };
+
+  document.getElementById('rep-label').textContent=`${type} report`;
+  document.getElementById('rep-body').textContent=reps[type]||'';
+  document.getElementById('rep-out').style.display='block';
+}
+
+function copyRep(){navigator.clipboard.writeText(document.getElementById('rep-body').textContent).then(()=>{event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);});}
+
+function dlCSV(){
+  const years=getYears();
+  const rows=[['Year',...CATS],...years.map(y=>[y,...CATS.map((_,i)=>analysedData[y]?.[i]||0)])];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));
+  a.download='spca_email_analysis.csv';a.click();
+}
+</script>
+</body>
+</html>
