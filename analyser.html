@@ -293,6 +293,7 @@ canvas{max-height:200px}
 .gov-rec-num{font-size:10px;font-weight:700;color:#1a3a6e;flex-shrink:0;width:18px}
 .gov-foot{background:#EEF2FA;padding:10px 32px;display:flex;justify-content:space-between;font-size:10px;color:#5a6a8a;border-top:1px solid #c5d0e8}
 
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 /* ── NAV BAR ── */
 .nav-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:10px 16px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;z-index:100}
 .nav-link{font-size:12px;color:var(--text2);text-decoration:none;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);white-space:nowrap;transition:all .15s}
@@ -318,7 +319,7 @@ canvas{max-height:200px}
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
       <div style="background:var(--teal-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--teal)"><strong>✓ What's real</strong><br>Thread counts · keyword match · year detection · BM/EN flags · live parse log · spam filter · unmatched export</div>
       <div style="background:var(--amber-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:#7B4700"><strong>⚠ Known limits</strong><br>Subject-line only · ~15–20% unclassified typical · vague subjects missed · emoji-only subjects skipped</div>
-      <div style="background:var(--purple-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--purple-dark)"><strong>ⓘ Demo mode</strong><br>No file yet? All reports use illustrative data with a clear watermark — not for distribution</div>
+      <div style="background:var(--purple-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--purple-dark)"><strong>ⓘ Sync</strong><br>Parsed results (not raw emails) sync across all your devices automatically after upload</div>
     </div>
     <div class="upload-zone" onclick="document.getElementById('mbox-inp').click()"
       ondragover="event.preventDefault();this.style.borderColor='var(--purple)'"
@@ -326,7 +327,7 @@ canvas{max-height:200px}
       ondrop="event.preventDefault();this.style.borderColor='var(--border2)';handleFile(event.dataTransfer.files[0])">
       <div style="font-size:26px;margin-bottom:8px">📂</div>
       <div style="font-size:15px;font-weight:600;margin-bottom:4px" id="uz-title">Drop your .mbox file here</div>
-      <div style="font-size:12px;color:var(--text3)">Processed entirely in your browser — nothing leaves your device</div>
+      <div style="font-size:12px;color:var(--text3)">Raw emails never leave your device — only the parsed category counts are synced</div>
       <input type="file" id="mbox-inp" accept=".mbox,.txt" style="display:none" onchange="handleFile(this.files[0])">
     </div>
     <div id="up-prog" style="display:none;margin-bottom:12px">
@@ -334,7 +335,32 @@ canvas{max-height:200px}
       <div style="font-size:12px;color:var(--text2);text-align:center;margin-top:4px" id="up-label">Processing…</div>
     </div>
     <div id="up-result" style="display:none;margin-bottom:10px"></div>
+
+    <!-- Save snapshot UI (shown after upload) -->
+    <div id="snapshot-save" style="display:none;margin-bottom:14px">
+      <div style="font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Save this upload as a named snapshot</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input id="snapshot-name" type="text" placeholder="e.g. Jan–Feb 2026 upload" style="font-size:var(--fs-sm);padding:7px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);flex:1;min-width:200px">
+        <button class="btn primary" onclick="saveSnapshot()">💾 Save snapshot</button>
+      </div>
+      <div id="snapshot-save-msg" style="font-size:12px;margin-top:6px;color:var(--teal)"></div>
+    </div>
+
     <div style="text-align:center"><button class="btn sm" onclick="useDemoData()">Skip — use illustrative demo data</button></div>
+  </div>
+
+  <!-- Saved snapshots -->
+  <div class="card" id="snapshots-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div class="card-title" style="margin-bottom:0">Saved snapshots</div>
+      <div id="sync-status" style="font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px">
+        <span id="sync-dot" style="width:7px;height:7px;border-radius:50%;background:var(--text3);flex-shrink:0;display:inline-block"></span>
+        <span id="sync-label">Loading…</span>
+      </div>
+    </div>
+    <div id="snapshots-list">
+      <div style="font-size:var(--fs-sm);color:var(--text3);font-style:italic;padding:8px 0">Loading saved snapshots…</div>
+    </div>
   </div>
 </div>
 
@@ -548,13 +574,19 @@ function handleFile(file){
     const yrs=Object.keys(s.yearCounts).map(Number).sort();
     if(yrs.length){realData={};yrs.forEach(y=>{realData[y]=CATS.map(c=>s.yearCounts[y][c]||0);});}
     intStat=s;updateIntegrity(s);
+    currentMeta={name:name,total:s.total,matched:s.matched,unmatched:s.unmatched,spam:s.spam,langs:s.langs,rate,yrs};
+    // Auto-save as active data (syncs to all devices immediately)
+    saveActiveData(realData,currentMeta);
     document.getElementById('data-mode-badge').className='data-badge badge-real';
-    document.getElementById('data-mode-badge').textContent=`✓ Real data — ${fmt(s.total)} threads`;
+    document.getElementById('data-mode-badge').textContent=`✓ ${name} — ${fmt(s.total)} threads`;
     const rc=rate>80?'var(--green)':rate>65?'var(--amber)':'var(--red)';
     document.getElementById('up-result').style.display='block';
     document.getElementById('up-result').innerHTML=`<div style="background:var(--teal-light);border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:var(--teal)">
       <strong>${name}</strong> — <strong>${fmt(s.total)}</strong> valid threads · <strong style="color:${rc}">${rate}% classified</strong> · <strong>${fmt(s.spam)}</strong> spam filtered · Years: ${yrs.length?yrs.join(', '):'not detected'}<br>
       <span style="opacity:.8">${CATS.map(c=>`${c.split('/')[0].trim()}: ${s.catCounts[c]}`).join(' · ')}</span></div>`;
+    // Show snapshot save UI with suggested name
+    document.getElementById('snapshot-name').value=name.replace(/\.mbox$/i,'').replace(/_/g,' ');
+    document.getElementById('snapshot-save').style.display='block';
     sw('export');
   }
   chunk();
@@ -576,7 +608,156 @@ function updateIntegrity(s){
   }).join('')||'<span class="log-info">Empty</span>';
 }
 
-// ── SHARED HELPERS ────────────────────────────────────────────────────────────
+// ── STORAGE / SYNC ────────────────────────────────────────────────────────────
+const STORAGE_KEY='spca:active';
+const SNAPSHOTS_KEY='spca:snapshots';
+
+function setSyncStatus(state,msg){
+  const dot=document.getElementById('sync-dot');
+  const lbl=document.getElementById('sync-label');
+  if(!dot||!lbl)return;
+  const colors={synced:'var(--green)',syncing:'var(--amber)',error:'var(--red)',offline:'var(--text3)'};
+  dot.style.background=colors[state]||colors.offline;
+  dot.style.animation=state==='syncing'?'pulse 1s infinite':'none';
+  lbl.textContent=msg;
+}
+
+async function saveActiveData(data,meta){
+  setSyncStatus('syncing','Saving…');
+  try{
+    const payload=JSON.stringify({data,meta,savedAt:new Date().toISOString()});
+    const res=await window.storage.set(STORAGE_KEY,payload);
+    if(!res)throw new Error('Save returned null');
+    setSyncStatus('synced','Synced · '+new Date().toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}));
+  }catch(e){
+    setSyncStatus('error','Sync failed — data in session only');
+    console.error('Storage save error:',e);
+  }
+}
+
+async function loadActiveData(){
+  setSyncStatus('syncing','Loading…');
+  try{
+    const res=await window.storage.get(STORAGE_KEY);
+    if(res&&res.value){
+      const parsed=JSON.parse(res.value);
+      realData=parsed.data||null;
+      const meta=parsed.meta||{};
+      if(realData){
+        document.getElementById('data-mode-badge').className='data-badge badge-real';
+        document.getElementById('data-mode-badge').textContent=`✓ ${meta.name||'Real data'} — ${fmt(meta.total||0)} threads`;
+        setSyncStatus('synced',`Loaded: ${meta.name||'last upload'} · ${new Date(parsed.savedAt).toLocaleDateString('en-MY')}`);
+        return true;
+      }
+    }
+    setSyncStatus('offline','No saved data — upload an .mbox to begin');
+    return false;
+  }catch(e){
+    setSyncStatus('offline','No saved data yet');
+    return false;
+  }
+}
+
+async function saveSnapshot(){
+  const name=document.getElementById('snapshot-name').value.trim();
+  if(!name){document.getElementById('snapshot-save-msg').textContent='Please enter a name for this snapshot.';return;}
+  if(!realData){document.getElementById('snapshot-save-msg').textContent='No parsed data to save.';return;}
+  const msg=document.getElementById('snapshot-save-msg');
+  msg.textContent='Saving…';msg.style.color='var(--amber)';
+  try{
+    // Load existing list
+    let snapshots=[];
+    try{const r=await window.storage.get(SNAPSHOTS_KEY);if(r&&r.value)snapshots=JSON.parse(r.value);}catch(e){}
+    // Build snapshot entry (data + lightweight meta, no raw emails)
+    const entry={
+      id:'snap_'+Date.now(),
+      name,
+      savedAt:new Date().toISOString(),
+      meta:currentMeta,
+      data:realData
+    };
+    // Prepend, keep last 10
+    snapshots=[entry,...snapshots.filter(s=>s.name!==name)].slice(0,10);
+    await window.storage.set(SNAPSHOTS_KEY,JSON.stringify(snapshots));
+    msg.textContent=`✓ Saved as "${name}"`;msg.style.color='var(--teal)';
+    document.getElementById('snapshot-name').value='';
+    renderSnapshotList(snapshots);
+  }catch(e){
+    msg.textContent='Save failed — try again.';msg.style.color='var(--red)';
+  }
+}
+
+async function loadSnapshotList(){
+  try{
+    const r=await window.storage.get(SNAPSHOTS_KEY);
+    if(r&&r.value){
+      const snapshots=JSON.parse(r.value);
+      renderSnapshotList(snapshots);
+    } else {
+      renderSnapshotList([]);
+    }
+  }catch(e){
+    renderSnapshotList([]);
+  }
+}
+
+function renderSnapshotList(snapshots){
+  const el=document.getElementById('snapshots-list');
+  if(!snapshots||snapshots.length===0){
+    el.innerHTML='<div style="font-size:var(--fs-sm);color:var(--text3);font-style:italic;padding:8px 0">No saved snapshots yet — upload an .mbox and save a snapshot to access it from any device.</div>';
+    return;
+  }
+  el.innerHTML=snapshots.map(s=>{
+    const d=new Date(s.savedAt);
+    const dateStr=d.toLocaleDateString('en-MY',{day:'numeric',month:'short',year:'numeric'})+' · '+d.toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'});
+    const yrs=s.data?Object.keys(s.data).sort().join(', '):'—';
+    const total=s.meta?.total||0;
+    return`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap">
+      <div style="flex:1;min-width:160px">
+        <div style="font-size:var(--fs-sm);font-weight:600;color:var(--text)">${s.name}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">${dateStr} · ${fmt(total)} threads · Years: ${yrs}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button class="btn sm" onclick="loadSnapshot('${s.id}')">Load</button>
+        <button class="btn sm" style="color:var(--red);border-color:var(--red)" onclick="deleteSnapshot('${s.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('')+'<div style="font-size:11px;color:var(--text3);margin-top:10px">Snapshots store parsed category counts only — raw emails are never uploaded.</div>';
+}
+
+async function loadSnapshot(id){
+  try{
+    const r=await window.storage.get(SNAPSHOTS_KEY);
+    if(!r||!r.value)return;
+    const snapshots=JSON.parse(r.value);
+    const snap=snapshots.find(s=>s.id===id);
+    if(!snap){alert('Snapshot not found.');return;}
+    realData=snap.data;
+    currentMeta=snap.meta||{};
+    // Also set as active
+    await saveActiveData(snap.data,snap.meta||{});
+    document.getElementById('data-mode-badge').className='data-badge badge-real';
+    document.getElementById('data-mode-badge').textContent=`✓ ${snap.name} — ${fmt(snap.meta?.total||0)} threads`;
+    // Update integrity panel if stats saved
+    document.getElementById('up-result').style.display='block';
+    document.getElementById('up-result').innerHTML=`<div style="background:var(--teal-light);border-radius:var(--radius-sm);padding:12px 14px;font-size:12px;color:var(--teal)">
+      ✓ Loaded snapshot: <strong>${snap.name}</strong> · ${fmt(snap.meta?.total||0)} threads · Years: ${snap.data?Object.keys(snap.data).sort().join(', '):'—'}</div>`;
+    sw('export');
+  }catch(e){alert('Failed to load snapshot.');}
+}
+
+async function deleteSnapshot(id){
+  if(!confirm('Delete this snapshot?'))return;
+  try{
+    const r=await window.storage.get(SNAPSHOTS_KEY);
+    if(!r||!r.value)return;
+    const snapshots=JSON.parse(r.value).filter(s=>s.id!==id);
+    await window.storage.set(SNAPSHOTS_KEY,JSON.stringify(snapshots));
+    renderSnapshotList(snapshots);
+  }catch(e){alert('Delete failed.');}
+}
+
+let currentMeta={};
 const demoBanner=(padding='16px 32px')=>isReal()?'':
   `<div style="background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 10px,#fffbeb 10px,#fffbeb 20px);border-bottom:2px solid #D97706;padding:${padding};display:flex;align-items:center;gap:10px">
     <span style="font-size:20px;flex-shrink:0">⚠️</span>
@@ -751,7 +932,7 @@ function buildGov(){
 
   // YoY table for the 4 relevant categories only
   const govCatIdx=[iP,iS,iR,iC];
-  const govCatBM=['Pemandulan / PoRo','Penyerahan Haiwan','Aduan Kacau Ganggu','Laporan Kekejaman'];
+  const govCatBM=['Peneuteran / PoRo','Penyerahan Haiwan','Aduan Kacau Ganggu','Laporan Kekejaman'];
   const yoyRows=yrs.map((y,i)=>{
     const row=govCatIdx.map(ci=>d[y]?d[y][ci]:0);
     const rowTotal=row.reduce((a,b)=>a+b,0);
@@ -790,16 +971,16 @@ function buildGov(){
       <div class="gov-highlight" style="margin-bottom:18px;font-size:12px;line-height:1.9">
         Data komunikasi awam SPCA Selangor dari 2023 hingga 2026 menunjukkan bahawa
         <strong>${fmt(govTotal)}</strong> pertanyaan diterima berkaitan empat isu yang berkait rapat dengan
-        populasi haiwan liar yang tidak terkawal — pemandulan, penyerahan, aduan kacau ganggu, dan laporan kekejaman.
+        populasi haiwan liar yang tidak terkawal — peneuteran, penyerahan, aduan kacau ganggu, dan laporan kekejaman.
         Ini membuktikan bahawa <strong>permintaan awam terhadap kawalan populasi secara berperikemanusiaan adalah tinggi dan konsisten.</strong>
-        Program Potong Royong (PoRo) — pemandulan berkumpulan berskala besar — adalah penyelesaian yang terbukti berkesan dan kos efektif.
+        Program Potong Royong (PoRo) — peneuteran berkumpulan berskala besar — adalah penyelesaian yang terbukti berkesan dan kos efektif.
       </div>
 
       <!-- 4 KPIs -->
       <div class="gov-kpi-row">
         <div class="gov-kpi" style="border-top:3px solid #534AB7">
           <div class="gov-kpi-n" style="color:#534AB7">${fmt(tP)}</div>
-          <div class="gov-kpi-l">Pertanyaan pemandulan / PoRo</div>
+          <div class="gov-kpi-l">Pertanyaan peneuteran / PoRo</div>
           <div class="gov-kpi-sub">${pct(tP,govTotal)}% daripada kes berkaitan · PERMINTAAN TERTINGGI</div>
         </div>
         <div class="gov-kpi" style="border-top:3px solid #D85A30">
@@ -824,7 +1005,7 @@ function buildGov(){
         <div>
           <div class="gov-sec"><h3>Mengapa PoRo adalah penyelesaian terbaik</h3>
             <div style="font-size:11px;color:#1a1a18;line-height:2">
-              <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">①</span><span><strong>Permintaan awam yang tinggi.</strong> ${fmt(tP)} pertanyaan pemandulan menunjukkan kesedaran masyarakat sudah sedia. Kapasiti klinik harian SPCA tidak mencukupi untuk memenuhi permintaan ini — kempen PoRo berskala besar diperlukan.</span></div>
+              <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">①</span><span><strong>Permintaan awam yang tinggi.</strong> ${fmt(tP)} pertanyaan peneuteran menunjukkan kesedaran masyarakat sudah sedia. Kapasiti klinik harian SPCA tidak mencukupi untuk memenuhi permintaan ini — kempen PoRo berskala besar diperlukan.</span></div>
               <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">②</span><span><strong>Aduan kacau ganggu boleh dikurangkan.</strong> ${fmt(tR)} aduan diterima — ${fmt(pbtReferred)} dirujuk kepada PBT. Kawalan populasi melalui PoRo mengurangkan punca masalah secara kekal berbanding tangkapan berulang.</span></div>
               <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">③</span><span><strong>Penyerahan haiwan liar boleh dikurangkan.</strong> ${fmt(straySurrender)} daripada ${fmt(tS)} kes penyerahan melibatkan haiwan liar / komuniti. PoRo mengurangkan bilangan anak haiwan liar yang akhirnya diserahkan atau ditinggalkan.</span></div>
               <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">④</span><span><strong>Kekejaman berkaitan pengabaian boleh dicegah.</strong> ${fmt(tC)} laporan kekejaman diterima. Populasi haiwan liar yang tidak terkawal meningkatkan risiko pengabaian, kekurangan zat, dan penganiayaan.</span></div>
@@ -853,7 +1034,7 @@ function buildGov(){
             <div class="gov-rec">${[
               ['Peruntukan lokasi kempen PoRo','Tanah / kawasan awam PBT untuk klinik lapangan PoRo berskala besar'],
               ['Sokongan logistik PBT','Penguatkuasaan laluan, khemah, dan kemudahan semasa kempen'],
-              ['Protokol TNRM bersama komuniti','Piawaian bersama untuk pemandulan, tanda telinga, dan pemantauan koloni'],
+              ['Protokol TNRM bersama JPV','Piawaian bersama untuk peneuteran, tanda telinga, dan pemantauan koloni'],
               ['Rujukan kes kekejaman yang terselaras','Saluran terus antara SPCA dan JPV / PERHILITAN untuk tindakan segera'],
               ['Kempen kesedaran awam bersama','Kolaborasi SPCA–PBT untuk mendidik komuniti tentang TNRM'],
             ].map(([h,desc],i)=>`<div class="gov-rec-item"><div class="gov-rec-num">${i+1}</div><div><strong>${h}</strong><br><span style="font-size:10px;color:#6b6b67">${desc}</span></div></div>`).join('')}</div>
@@ -894,7 +1075,7 @@ function drawGovChart(){
     data:{
       labels:yrs.map(y=>y===PARTIAL_YR?y+' *':y),
       datasets:[
-        {label:'Pemandulan/PoRo',data:yrs.map(y=>d[y]?d[y][iP]:0),backgroundColor:'#534AB7',borderRadius:3},
+        {label:'Peneuteran/PoRo',data:yrs.map(y=>d[y]?d[y][iP]:0),backgroundColor:'#534AB7',borderRadius:3},
         {label:'Penyerahan',data:yrs.map(y=>d[y]?d[y][iS]:0),backgroundColor:'#D85A30',borderRadius:3},
         {label:'Aduan Ganggu',data:yrs.map(y=>d[y]?d[y][iR]:0),backgroundColor:'#888780',borderRadius:3},
         {label:'Kekejaman',data:yrs.map(y=>d[y]?d[y][iC]:0),backgroundColor:'#7B1FA2',borderRadius:3},
@@ -918,7 +1099,7 @@ function socialWrap(content){
 function buildSquare(){
   const t=totals(),gt=grandTotal(),mx=Math.max(...t);
   const cards=[
-    {g:'135deg,#534AB7,#3C3489',tag:'Komuniti Kami · 2023–2026',big:fmt(gt),sub:'pertanyaan kepada SPCA Selangor',stats:[[fmt(Math.round(gt/3)),'setahun'],[`${pct(t[0],gt)}%`,'pemandulan'],[`${pct(t[2],gt)}%`,'sukarelawan']],bars:CATS.slice(0,4).map((c,i)=>[c.split('/')[0].trim(),t[i],mx,CCOLS[i]])},
+    {g:'135deg,#534AB7,#3C3489',tag:'Komuniti Kami · 2023–2026',big:fmt(gt),sub:'pertanyaan kepada SPCA Selangor',stats:[[fmt(Math.round(gt/3)),'setahun'],[`${pct(t[0],gt)}%`,'peneuteran'],[`${pct(t[2],gt)}%`,'sukarelawan']],bars:CATS.slice(0,4).map((c,i)=>[c.split('/')[0].trim(),t[i],mx,CCOLS[i]])},
     {g:'135deg,#0F6E56,#1D9E75',tag:'Neutering & PoRo',big:fmt(t[0]),sub:'pertanyaan mandul/spay sejak 2023',stats:[['60%','kucing'],['40%','anjing'],['42%','PoRo']],bars:[['Kucing (mandul)',60,100,'#534AB7'],['Anjing (mandul)',40,100,'#1D9E75'],['Kempen PoRo',42,100,'#3C3489'],['Klinik harian',58,100,'#AFA9EC']]},
     {g:'135deg,#D85A30,#BA4520',tag:'Penyerahan Haiwan',big:fmt(t[1]),sub:'permintaan menyerahkan haiwan peliharaan',stats:[['65%','haiwan peliharaan'],['60%','kucing'],['35%','haiwan liar']],bars:[['Kucing peliharaan',62,100,'#534AB7'],['Anjing peliharaan',38,100,'#1D9E75'],['Kucing liar',57,100,'#9e9d99'],['Anjing liar',43,100,'#6b6b67']]},
   ];
@@ -927,14 +1108,14 @@ function buildSquare(){
 function buildStory(){
   const t=totals(),gt=grandTotal();
   const stories=[
-    {g:'170deg,#534AB7 0%,#3C3489 50%,#1D9E75 100%',eye:'SPCA Selangor · 2023–2026',p:'🐾',big:fmt(gt),sub:'mesej daripada komuniti kami',items:[[fmt(t[0]),'pertanyaan pemandulan/spay'],[fmt(t[2]),'pertanyaan sukarelawan'],[fmt(t[5]),'permintaan penyelamatan']]},
+    {g:'170deg,#534AB7 0%,#3C3489 50%,#1D9E75 100%',eye:'SPCA Selangor · 2023–2026',p:'🐾',big:fmt(gt),sub:'mesej daripada komuniti kami',items:[[fmt(t[0]),'pertanyaan peneuteran/spay'],[fmt(t[2]),'pertanyaan sukarelawan'],[fmt(t[5]),'permintaan penyelamatan']]},
     {g:'170deg,#D85A30 0%,#BA4520 50%,#534AB7 100%',eye:'Penyerahan Haiwan · 2023–2026',p:'🏠',big:fmt(t[1]),sub:'permintaan menyerah atau melepaskan haiwan peliharaan',items:[['65%','haiwan peliharaan milik sendiri'],['60%','adalah kucing'],['Senarai tunggu','hingga 12–14 bulan untuk kes tertentu']]},
   ];
   return socialWrap(stories.map(s=>`<div class="sc-story"><div class="st-head" style="background:linear-gradient(${s.g})"><div class="st-eyebrow">${s.eye}</div><div class="st-paws">${s.p}</div><div class="st-big">${s.big}</div><div class="st-sub">${s.sub}</div>${s.items.map(([n,l])=>`<div class="st-item"><div class="st-item-n">${n}</div><div class="st-item-l">${l}</div></div>`).join('')}</div><div class="st-foot"><div class="st-logo">🐾 SPCA Selangor</div><div class="st-cta">spca.org.my</div></div></div>`).join(''));
 }
 function buildLand(){
   const t=totals(),gt=grandTotal(),mx=Math.max(...t);
-  return socialWrap(`<div class="sc-land"><div class="ld-head" style="background:linear-gradient(135deg,#534AB7,#1D9E75)"><div class="ld-left"><h2>🐾 Kebajikan Haiwan Selangor</h2><p>SPCA Selangor · Analitik Emel 2023–2026</p></div><div class="ld-right"><div class="ld-big">${fmt(gt)}</div><div class="ld-bigsub">pertanyaan komuniti</div></div></div><div class="ld-body"><div class="ld-stat-row">${[[fmt(Math.round(gt/3)),'purata/tahun'],[fmt(t[0]),'pamandulan'],[fmt(t[1]),'penyerahan'],[fmt(t[2]),'sukarelawan'],[fmt(t[5]),'penyelamatan']].map(([n,l])=>`<div class="ld-stat"><div class="ld-stat-n">${n}</div><div class="ld-stat-l">${l}</div></div>`).join('')}</div><div class="ld-bars">${CATS.map((c,i)=>`<div class="ld-bar-row"><div class="ld-bar-label">${c.split('/')[0].trim()}</div><div class="ld-bar-wrap"><div class="ld-bar" style="width:${pct(t[i],mx)}%;background:${CCOLS[i]}"></div></div><div class="ld-val">${fmt(t[i])}</div></div>`).join('')}</div></div><div class="ld-foot"><div class="ld-foot-l">🐾 SPCA Selangor · spca.org.my</div><div class="ld-foot-r">${isReal()?'Data disahkan':'Data ilustrasi'} · ${new Date().getFullYear()}</div></div></div>`);
+  return socialWrap(`<div class="sc-land"><div class="ld-head" style="background:linear-gradient(135deg,#534AB7,#1D9E75)"><div class="ld-left"><h2>🐾 Kebajikan Haiwan Selangor</h2><p>SPCA Selangor · Analitik Emel 2023–2026</p></div><div class="ld-right"><div class="ld-big">${fmt(gt)}</div><div class="ld-bigsub">pertanyaan komuniti</div></div></div><div class="ld-body"><div class="ld-stat-row">${[[fmt(Math.round(gt/3)),'purata/tahun'],[fmt(t[0]),'peneuteran'],[fmt(t[1]),'penyerahan'],[fmt(t[2]),'sukarelawan'],[fmt(t[5]),'penyelamatan']].map(([n,l])=>`<div class="ld-stat"><div class="ld-stat-n">${n}</div><div class="ld-stat-l">${l}</div></div>`).join('')}</div><div class="ld-bars">${CATS.map((c,i)=>`<div class="ld-bar-row"><div class="ld-bar-label">${c.split('/')[0].trim()}</div><div class="ld-bar-wrap"><div class="ld-bar" style="width:${pct(t[i],mx)}%;background:${CCOLS[i]}"></div></div><div class="ld-val">${fmt(t[i])}</div></div>`).join('')}</div></div><div class="ld-foot"><div class="ld-foot-l">🐾 SPCA Selangor · spca.org.my</div><div class="ld-foot-r">${isReal()?'Data disahkan':'Data ilustrasi'} · ${new Date().getFullYear()}</div></div></div>`);
 }
 function buildInfog(){
   const t=totals(),gt=grandTotal();
@@ -958,7 +1139,7 @@ function buildPartner(){
       <div><div class="ptn-col-head">For NGO & Rescue Partners</div>${[['Rescue referrals/year (no mobile unit)',fmt(Math.round(t[5]*.65))],['Stray colony/overpopulation cases',fmt(Math.round(t[8]*.34))],['Cruelty reports received',fmt(t[6])],['Active surrender waitlist/month',fmt(Math.round(t[1]/3/12))]].map(([l,v])=>`<div class="ptn-row"><span>${l}</span><strong>${v}</strong></div>`).join('')}<div class="ptn-note amber">~${fmt(Math.round(t[5]*.65))} rescue cases/year need referral — mobile unit partnership would fill this gap.</div></div>
     </div>
     <div style="background:#f5f5f0;border-radius:8px;padding:12px 14px;font-size:12px;color:#1a1a18;line-height:1.8;margin-bottom:14px;font-style:italic;border-left:4px solid #0F6E56">"Every email represents a person who didn't know where else to turn. Over three years, that's ${fmt(gt)} moments of trust."</div>
-    <div class="ptn-cta"><h4>Partner with SPCA Selangor</h4><p>enquiries@spca.org.my · spca.org.my · Sumbangan layak potongan cukai di bawah Seksyen 44(6) ACP 1967</p></div>
+    <div class="ptn-cta"><h4>Partner with SPCA Selangor</h4><p>info@spca.org.my · spca.org.my · LHDN-approved</p></div>
   </div>
 </div>`;
 }
@@ -1068,7 +1249,13 @@ function printReport(){
   w.document.close();setTimeout(()=>w.print(),800);
 }
 
-buildReport();
+// Init
+async function init(){
+  await loadActiveData();
+  await loadSnapshotList();
+  buildReport();
+}
+init();
 </script>
 </body>
 </html>
