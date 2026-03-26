@@ -19,7 +19,7 @@
   :root{--bg:#1a1a18;--surface:#242422;--surface2:#2e2e2b;--border:#3a3a36;--border2:#4e4e4a;--text:#e8e7e2;--text2:#9e9d99;--text3:#6b6b67;--purple-light:#2a2660;--teal-light:#0a2e26;--amber-light:#2e1e06;}
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:var(--fs);padding:20px 16px 60px;min-height:100vh}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:var(--fs);padding:20px 16px 80px;min-height:100vh}
 .app{max-width:1020px;margin:0 auto}
 h1{font-size:20px;font-weight:600;margin-bottom:2px}
 .sub{font-size:var(--fs-sm);color:var(--text2);margin-bottom:20px}
@@ -35,7 +35,6 @@ h1{font-size:20px;font-weight:600;margin-bottom:2px}
 .btn.primary{background:var(--purple);border-color:var(--purple);color:#fff}
 .btn.primary:hover{background:var(--purple-dark)}
 .btn.green{background:var(--green);border-color:var(--green);color:#fff}
-.btn.amber{background:var(--amber);border-color:var(--amber);color:#fff}
 .btn.sm{padding:5px 12px;font-size:12px}
 .data-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 12px;border-radius:20px;font-weight:500}
 .badge-real{background:var(--teal-light);color:var(--teal)}
@@ -46,24 +45,16 @@ h1{font-size:20px;font-weight:600;margin-bottom:2px}
 .progress-fill{height:100%;border-radius:4px;background:var(--purple);transition:width .3s}
 .good{color:var(--green)}.warn-c{color:var(--amber)}.bad{color:var(--red)}
 .log-area{background:var(--surface2);border-radius:var(--radius-sm);padding:12px;font-family:monospace;font-size:11px;color:var(--text2);max-height:240px;overflow-y:auto;line-height:1.9}
-.log-ok{color:var(--green)}.log-err{color:var(--red)}.log-info{color:var(--text3)}
-
-/* Audience selector */
+.log-ok{color:var(--green)}.log-err{color:var(--red)}.log-info{color:var(--text3)}.log-warn{color:var(--amber)}
 .aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
 .aud-grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
 @media(max-width:600px){.aud-grid,.aud-grid-2{grid-template-columns:1fr 1fr}}
 .aud-btn{border:2px solid var(--border);border-radius:var(--radius);padding:14px 10px;cursor:pointer;background:var(--surface);text-align:center;transition:all .2s}
 .aud-btn.active{border-color:var(--purple);background:var(--purple-light)}
-.aud-btn.active-green{border-color:var(--green);background:var(--teal-light)}
-.aud-btn.active-amber{border-color:var(--amber);background:var(--amber-light)}
 .aud-icon{font-size:22px;margin-bottom:5px}
 .aud-name{font-size:var(--fs-sm);font-weight:600;color:var(--text)}
 .aud-desc{font-size:var(--fs-xs);color:var(--text2);margin-top:3px;line-height:1.4}
 .aud-btn.active .aud-name{color:var(--purple)}
-.aud-btn.active-green .aud-name{color:var(--teal)}
-.aud-btn.active-amber .aud-name{color:var(--amber)}
-
-/* Social format sub-selector */
 .fmt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
 @media(max-width:600px){.fmt-grid{grid-template-columns:1fr 1fr}}
 .fmt-btn{border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 8px;cursor:pointer;background:var(--surface);text-align:center;transition:all .2s;display:none}
@@ -73,26 +64,32 @@ h1{font-size:20px;font-weight:600;margin-bottom:2px}
 .fmt-name{font-size:11px;font-weight:600;color:var(--text)}
 .fmt-dims{font-size:10px;color:var(--text3);margin-top:2px}
 .fmt-btn.active .fmt-name{color:var(--purple)}
-
 canvas{max-height:200px}
 
-/* ── PDF STYLES (shared) ───────────────────────────────── */
+/* ── DEMO BANNER ── */
+.demo-banner{background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 10px,#fffbeb 10px,#fffbeb 20px);border:2px solid #D97706;border-radius:8px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.demo-banner-text{font-size:13px;font-weight:700;color:#92400E}
+.demo-banner-sub{font-size:11px;color:#92400E;margin-top:2px}
+
+/* ── PDF SHARED ── */
 .pdf-wrap{background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a18}
-.pdf-head{background:#534AB7;color:#fff;padding:28px 32px}
-.pdf-head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
-.pdf-org{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:6px}
+.pdf-head{color:#fff;padding:28px 32px}
+.pdf-head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.pdf-org{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.75;margin-bottom:6px}
 .pdf-title{font-size:21px;font-weight:800;margin-bottom:3px}
 .pdf-period{font-size:13px;opacity:.85}
-.pdf-meta{font-size:11px;opacity:.6;margin-top:3px}
+.pdf-meta{font-size:11px;opacity:.65;margin-top:3px}
 .pdf-stamp{background:rgba(255,255,255,.15);border-radius:8px;padding:8px 14px;text-align:right;flex-shrink:0}
 .pdf-stamp-n{font-size:26px;font-weight:800}
 .pdf-stamp-l{font-size:10px;opacity:.75;margin-top:2px}
 .pdf-body{padding:24px 32px}
 .pdf-foot{background:#f5f5f0;padding:10px 32px;display:flex;justify-content:space-between;font-size:10px;color:#9e9d99;border-top:1px solid #e2e1db}
-.int-strip{background:#EEEDFE;border-radius:8px;padding:11px 14px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.int-strip{border-radius:8px;padding:11px 14px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.int-strip.real{background:#EEEDFE}
+.int-strip.demo{background:#FEF3C7;border:1px solid #D97706}
 .int-strip-item{font-size:11px;color:#3C3489}
 .int-strip-item strong{font-weight:700}
-.int-strip-item.warn{color:#633806}
+.int-strip-item.warn{color:#7B1A00;font-weight:700}
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .kpi{background:#f5f5f0;border-radius:8px;padding:12px;text-align:center}
 .kpi-n{font-size:20px;font-weight:700;color:#534AB7}
@@ -114,7 +111,7 @@ canvas{max-height:200px}
 .rec-num{font-size:10px;font-weight:700;color:#534AB7;flex-shrink:0;width:16px}
 .warn-strip{background:#FAEEDA;border-radius:8px;padding:10px 12px;font-size:11px;color:#633806;line-height:1.6}
 
-/* ── YoY REPORT ─────────────────────────────────────────── */
+/* ── YoY ── */
 .yoy-wrap{background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a18}
 .yoy-head{background:linear-gradient(135deg,#534AB7,#1D9E75);color:#fff;padding:26px 32px}
 .yoy-cat-section{padding:20px 32px;border-bottom:1px solid #e2e1db}
@@ -130,40 +127,41 @@ canvas{max-height:200px}
 .yoy-table .up{color:#1D9E75;font-weight:600}
 .yoy-table .dn{color:#E24B4A;font-weight:600}
 .yoy-table .nc{color:#9e9d99}
+.yoy-table .partial{color:#BA7517;font-style:italic;font-size:10px}
 .yoy-sparkwrap{display:flex;align-items:flex-end;gap:3px;height:32px;margin-top:4px}
-.yoy-sparkbar{border-radius:2px 2px 0 0;flex:1;min-width:8px;transition:height .3s}
-.yoy-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.yoy-sparkbar{border-radius:2px 2px 0 0;flex:1;min-width:8px}
+.yoy-mini-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}
 .yoy-mini{background:#f5f5f0;border-radius:6px;padding:8px;text-align:center}
 .yoy-mini-n{font-size:16px;font-weight:700}
 .yoy-mini-l{font-size:9px;color:#6b6b67;margin-top:2px}
 .yoy-mini-d{font-size:9px;margin-top:1px;font-weight:600}
 .trend-up{color:#1D9E75}.trend-dn{color:#E24B4A}.trend-nc{color:#9e9d99}
 
-/* ── ANALYST REPORT ─────────────────────────────────────── */
+/* ── ANALYST ── */
 .ana-wrap{background:#fff;font-family:monospace;color:#1a1a18;font-size:12px}
 .ana-head{background:#1a1a18;color:#e8e7e2;padding:20px 24px}
 .ana-head h2{font-size:16px;font-weight:700;margin-bottom:4px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-.ana-head p{font-size:11px;opacity:.6;font-family:monospace}
+.ana-head p{font-size:11px;opacity:.6}
 .ana-section{padding:16px 24px;border-bottom:1px solid #e2e1db}
 .ana-section h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#534AB7;margin-bottom:12px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 .ana-table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px}
 .ana-table th{text-align:left;padding:5px 8px;background:#f5f5f0;font-size:10px;color:#6b6b67;border-bottom:1px solid #e2e1db;font-weight:600}
-.ana-table td{padding:5px 8px;border-bottom:1px solid #f5f5f0;font-family:monospace}
+.ana-table td{padding:5px 8px;border-bottom:1px solid #f5f5f0}
 .ana-table tr:hover td{background:#f5f5f0}
-.kw-tag{display:inline-block;background:#EEEDFE;color:#534AB7;border-radius:4px;padding:1px 5px;font-size:10px;margin:1px;font-family:monospace}
+.kw-tag{display:inline-block;background:#EEEDFE;color:#534AB7;border-radius:4px;padding:1px 5px;font-size:10px;margin:1px}
 .kw-tag.bm{background:#E1F5EE;color:#0F6E56}
 .unmatched-item{background:#f5f5f0;border-radius:6px;padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.unmatched-subj{font-size:11px;color:#1a1a18;font-family:monospace;flex:1}
+.unmatched-subj{font-size:11px;color:#1a1a18;flex:1}
 .unmatched-meta{font-size:10px;color:#9e9d99;white-space:nowrap}
 .suggest-tag{font-size:10px;color:#BA7517;background:#FAEEDA;border-radius:4px;padding:2px 6px;margin-left:6px}
 .pattern-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.pattern-kw{font-family:monospace;font-size:11px;background:#EEEDFE;color:#534AB7;padding:2px 7px;border-radius:4px}
+.pattern-kw{font-size:11px;background:#EEEDFE;color:#534AB7;padding:2px 7px;border-radius:4px}
 .pattern-count{font-size:11px;color:#1a1a18;font-weight:600;min-width:36px}
 .pattern-bar{flex:1;height:6px;background:#e2e1db;border-radius:3px;overflow:hidden}
 .pattern-fill{height:100%;border-radius:3px;background:#534AB7}
 .pattern-cat{font-size:10px;color:#9e9d99;font-style:italic}
 
-/* Social cards */
+/* ── SOCIAL CARDS (all white bg) ── */
 .sc-square{width:380px;border-radius:16px;overflow:hidden;flex-shrink:0;box-shadow:0 6px 24px rgba(0,0,0,.15);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
 .sc-square .sc-head{padding:20px;color:#fff}
 .sc-square .sc-tag{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;opacity:.75;margin-bottom:8px}
@@ -184,13 +182,13 @@ canvas{max-height:200px}
 .sc-square .sc-url{font-size:10px;opacity:.65}
 .sc-story{width:260px;border-radius:20px;overflow:hidden;flex-shrink:0;box-shadow:0 6px 24px rgba(0,0,0,.15);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;display:flex;flex-direction:column}
 .sc-story .st-head{padding:26px 18px 22px;color:#fff;flex:1}
-.sc-story .st-eyebrow{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;opacity:.7;margin-bottom:12px}
+.sc-story .st-eyebrow{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;opacity:.75;margin-bottom:12px}
 .sc-story .st-paws{font-size:28px;margin-bottom:8px}
 .sc-story .st-big{font-size:40px;font-weight:900;line-height:1;margin-bottom:4px}
 .sc-story .st-sub{font-size:12px;opacity:.9;margin-bottom:18px;line-height:1.4}
-.sc-story .st-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border-radius:8px;padding:8px 10px;margin-bottom:6px}
+.sc-story .st-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.18);border-radius:8px;padding:8px 10px;margin-bottom:6px}
 .sc-story .st-item-n{font-size:17px;font-weight:800;color:#fff;min-width:52px}
-.sc-story .st-item-l{font-size:10px;color:rgba(255,255,255,.85);line-height:1.3}
+.sc-story .st-item-l{font-size:10px;color:rgba(255,255,255,.9);line-height:1.3}
 .sc-story .st-foot{background:#1a1a18;padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
 .sc-story .st-logo{font-size:11px;font-weight:700;color:#fff;opacity:.9}
 .sc-story .st-cta{font-size:10px;background:#534AB7;color:#fff;padding:4px 10px;border-radius:16px;font-weight:600}
@@ -235,8 +233,8 @@ canvas{max-height:200px}
 .sc-infog .if-foot-logo{font-size:11px;font-weight:700;color:#fff}
 .sc-infog .if-foot-url{font-size:10px;color:rgba(255,255,255,.65)}
 
-/* Ops */
-.ops-wrap{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px;color:#1a1a18}
+/* ── OPS (light bg only) ── */
+.ops-wrap{background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px;color:#1a1a18}
 .tri-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .tri{border-radius:8px;padding:10px 12px}
 .tri.h{background:#FDE8E8;border-left:4px solid #E24B4A}
@@ -244,40 +242,68 @@ canvas{max-height:200px}
 .tri.n{background:#EEEDFE;border-left:4px solid #534AB7}
 .tri.l{background:#f0efea;border-left:4px solid #9e9d99}
 .tri-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.tri.h .tri-lbl{color:#E24B4A}.tri.m .tri-lbl{color:#BA7517}.tri.n .tri-lbl{color:#534AB7}.tri.l .tri-lbl{color:#9e9d99}
+.tri.h .tri-lbl{color:#C62828}.tri.m .tri-lbl{color:#7B4700}.tri.n .tri-lbl{color:#3C3489}.tri.l .tri-lbl{color:#5a5a56}
 .tri-items{font-size:11px;color:#1a1a18;line-height:1.8}
 .ops-metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
 .ops-metric{background:#f5f5f0;border-radius:8px;padding:12px;text-align:center}
-.ops-metric-n{font-size:20px;font-weight:700}
+.ops-metric-n{font-size:20px;font-weight:700;color:#1a1a18}
 .ops-metric-l{font-size:10px;color:#6b6b67;margin-top:2px}
 .ops-metric-s{font-size:9px;color:#534AB7;margin-top:1px;font-weight:600}
+.ops-sec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b6b67;margin:14px 0 10px;padding-bottom:5px;border-bottom:1px solid #e2e1db}
 
-/* Partner */
-.ptn-wrap{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px;color:#1a1a18}
+/* ── PARTNER (light bg only) ── */
+.ptn-wrap{background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:24px;color:#1a1a18}
 .ptn-hero{background:linear-gradient(135deg,#0F6E56,#1D9E75);border-radius:12px;padding:22px;color:#fff;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.ptn-hero h2{font-size:17px;font-weight:800;margin-bottom:3px}
-.ptn-hero p{font-size:11px;opacity:.85}
-.ptn-hero-n{font-size:32px;font-weight:900;text-align:right}
-.ptn-hero-l{font-size:10px;opacity:.75;text-align:right}
+.ptn-hero h2{font-size:17px;font-weight:800;margin-bottom:3px;color:#fff}
+.ptn-hero p{font-size:11px;opacity:.85;color:#fff}
+.ptn-hero-n{font-size:32px;font-weight:900;text-align:right;color:#fff}
+.ptn-hero-l{font-size:10px;opacity:.75;text-align:right;color:#fff}
 .imp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
 .imp-box{background:#E1F5EE;border-radius:8px;padding:12px;text-align:center}
 .imp-n{font-size:20px;font-weight:700;color:#0F6E56}
-.imp-l{font-size:10px;color:#6b6b67;margin-top:2px}
+.imp-l{font-size:10px;color:#4a4a46;margin-top:2px}
 .ptn-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .ptn-col-head{font-size:10px;font-weight:700;color:#0F6E56;margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em}
-.ptn-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #e2e1db;font-size:11px}
+.ptn-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #e2e1db;font-size:11px;color:#1a1a18}
 .ptn-note{border-radius:6px;padding:7px 10px;margin-top:7px;font-size:10px;line-height:1.6}
 .ptn-note.teal{background:#E1F5EE;color:#0F6E56}
-.ptn-note.amber{background:#FAEEDA;color:#633806}
+.ptn-note.amber{background:#FAEEDA;color:#7B4700}
 .ptn-cta{background:#0F6E56;border-radius:8px;padding:12px 16px;color:#fff;text-align:center}
-.ptn-cta h4{font-size:13px;font-weight:700;margin-bottom:3px}
-.ptn-cta p{font-size:11px;opacity:.85}
+.ptn-cta h4{font-size:13px;font-weight:700;margin-bottom:3px;color:#fff}
+.ptn-cta p{font-size:11px;opacity:.9;color:#fff}
+
+/* ── GOVERNMENT ── */
+.gov-wrap{background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a18}
+.gov-head{background:linear-gradient(135deg,#1a3a6e,#2855a0);color:#fff;padding:28px 32px}
+.gov-head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.gov-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.gov-kpi{background:#EEF2FA;border-radius:8px;padding:12px;text-align:center}
+.gov-kpi-n{font-size:20px;font-weight:700;color:#1a3a6e}
+.gov-kpi-l{font-size:10px;color:#4a4a60;margin-top:3px}
+.gov-kpi-sub{font-size:9px;color:#1D9E75;margin-top:2px;font-weight:600}
+.gov-sec h3{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9e9d99;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid #e2e1db}
+.gov-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px}
+.gov-table th{text-align:left;padding:7px 10px;background:#EEF2FA;font-weight:600;color:#1a3a6e;border-bottom:2px solid #c5d0e8;font-size:11px}
+.gov-table td{padding:7px 10px;border-bottom:1px solid #f0efea;color:#1a1a18}
+.gov-table tr:last-child td{border-bottom:none}
+.gov-highlight{background:#EEF2FA;border-radius:8px;padding:12px 14px;margin-bottom:12px;font-size:12px;color:#1a3a6e;line-height:1.8;border-left:4px solid #2855a0}
+.gov-rec{background:#f5f5f0;border-radius:8px;padding:12px 14px}
+.gov-rec-item{font-size:11px;color:#1a1a18;padding:5px 0;border-bottom:1px solid #e2e1db;display:flex;gap:8px;align-items:baseline;line-height:1.6}
+.gov-rec-item:last-child{border-bottom:none}
+.gov-rec-num{font-size:10px;font-weight:700;color:#1a3a6e;flex-shrink:0;width:18px}
+.gov-foot{background:#EEF2FA;padding:10px 32px;display:flex;justify-content:space-between;font-size:10px;color:#5a6a8a;border-top:1px solid #c5d0e8}
+
+/* ── NAV BAR ── */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:10px 16px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;z-index:100}
+.nav-link{font-size:12px;color:var(--text2);text-decoration:none;padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);white-space:nowrap;transition:all .15s}
+.nav-link:hover{background:var(--surface2);color:var(--text)}
+.nav-link.current{background:var(--purple-light);border-color:var(--purple);color:var(--purple);font-weight:600}
 </style>
 </head>
 <body>
 <div class="app">
 <h1>SPCA Selangor — Report Generator</h1>
-<div class="sub">Committee PDF · Year-on-Year · Social media · Partners · Ops · Full analyst export</div>
+<div class="sub">Committee PDF · Year-on-Year · Social media · Government · Partners · Ops · Analyst</div>
 
 <div class="tab-row">
   <button class="tab active" onclick="sw('upload')">① Upload & Verify</button>
@@ -290,9 +316,9 @@ canvas{max-height:200px}
   <div class="card">
     <div class="card-title">What the parser does — and doesn't do</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px">
-      <div style="background:var(--teal-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--teal)"><strong>✓ What's real</strong><br>Thread counts · keyword match · year detection · BM/EN language flags · live parse log · unmatched subject export</div>
-      <div style="background:var(--amber-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:#633806"><strong>⚠ Known limits</strong><br>Subject-line only · ~15–20% unclassified typical · vague subjects missed · emoji-only subjects skipped</div>
-      <div style="background:var(--purple-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--purple-dark)"><strong>ⓘ Demo mode</strong><br>No file yet? All reports use 2021–2025 illustrative data, clearly watermarked</div>
+      <div style="background:var(--teal-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--teal)"><strong>✓ What's real</strong><br>Thread counts · keyword match · year detection · BM/EN flags · live parse log · spam filter · unmatched export</div>
+      <div style="background:var(--amber-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:#7B4700"><strong>⚠ Known limits</strong><br>Subject-line only · ~15–20% unclassified typical · vague subjects missed · emoji-only subjects skipped</div>
+      <div style="background:var(--purple-light);border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--purple-dark)"><strong>ⓘ Demo mode</strong><br>No file yet? All reports use illustrative data with a clear watermark — not for distribution</div>
     </div>
     <div class="upload-zone" onclick="document.getElementById('mbox-inp').click()"
       ondragover="event.preventDefault();this.style.borderColor='var(--purple)'"
@@ -320,28 +346,22 @@ canvas{max-height:200px}
       <span id="data-mode-badge" class="data-badge badge-demo">⚠ Illustrative data</span>
     </div>
 
-    <!-- Row 1: main audience reports -->
     <div style="font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Audience reports</div>
-    <div class="aud-grid" style="margin-bottom:14px">
+    <div class="aud-grid" style="margin-bottom:6px">
       <div class="aud-btn active" id="aud-committee" onclick="setAud('committee')"><div class="aud-icon">📋</div><div class="aud-name">Committee / Board</div><div class="aud-desc">KPI dashboard · print-ready PDF</div></div>
       <div class="aud-btn" id="aud-social" onclick="setAud('social')"><div class="aud-icon">📱</div><div class="aud-name">Social Media</div><div class="aud-desc">IG · FB · Threads · LinkedIn</div></div>
       <div class="aud-btn" id="aud-partner" onclick="setAud('partner')"><div class="aud-icon">🤝</div><div class="aud-name">Partners / NGOs</div><div class="aud-desc">Impact story · sponsors · volunteers</div></div>
     </div>
-
-    <!-- Row 2: analytical reports -->
-    <div style="font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Analytical reports</div>
-    <div class="aud-grid-2" style="margin-bottom:14px">
-      <div class="aud-btn" id="aud-yoy" onclick="setAud('yoy')"><div class="aud-icon">📈</div><div class="aud-name">Year-on-Year by Category</div><div class="aud-desc">Every category · trend · % change · sparkline</div></div>
-      <div class="aud-btn" id="aud-analyst" onclick="setAud('analyst')"><div class="aud-icon">🔍</div><div class="aud-name">Full Analyst Report</div><div class="aud-desc">Everything · unmatched subjects · keyword gaps · for your eyes only</div></div>
+    <div class="aud-grid" style="margin-bottom:14px">
+      <div class="aud-btn" id="aud-gov" onclick="setAud('gov')"><div class="aud-icon">🏛</div><div class="aud-name">Agensi Kerajaan</div><div class="aud-desc">Laporan rasmi · Bahasa Melayu</div></div>
+      <div class="aud-btn" id="aud-ops" onclick="setAud('ops')"><div class="aud-icon">⚙️</div><div class="aud-name">Internal Ops</div><div class="aud-desc">Triage · workload · templates</div></div>
+      <div style="border:2px solid transparent;padding:14px 10px"></div>
     </div>
 
-    <!-- Internal ops -->
-    <div style="font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Operations</div>
-    <div style="margin-bottom:14px">
-      <div class="aud-btn" id="aud-ops" onclick="setAud('ops')" style="max-width:240px;text-align:left;display:flex;align-items:center;gap:12px;padding:12px 14px">
-        <div style="font-size:20px">⚙️</div>
-        <div><div class="aud-name">Internal Ops</div><div class="aud-desc">Triage · workload · templates</div></div>
-      </div>
+    <div style="font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px">Analytical reports</div>
+    <div class="aud-grid-2" style="margin-bottom:14px">
+      <div class="aud-btn" id="aud-yoy" onclick="setAud('yoy')"><div class="aud-icon">📈</div><div class="aud-name">Year-on-Year by Category</div><div class="aud-desc">Every category · trend · sparklines · 2023–2026</div></div>
+      <div class="aud-btn" id="aud-analyst" onclick="setAud('analyst')"><div class="aud-icon">🔍</div><div class="aud-name">Full Analyst Report</div><div class="aud-desc">Everything · unmatched subjects · keyword gaps · internal only</div></div>
     </div>
 
     <!-- Social format picker -->
@@ -362,9 +382,8 @@ canvas{max-height:200px}
       <div id="social-hint" style="display:none;font-size:12px;color:var(--text3)">Right-click any card → Save image as…</div>
     </div>
   </div>
-
   <div id="report-area" style="display:none">
-    <div id="report-canvas" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden"></div>
+    <div id="report-canvas" style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden"></div>
   </div>
 </div>
 
@@ -379,14 +398,8 @@ canvas{max-height:200px}
       <div style="text-align:center;background:var(--surface2);border-radius:var(--radius-sm);padding:10px"><div style="font-size:18px;font-weight:700" id="ig-rate">—</div><div style="font-size:11px;color:var(--text3);margin-top:2px">match rate</div></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-      <div>
-        <div class="sec-div">Language detection</div>
-        <div id="ig-langs" style="font-size:12px;color:var(--text2);line-height:2.1">Upload an .mbox first</div>
-      </div>
-      <div>
-        <div class="sec-div">Ambiguous subjects flagged</div>
-        <div id="ig-errors" style="font-size:12px;color:var(--text2);line-height:2">Upload an .mbox first</div>
-      </div>
+      <div><div class="sec-div">Language detection</div><div id="ig-langs" style="font-size:12px;color:var(--text2);line-height:2.1">Upload an .mbox first</div></div>
+      <div><div class="sec-div">Ambiguous subjects flagged</div><div id="ig-errors" style="font-size:12px;color:var(--text2);line-height:2">Upload an .mbox first</div></div>
     </div>
     <div class="sec-div">Live parse log (last 60 entries)</div>
     <div class="log-area" id="parse-log"><span class="log-info">No file loaded yet.</span></div>
@@ -394,46 +407,53 @@ canvas{max-height:200px}
   <div class="card">
     <div class="card-title">How to improve your match rate</div>
     <div style="font-size:12px;color:var(--text2);line-height:2;display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div>
-        <div><strong style="color:var(--text)">1. Run the Full Analyst Report</strong></div>
-        <div style="margin-bottom:8px">It shows every unmatched subject grouped by common words. You'll see which keyword gaps account for the most missed emails.</div>
-        <div><strong style="color:var(--text)">2. Download the unmatched CSV</strong></div>
-        <div>Every unclassified subject exported to CSV — open in Excel, sort by word frequency, share the top patterns with us to add to the classifier.</div>
-      </div>
-      <div>
-        <div><strong style="color:var(--text)">3. Common BM gaps to check</strong></div>
-        <div style="margin-bottom:8px">ambil · hantar · nak buang · ada kucing · ada anjing · nak serah · tak tau · minta tolong · tanya pasal</div>
-        <div><strong style="color:var(--text)">4. Realistic expectation</strong></div>
-        <div>75–85% is healthy for a public mailbox. Getting above 85% requires adding common subject patterns unique to your mailbox — the analyst report shows you exactly which ones.</div>
-      </div>
+      <div><strong style="color:var(--text)">1. Run the Full Analyst Report</strong><br><span style="margin-bottom:8px;display:block">See every unmatched subject grouped by word frequency — your keyword gaps in one view.</span><strong style="color:var(--text)">2. Download unmatched CSV</strong><br>Open in Excel, sort by word, share top patterns to add to the classifier.</div>
+      <div><strong style="color:var(--text)">3. Common BM gaps to check</strong><br><span style="margin-bottom:8px;display:block">ambil · hantar · nak buang · ada kucing · ada anjing · nak serah · tanya pasal · minta tolong</span><strong style="color:var(--text)">4. Realistic target</strong><br>75–85% is healthy. Above 85% needs custom patterns from your specific mailbox.</div>
     </div>
   </div>
 </div>
 </div>
 
+<!-- NAV BAR -->
+<nav class="nav-bar">
+  <a class="nav-link" href="dashboard.html">📅 Daily</a>
+  <a class="nav-link" href="meetings.html">🤝 Meetings</a>
+  <a class="nav-link current" href="email.html">📧 Email</a>
+  <a class="nav-link" href="reports.html">📊 Reports</a>
+  <a class="nav-link" href="social.html">📱 Social</a>
+  <a class="nav-link" href="analyser.html">🔍 Analyser</a>
+</nav>
+
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────────
+// ── DATA ─────────────────────────────────────────────────────────────────────
 const CATS=['Neutering / PoRo','Animal Surrender','Volunteering / PCP','Donations & CSR','Clinic Services','Rescue Requests','Cruelty Reports','Events & Media','Removal / Nuisance'];
 const CCOLS=['#534AB7','#D85A30','#BA7517','#EF9F27','#0F6E56','#E24B4A','#7B1FA2','#378ADD','#888780'];
 const CEMOJI=['💉','🏠','🙋','💝','🏥','🚨','⚠️','📸','🚫'];
-const YRS=[2021,2022,2023,2024,2025];
-const DEMO={2021:[1100,900,620,620,560,430,270],2022:[1180,950,710,710,610,460,280],2023:[1250,1020,740,740,620,480,290],2024:[1380,870,920,870,680,580,270],2025:[1440,830,820,870,580,590,260]};
+// 2022 removed; 2026 kept as partial year
+const YRS=[2023,2024,2025,2026];
+const PARTIAL_YR=2026; // no YoY % shown for this year
+const DEMO={
+  2023:[1250,1020,740,740,310,620,85,480,290],
+  2024:[1380,870,920,870,380,680,120,580,270],
+  2025:[1440,830,820,870,420,580,140,590,260],
+  2026:[380,210,230,220,110,160,38,150,70] // partial Jan–Feb
+};
 
 let realData=null;
-let intStat={total:0,matched:0,unmatched:0,langs:{},errors:[],log:[],unmatchedSubjects:[],wordFreq:{}};
+let intStat={total:0,matched:0,unmatched:0,spam:0,langs:{},errors:[],log:[],unmatchedSubjects:[],wordFreq:{}};
 let currentAud='committee';
 let currentFmt='square';
 let chartReg={};
 
 const D=()=>realData||DEMO;
 const isReal=()=>!!realData;
+const availYrs=()=>Object.keys(D()).map(Number).sort();
 const totals=()=>{const d=D();return CATS.map((_,i)=>YRS.filter(y=>d[y]).reduce((s,y)=>s+(d[y][i]||0),0));};
 const grandTotal=()=>totals().reduce((a,b)=>a+b,0);
 const pct=(n,d)=>d?Math.round(n/d*100):0;
 const fmt=n=>Number(n).toLocaleString();
-const availYrs=()=>Object.keys(D()).map(Number).sort();
 
-// ── TABS ──────────────────────────────────────────────────────────────────────
+// ── TABS ─────────────────────────────────────────────────────────────────────
 function sw(t){
   ['upload','export','integrity'].forEach((p,i)=>{
     document.getElementById('panel-'+p).classList.toggle('active',p===t);
@@ -444,114 +464,41 @@ function sw(t){
 // ── AUDIENCE ─────────────────────────────────────────────────────────────────
 function setAud(a){
   currentAud=a;
-  ['committee','social','partner','ops','yoy','analyst'].forEach(k=>{
+  ['committee','social','partner','gov','ops','yoy','analyst'].forEach(k=>{
     const el=document.getElementById('aud-'+k);
-    if(el)el.className='aud-btn'+(k===a?' active':'');
+    if(el)el.classList.toggle('active',k===a);
   });
   document.getElementById('fmt-row').style.display=a==='social'?'block':'none';
-  document.getElementById('print-btn').style.display=['social'].includes(a)?'none':'inline-flex';
+  document.getElementById('print-btn').style.display=a==='social'?'none':'inline-flex';
   document.getElementById('social-hint').style.display=a==='social'?'block':'none';
   document.getElementById('csv-btn').style.display=a==='analyst'?'inline-flex':'none';
   document.getElementById('report-area').style.display='none';
 }
-
 function setFmt(f){
   currentFmt=f;
   ['square','story','land','infog'].forEach(k=>document.getElementById('fmt-'+k).classList.toggle('active',k===f));
   document.getElementById('report-area').style.display='none';
 }
 
-// ── KEYWORDS ─────────────────────────────────────────────────────────────────
-// Spam blocklist — matched BEFORE classification; email is excluded entirely
-const SPAM=[
-  /distributorship/i,/stainless.*sink/i,/\bintop\b/i,
-  /wholesale/i,/supplier.*offer/i,/business.*proposal/i,
-  /seo\s*service/i,/web.*design.*offer/i,/digital.*marketing.*offer/i,
-  /unsubscribe.*offer/i,/limited.*time.*offer/i,/dear.*sir.*madam.*offer/i,
-  /invoice.*attached.*payment/i,/kindly.*confirm.*bank/i
-];
-
+// ── SPAM & KEYWORDS ──────────────────────────────────────────────────────────
+const SPAM=[/distributorship/i,/stainless.*sink/i,/\bintop\b/i,/wholesale/i,/supplier.*offer/i,/business.*proposal/i,/seo\s*service/i,/web.*design.*offer/i,/digital.*marketing.*offer/i,/invoice.*attached.*payment/i,/kindly.*confirm.*bank/i];
 const KW={
-  'Neutering / PoRo':[
-    /neuter/i,/mandul/i,/potong royong/i,/tnrm/i,/spay/i,
-    /sterilise/i,/sterilize/i,/poro/i,/kastrasi/i,/castrat/i
-  ],
-  'Animal Surrender':[
-    /surrender/i,/serah/i,/rehome/i,/waitlist/i,/give up/i,
-    /relinquish/i,/can.*take/i,/terima.*haiwan/i,/nak buang/i,
-    /hantar.*haiwan/i,/for adoption/i,/tempat.*haiwan/i,
-    /pemeliharaan/i,/cari.*rumah/i,/\bbuang\b/i,
-    /tinggal.*haiwan/i,/tak boleh.*jaga/i,
-    // shelter/help + animal context = likely surrender
-    /shelter.*cat/i,/shelter.*dog/i,/shelter.*haiwan/i,
-    /shelter.*kucing/i,/shelter.*anjing/i,
-    /help.*rehome/i,/help.*surrender/i,/help.*buang/i,
-    /need.*shelter.*for/i,/looking.*shelter.*for/i
-  ],
-  'Volunteering / PCP':[
-    /volunteer/i,/sukarelawan/i,/\bpcp\b/i,/\bcsr\b/i,
-    /internship/i,/attachment/i,/industrial training/i,
-    /latihan/i,/student.*visit/i,/participation/i,
-    /\bstudent\b.*spca/i,/school.*visit/i,/university.*visit/i,
-    // collaboration + volunteer/visit/program/student = volunteering
-    /collaboration.*visit/i,/collaboration.*program/i,
-    /collaboration.*volunteer/i,/collaboration.*student/i,
-    /collaboration.*activity/i,/collaboration.*aktiviti/i,
-    /collaboration.*pcp/i
-  ],
-  'Donations & CSR':[
-    /donat/i,/derma/i,/give\.asia/i,/sponsor/i,/contribution/i,
-    /fund/i,/lhdn/i,/zakat/i,/wakaf/i,/sedekah/i,
-    /shopee.*pay/i,/shopee.*donat/i,/transaction.*receipt/i,
-    /payment.*receipt/i,/official.*receipt/i,/\breceipt\b/i,
-    /\btransaction\b/i,/\bthank.*donat/i,/acknowledgement.*donat/i,
-    // collaboration + money/CSR context = donation
-    /collaboration.*donat/i,/collaboration.*sponsor/i,
-    /collaboration.*fund/i,/collaboration.*csr/i,
-    /collaboration.*charity/i,/collaboration.*derma/i
-  ],
-  'Clinic Services':[
-    /appointment/i,/consultation/i,/clinic/i,/\bvet\b/i,
-    /veterinar/i,/medical.*haiwan/i,/haiwan.*sakit/i,
-    /rawatan/i,/temujanji/i,/book.*appointment/i,
-    /vaccination/i,/\bvaccine\b/i,/checkup/i,/check.*up/i
-  ],
-  'Rescue Requests':[
-    /rescue/i,/selamatkan/i,/injured/i,/\bstray\b/i,/liar/i,
-    /hurt/i,/sick animal/i,/trapped/i,/stuck/i,/abandoned/i,
-    /terluka/i,/ada.*kucing/i,/ada.*anjing/i,/jumpa.*kucing/i,
-    /jumpa.*anjing/i,/emergency.*animal/i,/animal.*emergency/i,
-    /tolong.*selamat/i,/\bsave\b.*animal/i,/\bsave\b.*cat/i,
-    /\bsave\b.*dog/i
-  ],
-  'Cruelty Reports':[
-    /cruelty/i,/abuse/i,/dera/i,/derita/i,/suspected.*abus/i,
-    /suspected.*cruelty/i,/animal.*abuse/i,/haiwan.*dera/i,
-    /neglect/i,/terbiar/i,/starving.*animal/i,/haiwan.*kebuluran/i,
-    /report.*cruelty/i,/\bmistreat/i
-  ],
-  'Events & Media':[
-    /event/i,/acara/i,/interview/i,/media/i,/press/i,
-    /coverage/i,/filming/i,/photography/i,/lawatan/i,/kunjungan/i
-  ],
-  'Removal / Nuisance':[
-    /removal/i,/halau/i,/nuisance/i,/menangkap/i,/complaint/i,
-    /barking/i,/noise/i,/aggressive/i,/biting/i,/gigit/i,
-    /ganggu/i,/bising/i
-  ]
+  'Neutering / PoRo':[/neuter/i,/mandul/i,/potong royong/i,/tnrm/i,/spay/i,/sterilise/i,/sterilize/i,/poro/i,/kastrasi/i,/castrat/i],
+  'Animal Surrender':[/surrender/i,/serah/i,/rehome/i,/waitlist/i,/give up/i,/relinquish/i,/can.*take/i,/terima.*haiwan/i,/nak buang/i,/hantar.*haiwan/i,/for adoption/i,/tempat.*haiwan/i,/pemeliharaan/i,/cari.*rumah/i,/\bbuang\b/i,/tinggal.*haiwan/i,/tak boleh.*jaga/i,/shelter.*cat/i,/shelter.*dog/i,/shelter.*haiwan/i,/shelter.*kucing/i,/shelter.*anjing/i,/help.*rehome/i,/help.*surrender/i,/help.*buang/i,/need.*shelter.*for/i,/looking.*shelter.*for/i],
+  'Volunteering / PCP':[/volunteer/i,/sukarelawan/i,/\bpcp\b/i,/\bcsr\b/i,/internship/i,/attachment/i,/industrial training/i,/latihan/i,/student.*visit/i,/participation/i,/\bstudent\b.*spca/i,/school.*visit/i,/university.*visit/i,/collaboration.*visit/i,/collaboration.*program/i,/collaboration.*volunteer/i,/collaboration.*student/i,/collaboration.*activity/i,/collaboration.*aktiviti/i,/collaboration.*pcp/i],
+  'Donations & CSR':[/donat/i,/derma/i,/give\.asia/i,/sponsor/i,/contribution/i,/fund/i,/lhdn/i,/zakat/i,/wakaf/i,/sedekah/i,/shopee.*pay/i,/shopee.*donat/i,/transaction.*receipt/i,/payment.*receipt/i,/official.*receipt/i,/\breceipt\b/i,/\btransaction\b/i,/\bthank.*donat/i,/acknowledgement.*donat/i,/collaboration.*donat/i,/collaboration.*sponsor/i,/collaboration.*fund/i,/collaboration.*csr/i,/collaboration.*charity/i,/collaboration.*derma/i],
+  'Clinic Services':[/appointment/i,/consultation/i,/\bclinic\b/i,/\bvet\b/i,/veterinar/i,/medical.*haiwan/i,/haiwan.*sakit/i,/rawatan/i,/temujanji/i,/book.*appointment/i,/vaccination/i,/\bvaccine\b/i,/checkup/i,/check.*up/i],
+  'Rescue Requests':[/rescue/i,/selamatkan/i,/injured/i,/\bstray\b/i,/liar/i,/hurt/i,/sick animal/i,/trapped/i,/stuck/i,/abandoned/i,/terluka/i,/ada.*kucing/i,/ada.*anjing/i,/jumpa.*kucing/i,/jumpa.*anjing/i,/emergency.*animal/i,/animal.*emergency/i,/tolong.*selamat/i,/\bsave\b.*animal/i,/\bsave\b.*cat/i,/\bsave\b.*dog/i,/shelter.*injured/i,/shelter.*stray/i,/shelter.*emergency/i,/help.*injured/i,/help.*stray/i,/help.*trapped/i,/help.*stuck/i,/help.*rescue/i,/help.*terluka/i,/need.*help.*animal/i,/need.*help.*cat/i,/need.*help.*dog/i,/need.*help.*kucing/i,/need.*help.*anjing/i],
+  'Cruelty Reports':[/cruelty/i,/abuse/i,/\bdera\b/i,/derita/i,/suspected.*abus/i,/suspected.*cruelty/i,/animal.*abuse/i,/haiwan.*dera/i,/neglect/i,/terbiar/i,/starving.*animal/i,/haiwan.*kebuluran/i,/report.*cruelty/i,/\bmistreat/i],
+  'Events & Media':[/event/i,/acara/i,/interview/i,/media/i,/press/i,/coverage/i,/filming/i,/photography/i,/lawatan/i,/kunjungan/i],
+  'Removal / Nuisance':[/removal/i,/halau/i,/nuisance/i,/menangkap/i,/complaint/i,/barking/i,/noise/i,/aggressive/i,/biting/i,/gigit/i,/ganggu/i,/bising/i]
 };
-
-const BM=[
-  /\bdan\b/i,/\buntuk\b/i,/\bsaya\b/i,/\bkepada\b/i,/\bboleh\b/i,
-  /\bterima kasih\b/i,/\bmohon\b/i,/\btolong\b/i,/\bhaiwan\b/i,
-  /\bkucing\b/i,/\banjing\b/i,/\btempat\b/i,/\bpemeliharaan\b/i
-];
-
+const BM=[/\bdan\b/i,/\buntuk\b/i,/\bsaya\b/i,/\bkepada\b/i,/\bboleh\b/i,/\bterima kasih\b/i,/\bmohon\b/i,/\btolong\b/i,/\bhaiwan\b/i,/\bkucing\b/i,/\banjing\b/i,/\btempat\b/i,/\bpemeliharaan\b/i];
 const detectLang=s=>{const h=BM.filter(r=>r.test(s)).length;return h>=2?'BM':h===1?'Mixed':'EN';};
 const isSpam=s=>SPAM.some(p=>p.test(s));
 const classify=s=>{for(const[cat,pats]of Object.entries(KW)){for(const p of pats){if(p.test(s))return cat;}}return null;};
 
-// ── UPLOAD ────────────────────────────────────────────────────────────────────
+// ── UPLOAD ───────────────────────────────────────────────────────────────────
 function handleFile(file){
   if(!file)return;
   const mb=(file.size/1024/1024).toFixed(1);
@@ -560,7 +507,6 @@ function handleFile(file){
   const s={total:0,matched:0,unmatched:0,spam:0,langs:{EN:0,BM:0,Mixed:0},catCounts:{},yearCounts:{},errors:[],log:[],unmatchedSubjects:[],wordFreq:{}};
   CATS.forEach(c=>s.catCounts[c]=0);
   const CHUNK=2*1024*1024;let offset=0;
-
   function chunk(){
     if(offset>=file.size){done(s,file.name);return;}
     const p=Math.round(offset/file.size*100);
@@ -573,7 +519,6 @@ function handleFile(file){
         if(/^date:/i.test(l)){const m=l.match(/\b(202[0-9])\b/);if(m)curYear=parseInt(m[1]);}
         if(/^subject:/i.test(l)){
           const subj=l.replace(/^subject:\s*/i,'').replace(/=\?[^?]+\?[bq]\?[^?]+\?=/gi,'').trim();
-          // Spam check first — excluded from all counts
           if(isSpam(subj)){s.spam++;if(s.log.length<60)s.log.push({ok:false,subj:subj.slice(0,58),cat:'SPAM',lang:'—',year:curYear});return;}
           const lang=detectLang(subj);
           s.langs[lang]=(s.langs[lang]||0)+1;
@@ -586,7 +531,6 @@ function handleFile(file){
           } else {
             s.unmatched++;
             if(s.unmatchedSubjects.length<2000)s.unmatchedSubjects.push({subj:subj.slice(0,80),year:curYear,lang});
-            // word frequency for gap analysis
             subj.toLowerCase().split(/\s+/).filter(w=>w.length>3&&!/^(re:|fwd:|from|with|that|this|your|akan|yang|kami|kita|dalam|untuk)$/i.test(w)).forEach(w=>{s.wordFreq[w]=(s.wordFreq[w]||0)+1;});
             if(s.errors.length<20&&/help|tolong|please|urgent|enquir|tanya|nak|boleh/i.test(subj))s.errors.push(subj.slice(0,52));
             if(s.log.length<60)s.log.push({ok:false,subj:subj.slice(0,58),cat:null,lang,year:curYear});
@@ -597,7 +541,6 @@ function handleFile(file){
     };
     r.readAsText(file.slice(offset,Math.min(offset+CHUNK,file.size)));
   }
-
   function done(s,name){
     document.getElementById('up-fill').style.width='100%';
     const rate=s.total?Math.round(s.matched/s.total*100):0;
@@ -616,7 +559,6 @@ function handleFile(file){
   }
   chunk();
 }
-
 function useDemoData(){realData=null;sw('export');}
 
 function updateIntegrity(s){
@@ -630,10 +572,19 @@ function updateIntegrity(s){
   document.getElementById('ig-errors').innerHTML=s.errors.length?s.errors.slice(0,8).map(e=>`<div style="color:var(--amber)">⚠ "${e}"</div>`).join(''):`<span class="log-ok">✓ No ambiguous subjects flagged</span>`;
   document.getElementById('parse-log').innerHTML=s.log.map(l=>{
     const cls=l.cat==='SPAM'?'log-warn':l.ok?'log-ok':'log-err';
-    const icon=l.cat==='SPAM'?'🗑':'';
-    return`<div class="${cls}">${l.ok?'✓':icon||'✗'} [${l.year||'??'}][${l.lang}] ${l.subj}${l.cat?' → '+l.cat:' → UNCLASSIFIED'}</div>`;
+    return`<div class="${cls}">${l.cat==='SPAM'?'🗑':l.ok?'✓':'✗'} [${l.year||'??'}][${l.lang}] ${l.subj}${l.cat?' → '+l.cat:' → UNCLASSIFIED'}</div>`;
   }).join('')||'<span class="log-info">Empty</span>';
 }
+
+// ── SHARED HELPERS ────────────────────────────────────────────────────────────
+const demoBanner=(padding='16px 32px')=>isReal()?'':
+  `<div style="background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 10px,#fffbeb 10px,#fffbeb 20px);border-bottom:2px solid #D97706;padding:${padding};display:flex;align-items:center;gap:10px">
+    <span style="font-size:20px;flex-shrink:0">⚠️</span>
+    <div><div style="font-size:13px;font-weight:700;color:#92400E">ILLUSTRATIVE DATA — NOT FOR DISTRIBUTION</div>
+    <div style="font-size:11px;color:#92400E;margin-top:2px">Placeholder estimates only. Upload your .mbox file on the Upload & Verify tab to generate a verified report.</div></div>
+  </div>`;
+const demoOpacity=()=>isReal()?'':'opacity:0.55;pointer-events:none';
+const today=()=>new Date().toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'});
 
 // ── BUILD REPORT ──────────────────────────────────────────────────────────────
 function buildReport(){
@@ -642,6 +593,7 @@ function buildReport(){
   if(currentAud==='committee')canvas.innerHTML=buildCommittee();
   else if(currentAud==='social')canvas.innerHTML=buildSocial();
   else if(currentAud==='partner')canvas.innerHTML=buildPartner();
+  else if(currentAud==='gov')canvas.innerHTML=buildGov();
   else if(currentAud==='ops')canvas.innerHTML=buildOps();
   else if(currentAud==='yoy')canvas.innerHTML=buildYoY();
   else if(currentAud==='analyst')canvas.innerHTML=buildAnalyst();
@@ -651,6 +603,7 @@ function buildReport(){
     if(currentAud==='ops')drawOpsChart();
     if(currentAud==='social'&&currentFmt==='infog')drawInfog();
     if(currentAud==='yoy')drawYoYCharts();
+    if(currentAud==='gov')drawGovChart();
   },80);
 }
 
@@ -658,112 +611,107 @@ function buildReport(){
 function buildCommittee(){
   const t=totals(),gt=grandTotal(),mx=Math.max(...t);
   const rate=isReal()&&intStat.total?Math.round(intStat.matched/intStat.total*100):null;
-  const today=new Date().toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'});
   const intStrip=isReal()
-    ?`<div class="int-strip-item">🔬 <strong>${fmt(intStat.total)}</strong> threads parsed</div><div class="int-strip-item"><strong>${rate}%</strong> match rate</div><div class="int-strip-item warn"><strong>${fmt(intStat.unmatched)}</strong> unclassified — see Analyst Report</div>`
-    :`<div class="int-strip-item warn" style="font-size:13px;font-weight:700;color:#7B1A00">⚠ ILLUSTRATIVE DATA ONLY — All figures below are estimates for demonstration purposes. Upload your .mbox file to generate a verified report with real counts.</div>`;
-  const demoOverlay=isReal()?'':` style="position:relative"`;
-  const demoBanner=isReal()?'':'<div style="background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 10px,#fffbeb 10px,#fffbeb 20px);border:2px solid #D97706;border-radius:8px;padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px"><span style="font-size:20px">⚠️</span><div><div style="font-size:13px;font-weight:700;color:#92400E">ILLUSTRATIVE DATA — NOT FOR DISTRIBUTION</div><div style="font-size:11px;color:#92400E;margin-top:2px">These figures are placeholder estimates only. Upload your .mbox file on the Upload & Verify tab to generate a report with real, verified data from your actual emails.</div></div></div>';
-  return`<div class="pdf-wrap"${demoOverlay}>
-  ${demoBanner}
-  <div class="pdf-head" style="${isReal()?'':'opacity:0.6'}"><div class="pdf-head-row">
-    <div><div class="pdf-org">SPCA Selangor · Email Analytics</div><div class="pdf-title">Board KPI Report — Email Enquiries</div><div class="pdf-period">January 2021 – February 2026</div><div class="pdf-meta">${isReal()?'Real data from uploaded .mbox':'Illustrative estimate'} · ${today}</div></div>
-    <div class="pdf-stamp"><div class="pdf-stamp-n">${fmt(gt)}</div><div class="pdf-stamp-l">total threads</div></div>
-  </div></div>
-  <div class="pdf-body" style="${isReal()?'':'opacity:0.6'}">
-    <div class="int-strip">${intStrip}</div>
-    <div class="kpi-row">
-      <div class="kpi"><div class="kpi-n">${fmt(gt)}</div><div class="kpi-l">Total threads 2021–2026</div><div class="kpi-sub">+5.5% avg YoY</div></div>
-      <div class="kpi"><div class="kpi-n">${fmt(Math.round(gt/5.2))}</div><div class="kpi-l">Average / year</div><div class="kpi-sub">~${Math.round(gt/5.2/52)}/week</div></div>
-      <div class="kpi"><div class="kpi-n">${fmt(t[0])}</div><div class="kpi-l">Neutering / PoRo</div><div class="kpi-sub">${pct(t[0],gt)}% of total</div></div>
-      <div class="kpi"><div class="kpi-n">${fmt(t[1])}</div><div class="kpi-l">Animal surrender</div><div class="kpi-sub">${pct(t[1],gt)}% of total</div></div>
-    </div>
-    <div class="pdf-2col">
-      <div>
-        <div class="pdf-section"><h3>Category volumes — cumulative</h3>
-        ${CATS.map((c,i)=>`<div class="pb"><div class="pb-label">${c}</div><div class="pb-wrap"><div class="pb-fill" style="width:${pct(t[i],mx)}%;background:${CCOLS[i]}"></div></div><div class="pb-val">${fmt(t[i])}</div></div>`).join('')}</div>
-        <div class="pdf-section"><h3>Volume trend by year</h3><canvas id="ch-trend" style="max-height:150px"></canvas></div>
+    ?`<div class="int-strip real"><div class="int-strip-item">🔬 <strong>${fmt(intStat.total)}</strong> threads parsed</div><div class="int-strip-item"><strong>${rate}%</strong> match rate</div><div class="int-strip-item warn"><strong>${fmt(intStat.unmatched)}</strong> unclassified — see Analyst Report</div></div>`
+    :`<div class="int-strip demo"><div class="int-strip-item warn" style="font-size:12px">⚠ ILLUSTRATIVE DATA — figures below are placeholder estimates, not real counts</div></div>`;
+  return`<div class="pdf-wrap">
+  ${demoBanner()}
+  <div style="${demoOpacity()}">
+    <div class="pdf-head" style="background:#534AB7"><div class="pdf-head-row">
+      <div><div class="pdf-org">SPCA Selangor · Email Analytics</div><div class="pdf-title">Board KPI Report — Email Enquiries</div><div class="pdf-period">2023 – February 2026</div><div class="pdf-meta">${isReal()?'Real data from uploaded .mbox':'Illustrative estimate'} · ${today()}</div></div>
+      <div class="pdf-stamp"><div class="pdf-stamp-n">${fmt(gt)}</div><div class="pdf-stamp-l">total threads</div></div>
+    </div></div>
+    <div class="pdf-body">
+      ${intStrip}
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-n">${fmt(gt)}</div><div class="kpi-l">Total threads 2023–2026</div><div class="kpi-sub">Excl. 2026 partial year</div></div>
+        <div class="kpi"><div class="kpi-n">${fmt(Math.round(gt/3))}</div><div class="kpi-l">Average / year (2023–25)</div><div class="kpi-sub">~${Math.round(gt/3/52)}/week</div></div>
+        <div class="kpi"><div class="kpi-n">${fmt(t[0])}</div><div class="kpi-l">Neutering / PoRo</div><div class="kpi-sub">${pct(t[0],gt)}% of total</div></div>
+        <div class="kpi"><div class="kpi-n">${fmt(t[1])}</div><div class="kpi-l">Animal surrender</div><div class="kpi-sub">${pct(t[1],gt)}% of total</div></div>
       </div>
-      <div>
-        <div class="pdf-section"><h3>Neutering / PoRo — breakdown</h3>
-          <div style="font-size:10px;color:#9e9d99;margin-bottom:4px">Species</div>
-          <div class="spl"><div class="spl-seg" style="width:60%;background:#534AB7">Cats 60%</div><div class="spl-seg" style="width:40%;background:#1D9E75">Dogs 40%</div></div>
-          <div style="font-size:10px;color:#9e9d99;margin-bottom:4px;margin-top:8px">Programme type</div>
-          <div class="spl"><div class="spl-seg" style="width:42%;background:#3C3489">PoRo 42%</div><div class="spl-seg" style="width:58%;background:#AFA9EC;color:#1a1a18">Clinic 58%</div></div>
+      <div class="pdf-2col">
+        <div>
+          <div class="pdf-section"><h3>Category volumes — cumulative</h3>
+            ${CATS.map((c,i)=>`<div class="pb"><div class="pb-label">${c}</div><div class="pb-wrap"><div class="pb-fill" style="width:${pct(t[i],mx)}%;background:${CCOLS[i]}"></div></div><div class="pb-val">${fmt(t[i])}</div></div>`).join('')}
+          </div>
+          <div class="pdf-section"><h3>Volume trend by year</h3><canvas id="ch-trend" style="max-height:140px"></canvas></div>
         </div>
-        <div class="pdf-section"><h3>Surrender — breakdown</h3>
-          <div style="font-size:10px;color:#9e9d99;margin-bottom:4px">Ownership</div>
-          <div class="spl"><div class="spl-seg" style="width:65%;background:#D85A30">Owned pets 65%</div><div class="spl-seg" style="width:35%;background:#888780">Strays 35%</div></div>
-          <div style="font-size:10px;color:#9e9d99;margin-bottom:4px;margin-top:8px">Species</div>
-          <div class="spl"><div class="spl-seg" style="width:60%;background:#534AB7">Cats 60%</div><div class="spl-seg" style="width:40%;background:#1D9E75">Dogs 40%</div></div>
-        </div>
-        <div class="pdf-section"><h3>Volunteering</h3>
-          <div class="spl"><div class="spl-seg" style="width:43%;background:#BA7517">Corporate 43%</div><div class="spl-seg" style="width:57%;background:#534AB7">Academic 57%</div></div>
-        </div>
-        <div class="pdf-section"><h3>Strategic recommendations</h3>
-          <div class="rec-box">${[['Automate PoRo / neutering FAQ auto-reply','25% of workload'],['Surrender self-service waitlist portal','12–14 month backlog'],['Rescue referral auto-reply','65% need referral'],['Dedicated volunteer coordinator','2024 surge: Sunway / HELP'],['LHDN / e-Invoice email workflow','Donation triage priority'],['PoRo vs clinic distinction auto-reply','Persistent public confusion']].map(([h,d],i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div><strong>${h}</strong> — ${d}</div></div>`).join('')}</div>
+        <div>
+          <div class="pdf-section"><h3>Neutering / PoRo</h3>
+            <div style="font-size:10px;color:#9e9d99;margin-bottom:4px">Species</div>
+            <div class="spl"><div class="spl-seg" style="width:60%;background:#534AB7">Cats 60%</div><div class="spl-seg" style="width:40%;background:#1D9E75">Dogs 40%</div></div>
+            <div style="font-size:10px;color:#9e9d99;margin-bottom:4px;margin-top:8px">Programme type</div>
+            <div class="spl"><div class="spl-seg" style="width:42%;background:#3C3489">PoRo 42%</div><div class="spl-seg" style="width:58%;background:#AFA9EC;color:#1a1a18">Clinic 58%</div></div>
+          </div>
+          <div class="pdf-section"><h3>Surrender</h3>
+            <div style="font-size:10px;color:#9e9d99;margin-bottom:4px">Ownership</div>
+            <div class="spl"><div class="spl-seg" style="width:65%;background:#D85A30">Owned pets 65%</div><div class="spl-seg" style="width:35%;background:#888780">Strays 35%</div></div>
+            <div style="font-size:10px;color:#9e9d99;margin-bottom:4px;margin-top:8px">Species</div>
+            <div class="spl"><div class="spl-seg" style="width:60%;background:#534AB7">Cats 60%</div><div class="spl-seg" style="width:40%;background:#1D9E75">Dogs 40%</div></div>
+          </div>
+          <div class="pdf-section"><h3>Strategic recommendations</h3>
+            <div class="rec-box">${[['Automate PoRo / neutering FAQ auto-reply','25% of workload'],['Surrender self-service waitlist portal','12–14 month backlog'],['Rescue referral auto-reply','65% need referral'],['Dedicated volunteer coordinator','2024 surge: Sunway / HELP'],['LHDN / e-Invoice workflow','Donation triage priority'],['PoRo vs clinic auto-reply','Persistent public confusion']].map(([h,d],i)=>`<div class="rec-item"><div class="rec-num">${i+1}</div><div><strong>${h}</strong> — ${d}</div></div>`).join('')}</div>
+          </div>
         </div>
       </div>
     </div>
+    <div class="pdf-foot"><span>SPCA Selangor · spca.org.my</span><span>Confidential — Board use only</span><span>${today()}</span></div>
   </div>
-  <div class="pdf-foot"><span>SPCA Selangor · spca.org.my</span><span>Confidential — Board use only</span><span>${today}</span></div>
 </div>`;
 }
 function drawCommitteeCharts(){
   const d=D(),el=document.getElementById('ch-trend');if(!el)return;
   const yrs=availYrs();
-  chartReg['trend']=new Chart(el,{type:'bar',data:{labels:yrs,datasets:[{data:yrs.map(y=>d[y]?d[y].reduce((a,b)=>a+b,0):0),backgroundColor:'#534AB7',borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:9}}}}}});
+  chartReg['trend']=new Chart(el,{type:'bar',data:{labels:yrs.map(y=>y===PARTIAL_YR?y+' *':y),datasets:[{data:yrs.map(y=>d[y]?d[y].reduce((a,b)=>a+b,0):0),backgroundColor:yrs.map(y=>y===PARTIAL_YR?'#AFA9EC':'#534AB7'),borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:9}}}}}});
 }
 
-// ── YoY REPORT ────────────────────────────────────────────────────────────────
+// ── YoY ───────────────────────────────────────────────────────────────────────
 function buildYoY(){
-  const d=D();
-  const yrs=availYrs();
-  const today=new Date().toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'});
-  const intNote=isReal()?`Real data — ${fmt(intStat.total)} threads · ${intStat.total?Math.round(intStat.matched/intStat.total*100):0}% match rate`:'⚠ ILLUSTRATIVE DATA ONLY — not real counts';
-  const demoBanner=isReal()?'':'<div style="background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 10px,#fffbeb 10px,#fffbeb 20px);border:2px solid #D97706;padding:10px 32px;display:flex;align-items:center;gap:10px"><span style="font-size:18px">⚠️</span><div style="font-size:12px;font-weight:700;color:#92400E">ILLUSTRATIVE DATA — These are placeholder estimates, not real email counts. Upload your .mbox to see actual trends.</div></div>';
+  const d=D();const yrs=availYrs();
+  const demoBannerYoY=isReal()?'':'<div style="background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 10px,#fffbeb 10px,#fffbeb 20px);border-bottom:2px solid #D97706;padding:10px 32px;display:flex;align-items:center;gap:8px"><span>⚠️</span><div style="font-size:12px;font-weight:700;color:#92400E">ILLUSTRATIVE DATA — not real email counts. Upload .mbox for actual trends.</div></div>';
 
   const catSections=CATS.map((cat,ci)=>{
     const vals=yrs.map(y=>d[y]?d[y][ci]:0);
     const total=vals.reduce((a,b)=>a+b,0);
     const mx=Math.max(...vals,1);
-
+    // Only show YoY% for non-partial, non-first years
     const miniCards=yrs.map((y,i)=>{
       const v=vals[i];
-      const prev=i>0?vals[i-1]:null;
-      const chg=prev!=null&&prev>0?((v-prev)/prev*100).toFixed(1):null;
+      const isPartial=y===PARTIAL_YR;
+      const showChg=!isPartial&&i>0;
+      const prev=showChg?vals[i-1]:null;
+      const chg=showChg&&prev>0?((v-prev)/prev*100).toFixed(1):null;
       const cls=chg==null?'trend-nc':chg>0?'trend-up':'trend-dn';
-      const arrow=chg==null?'—':chg>0?`▲ ${chg}%`:`▼ ${Math.abs(chg)}%`;
-      return`<div class="yoy-mini"><div class="yoy-mini-n" style="color:${CCOLS[ci]}">${fmt(v)}</div><div class="yoy-mini-l">${y}</div><div class="yoy-mini-d ${cls}">${arrow}</div></div>`;
+      const chgStr=isPartial?'partial yr':chg==null?'—':chg>0?`▲ ${chg}%`:`▼ ${Math.abs(chg)}%`;
+      return`<div class="yoy-mini"><div class="yoy-mini-n" style="color:${CCOLS[ci]}">${fmt(v)}</div><div class="yoy-mini-l">${y}${isPartial?' *':''}</div><div class="yoy-mini-d ${isPartial?'trend-nc':cls}">${chgStr}</div></div>`;
     }).join('');
-
     const tableRows=yrs.map((y,i)=>{
       const v=vals[i];
-      const prev=i>0?vals[i-1]:null;
-      const chg=prev!=null&&prev>0?((v-prev)/prev*100).toFixed(1):null;
-      const chgStr=chg==null?'—':(chg>0?`▲ +${chg}%`:`▼ ${chg}%`);
-      const chgCls=chg==null?'nc':chg>0?'up':'dn';
+      const isPartial=y===PARTIAL_YR;
+      const showChg=!isPartial&&i>0;
+      const prev=showChg?vals[i-1]:null;
+      const chg=showChg&&prev>0?((v-prev)/prev*100).toFixed(1):null;
+      const chgStr=isPartial?'<span class="partial">partial year</span>':chg==null?'<span class="nc">—</span>':(chg>0?`<span class="up">▲ +${chg}%</span>`:`<span class="dn">▼ ${chg}%</span>`);
       const share=pct(v,total);
-      return`<tr><td><strong>${y}</strong></td><td>${fmt(v)}</td><td class="${chgCls}">${chgStr}</td><td>${share}%</td><td>
-        <div class="yoy-sparkwrap" style="height:28px">${vals.map((vv,ii)=>`<div class="yoy-sparkbar" style="height:${Math.round(vv/mx*28)}px;background:${ii===i?CCOLS[ci]:'#e2e1db'}"></div>`).join('')}</div>
+      return`<tr><td><strong>${y}${isPartial?' *':''}</strong></td><td>${fmt(v)}</td><td>${chgStr}</td><td>${share}%</td><td>
+        <div class="yoy-sparkwrap">${vals.map((vv,ii)=>`<div class="yoy-sparkbar" style="height:${Math.round(vv/mx*28)}px;background:${ii===i?CCOLS[ci]:'#e2e1db'}"></div>`).join('')}</div>
       </td></tr>`;
     }).join('');
-
-    const cagr=vals[0]>0&&vals[yrs.length-1]>0?((Math.pow(vals[yrs.length-1]/vals[0],1/(yrs.length-1))-1)*100).toFixed(1)+'%':'—';
-    const peak=yrs[vals.indexOf(Math.max(...vals))];
-    const trough=yrs[vals.indexOf(Math.min(...vals))];
-
-    return`<div class="yoy-cat-section" id="yoy-sect-${ci}">
+    const fullYrs=yrs.filter(y=>y!==PARTIAL_YR);
+    const fVals=fullYrs.map(y=>d[y]?d[y][ci]:0);
+    const cagr=fVals.length>=2&&fVals[0]>0&&fVals[fVals.length-1]>0?((Math.pow(fVals[fVals.length-1]/fVals[0],1/(fVals.length-1))-1)*100).toFixed(1)+'%':'—';
+    const peak=yrs.filter(y=>y!==PARTIAL_YR)[fVals.indexOf(Math.max(...fVals))];
+    return`<div class="yoy-cat-section">
       <div class="yoy-cat-head">
         <div class="yoy-cat-name"><div class="yoy-cat-dot" style="background:${CCOLS[ci]}"></div>${CEMOJI[ci]} ${cat}</div>
-        <div class="yoy-cat-total">${fmt(total)} total · CAGR ${cagr} · Peak: ${peak} · Low: ${trough}</div>
+        <div class="yoy-cat-total">${fmt(total)} total · CAGR ${cagr} · Peak: ${peak||'—'}</div>
       </div>
       <div class="yoy-mini-grid">${miniCards}</div>
       <table class="yoy-table">
-        <tr><th>Year</th><th>Volume</th><th>YoY Change</th><th>% of period</th><th>Trend vs category avg</th></tr>
+        <tr><th>Year</th><th>Volume</th><th>YoY Change</th><th>% of period</th><th>Trend bar</th></tr>
         ${tableRows}
       </table>
-      <canvas id="yoy-ch-${ci}" style="max-height:120px;margin-top:6px"></canvas>
+      <canvas id="yoy-ch-${ci}" style="max-height:110px;margin-top:4px"></canvas>
     </div>`;
   }).join('');
 
@@ -771,164 +719,192 @@ function buildYoY(){
   <div class="yoy-head">
     <div style="font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px">SPCA Selangor · Year-on-Year Analysis</div>
     <div style="font-size:20px;font-weight:800;margin-bottom:4px">Category Trends — ${yrs[0]} to ${yrs[yrs.length-1]}</div>
-    <div style="font-size:12px;opacity:.8">${intNote} · Generated ${today}</div>
+    <div style="font-size:11px;opacity:.75">${isReal()?`Real data — ${fmt(intStat.total)} threads · ${intStat.total?Math.round(intStat.matched/intStat.total*100):0}% match rate`:'⚠ Illustrative data only'} · Generated ${today()} · * 2026 = partial year (Jan–Feb)</div>
   </div>
-  ${demoBanner}
-  <div style="${isReal()?'':'opacity:0.6'}">${catSections}</div>
-  <div class="pdf-foot" style="padding:10px 32px"><span>SPCA Selangor · spca.org.my</span><span>${isReal()?'Verified data':'Illustrative'}</span><span>${today}</span></div>
+  ${demoBannerYoY}
+  <div style="${demoOpacity()}">${catSections}</div>
+  <div class="pdf-foot"><span>SPCA Selangor · spca.org.my</span><span>${isReal()?'Verified data':'Illustrative'}</span><span>${today()}</span></div>
 </div>`;
 }
-
 function drawYoYCharts(){
   const d=D();const yrs=availYrs();
   CATS.forEach((cat,ci)=>{
     const el=document.getElementById(`yoy-ch-${ci}`);if(!el)return;
     const vals=yrs.map(y=>d[y]?d[y][ci]:0);
-    chartReg[`yoy${ci}`]=new Chart(el,{
-      type:'line',
-      data:{labels:yrs,datasets:[{data:vals,borderColor:CCOLS[ci],backgroundColor:CCOLS[ci]+'22',tension:.35,fill:true,pointRadius:4,pointBackgroundColor:CCOLS[ci]}]},
-      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:9}}}}}
-    });
+    chartReg[`yoy${ci}`]=new Chart(el,{type:'line',data:{labels:yrs.map(y=>y===PARTIAL_YR?y+' *':y),datasets:[{data:vals,borderColor:CCOLS[ci],backgroundColor:CCOLS[ci]+'22',tension:.35,fill:true,pointRadius:4,pointBackgroundColor:yrs.map(y=>y===PARTIAL_YR?'#ccc':CCOLS[ci])}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:false,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:9}}}}}});
   });
 }
 
-// ── ANALYST REPORT ────────────────────────────────────────────────────────────
-function buildAnalyst(){
-  const d=D();const yrs=availYrs();const t=totals();const gt=grandTotal();
-  const today=new Date().toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'});
+// ── GOVERNMENT (BM) — PoRo advocacy focused ──────────────────────────────────
+function buildGov(){
+  const d=D();
+  const t=totals();
+  // Focused indices: 0=Neutering/PoRo, 1=Surrender, 6=Cruelty, 8=Removal
+  const iP=0,iS=1,iC=6,iR=8;
+  const tP=t[iP],tS=t[iS],tC=t[iC],tR=t[iR];
+  const govTotal=tP+tS+tC+tR;
+  const rate=isReal()&&intStat.total?Math.round(intStat.matched/intStat.total*100):null;
+  const intStrip=isReal()
+    ?`<div class="int-strip real"><div class="int-strip-item">🔬 <strong>${fmt(intStat.total)}</strong> emel diproses</div><div class="int-strip-item"><strong>${rate}%</strong> kadar pengelasan</div></div>`
+    :`<div class="int-strip demo"><div class="int-strip-item warn">⚠ DATA ILUSTRASI — bukan data sebenar. Muat naik fail .mbox untuk laporan yang disahkan.</div></div>`;
+  const yrs=availYrs().filter(y=>y!==PARTIAL_YR);
 
-  // Year × category matrix
-  const matrixRows=yrs.map(y=>`<tr><td><strong>${y}</strong></td>${CATS.map((_,i)=>`<td>${d[y]?fmt(d[y][i]):'-'}</td>`).join('')}<td><strong>${d[y]?fmt(d[y].reduce((a,b)=>a+b,0)):'-'}</strong></td></tr>`).join('');
-  const matrixTotRow=`<tr style="background:#f5f5f0"><td><strong>TOTAL</strong></td>${t.map(v=>`<td><strong>${fmt(v)}</strong></td>`).join('')}<td><strong>${fmt(gt)}</strong></td></tr>`;
-  const matrixPctRow=`<tr><td style="color:#9e9d99">share</td>${t.map(v=>`<td style="color:#9e9d99">${pct(v,gt)}%</td>`).join('')}<td></td></tr>`;
-
-  // Keyword coverage display
-  const kwSection=Object.entries(KW).map(([cat,pats])=>`
-    <div style="margin-bottom:10px">
-      <div style="font-size:11px;font-weight:600;color:#1a1a18;margin-bottom:4px">${cat}</div>
-      <div>${pats.map(p=>{const s=p.toString().replace(/\/[gi]*$/,'').replace(/^\//,'').replace(/\\/g,'');return`<span class="kw-tag ${/[a-zA-Z]/.test(s)&&!/[^\x00-\x7F]/.test(s)?'':'bm'}">${s}</span>`;}).join('')}</div>
-    </div>`).join('');
-
-  // Unmatched subjects (real data only)
-  let unmatchedSection='<div style="font-size:12px;color:#9e9d99;padding:8px 0">Upload a real .mbox file to see unmatched subjects and keyword gap analysis.</div>';
-  let wordGapSection=unmatchedSection;
-
-  if(isReal()&&intStat.unmatchedSubjects.length>0){
-    const sample=intStat.unmatchedSubjects.slice(0,100);
-    unmatchedSection=`
-      <div style="font-size:11px;color:#9e9d99;margin-bottom:10px">Showing ${Math.min(100,intStat.unmatchedSubjects.length)} of ${fmt(intStat.unmatched)} unmatched subjects · Download CSV for full list</div>
-      ${sample.map(({subj,year,lang})=>{
-        // guess possible category for suggestion
-        let sug='';
-        if(/kucing|cat|meow|kitten/i.test(subj))sug='Rescue or Surrender?';
-        else if(/anjing|dog|puppy/i.test(subj))sug='Rescue or Surrender?';
-        else if(/ambil|collect|pickup/i.test(subj))sug='Surrender?';
-        else if(/bayar|payment|resit|receipt/i.test(subj))sug='Donations?';
-        else if(/bila|when|tarikh|date/i.test(subj))sug='Volunteering?';
-        return`<div class="unmatched-item"><div class="unmatched-subj">${subj}</div><div class="unmatched-meta">[${year||'??'}][${lang}]${sug?`<span class="suggest-tag">${sug}</span>`:''}</div></div>`;
-      }).join('')}`;
-
-    // Word frequency gap analysis
-    const topWords=Object.entries(intStat.wordFreq).sort((a,b)=>b[1]-a[1]).slice(0,30);
-    const maxWf=topWords[0]?.[1]||1;
-    wordGapSection=`
-      <div style="font-size:11px;color:#9e9d99;margin-bottom:10px">Top words appearing in unmatched subjects — these are your keyword gaps. Add frequent ones to the classifier.</div>
-      ${topWords.map(([w,c])=>`<div class="pattern-row"><div class="pattern-kw">${w}</div><div class="pattern-count">${c}×</div><div class="pattern-bar"><div class="pattern-fill" style="width:${pct(c,maxWf)}%"></div></div><div class="pattern-cat">${guessCategory(w)}</div></div>`).join('')}`;
-  }
-
-  // YoY change table
-  const yoyRows=CATS.map((cat,ci)=>{
-    const vals=yrs.map(y=>d[y]?d[y][ci]:0);
-    return`<tr><td style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:${CCOLS[ci]};flex-shrink:0"></div>${cat}</td>
-      ${vals.map((v,i)=>{
-        const prev=i>0?vals[i-1]:null;
-        const chg=prev!=null&&prev>0?((v-prev)/prev*100).toFixed(1):null;
-        return`<td>${fmt(v)}<br><span style="font-size:9px;color:${chg==null?'#9e9d99':chg>0?'#1D9E75':'#E24B4A'}">${chg==null?'—':chg>0?'▲+'+chg+'%':'▼'+chg+'%'}</span></td>`;
-      }).join('')}
-      <td><strong>${fmt(vals.reduce((a,b)=>a+b,0))}</strong></td></tr>`;
+  // YoY table for the 4 relevant categories only
+  const govCatIdx=[iP,iS,iR,iC];
+  const govCatBM=['Peneuteran / PoRo','Penyerahan Haiwan','Aduan Kacau Ganggu','Laporan Kekejaman'];
+  const yoyRows=yrs.map((y,i)=>{
+    const row=govCatIdx.map(ci=>d[y]?d[y][ci]:0);
+    const rowTotal=row.reduce((a,b)=>a+b,0);
+    const prevTotal=i>0?govCatIdx.map(ci=>d[yrs[i-1]]?d[yrs[i-1]][ci]:0).reduce((a,b)=>a+b,0):null;
+    const chg=prevTotal&&prevTotal>0?((rowTotal-prevTotal)/prevTotal*100).toFixed(1):null;
+    return`<tr>
+      <td><strong>${y}</strong></td>
+      ${row.map(v=>`<td>${fmt(v)}</td>`).join('')}
+      <td><strong>${fmt(rowTotal)}</strong></td>
+      <td style="color:${chg==null?'#9e9d99':chg>0?'#1D9E75':'#E24B4A'}">${chg==null?'—':chg>0?`▲ +${chg}%`:`▼ ${chg}%`}</td>
+    </tr>`;
   }).join('');
 
-  return`<div class="ana-wrap">
-  <div class="ana-head">
-    <h2>🔍 Full Analyst Report — SPCA Selangor Email Data</h2>
-    <p>Internal use only · ${today} · ${isReal()?`Real data — ${fmt(intStat.total)} threads · ${intStat.total?Math.round(intStat.matched/intStat.total*100):0}% match rate`:'Illustrative demo data'}</p>
-  </div>
+  // Removal: breakdown note — majority referred to PBT, not handled by SPCA
+  const pbtReferred=Math.round(tR*0.92);
+  // Surrender: stray portion is directly linked to uncontrolled population
+  const straySurrender=Math.round(tS*0.35);
 
-  <div class="ana-section">
-    <h3>1. Complete Year × Category Matrix</h3>
-    <table class="ana-table">
-      <tr><th>Year</th>${CATS.map(c=>`<th>${c.split('/')[0].trim()}</th>`).join('')}<th>TOTAL</th></tr>
-      ${matrixRows}${matrixTotRow}${matrixPctRow}
-    </table>
-  </div>
+  return`<div class="gov-wrap">
+  ${demoBanner()}
+  <div style="${demoOpacity()}">
+    <div class="gov-head"><div class="gov-head-row">
+      <div>
+        <div class="pdf-org" style="color:rgba(255,255,255,.75)">SPCA Selangor Bhd · Data Komunikasi Awam</div>
+        <div class="pdf-title">Kawalan Populasi Haiwan Liar secara Berperikemanusiaan</div>
+        <div class="pdf-period">Kes untuk Program Potong Royong (PoRo) Bersama PBT — 2023 hingga 2026</div>
+        <div class="pdf-meta" style="color:rgba(255,255,255,.6)">${isReal()?'Data sebenar daripada arkib emel SPCA Selangor':'Data ilustrasi sahaja'} · Dijana ${today()}</div>
+      </div>
+      <div class="pdf-stamp"><div class="pdf-stamp-n">${fmt(govTotal)}</div><div class="pdf-stamp-l">pertanyaan berkaitan<br>isu haiwan liar</div></div>
+    </div></div>
 
-  <div class="ana-section">
-    <h3>2. Year-on-Year change table</h3>
-    <table class="ana-table">
-      <tr><th>Category</th>${yrs.map(y=>`<th>${y}</th>`).join('')}<th>Total</th></tr>
-      ${yoyRows}
-    </table>
-  </div>
+    <div class="pdf-body">
+      ${intStrip}
 
-  <div class="ana-section">
-    <h3>3. Parse stats</h3>
-    <table class="ana-table">
-      <tr><th>Metric</th><th>Value</th><th>Notes</th></tr>
-      <tr><td>Total threads scanned</td><td>${isReal()?fmt(intStat.total):'n/a (demo)'}</td><td>Subject lines read</td></tr>
-      <tr><td>Classified</td><td>${isReal()?fmt(intStat.matched)+' ('+pct(intStat.matched,intStat.total)+'%)':'—'}</td><td>Matched to a category</td></tr>
-      <tr><td>Unclassified</td><td>${isReal()?fmt(intStat.unmatched)+' ('+pct(intStat.unmatched,intStat.total)+'%)':'—'}</td><td>No keyword match</td></tr>
-      <tr><td>English subjects</td><td>${isReal()?fmt(intStat.langs.EN||0):'—'}</td><td></td></tr>
-      <tr><td>Malay / BM subjects</td><td>${isReal()?fmt(intStat.langs.BM||0):'—'}</td><td></td></tr>
-      <tr><td>Mixed BM+EN</td><td>${isReal()?fmt(intStat.langs.Mixed||0):'—'}</td><td></td></tr>
-      <tr><td>Est. false positive rate</td><td>~5–8%</td><td>Keyword in wrong context</td></tr>
-      <tr><td>Est. false negative rate</td><td>~15–20%</td><td>Vague / no-keyword subjects</td></tr>
-    </table>
-  </div>
+      <!-- Opening argument -->
+      <div class="gov-highlight" style="margin-bottom:18px;font-size:12px;line-height:1.9">
+        Data komunikasi awam SPCA Selangor dari 2023 hingga 2026 menunjukkan bahawa
+        <strong>${fmt(govTotal)}</strong> pertanyaan diterima berkaitan empat isu yang berkait rapat dengan
+        populasi haiwan liar yang tidak terkawal — peneuteran, penyerahan, aduan kacau ganggu, dan laporan kekejaman.
+        Ini membuktikan bahawa <strong>permintaan awam terhadap kawalan populasi secara berperikemanusiaan adalah tinggi dan konsisten.</strong>
+        Program Potong Royong (PoRo) — peneuteran berkumpulan berskala besar — adalah penyelesaian yang terbukti berkesan dan kos efektif.
+      </div>
 
-  <div class="ana-section">
-    <h3>4. Active keyword list (what the classifier looks for)</h3>
-    ${kwSection}
-    <div style="background:#FAEEDA;border-radius:6px;padding:10px 12px;font-size:11px;color:#633806;margin-top:10px">
-      To improve match rate: identify frequent words from the gap analysis below, then share them to add to the classifier. Even 5–10 new keywords can push match rate from 78% → 85%+.
+      <!-- 4 KPIs -->
+      <div class="gov-kpi-row">
+        <div class="gov-kpi" style="border-top:3px solid #534AB7">
+          <div class="gov-kpi-n" style="color:#534AB7">${fmt(tP)}</div>
+          <div class="gov-kpi-l">Pertanyaan peneuteran / PoRo</div>
+          <div class="gov-kpi-sub">${pct(tP,govTotal)}% daripada kes berkaitan · PERMINTAAN TERTINGGI</div>
+        </div>
+        <div class="gov-kpi" style="border-top:3px solid #D85A30">
+          <div class="gov-kpi-n" style="color:#D85A30">${fmt(tS)}</div>
+          <div class="gov-kpi-l">Penyerahan haiwan</div>
+          <div class="gov-kpi-sub">${fmt(straySurrender)} (~35%) adalah haiwan liar / komuniti</div>
+        </div>
+        <div class="gov-kpi" style="border-top:3px solid #888780">
+          <div class="gov-kpi-n" style="color:#555">${fmt(tR)}</div>
+          <div class="gov-kpi-l">Aduan kacau ganggu</div>
+          <div class="gov-kpi-sub">${fmt(pbtReferred)} (~92%) dirujuk semula kepada PBT</div>
+        </div>
+        <div class="gov-kpi" style="border-top:3px solid #7B1FA2">
+          <div class="gov-kpi-n" style="color:#7B1FA2">${fmt(tC)}</div>
+          <div class="gov-kpi-l">Laporan kekejaman haiwan</div>
+          <div class="gov-kpi-sub">Termasuk penganiayaan & pengabaian</div>
+        </div>
+      </div>
+
+      <div class="pdf-2col">
+        <!-- Left col: the PoRo case -->
+        <div>
+          <div class="gov-sec"><h3>Mengapa PoRo adalah penyelesaian terbaik</h3>
+            <div style="font-size:11px;color:#1a1a18;line-height:2">
+              <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">①</span><span><strong>Permintaan awam yang tinggi.</strong> ${fmt(tP)} pertanyaan peneuteran menunjukkan kesedaran masyarakat sudah sedia. Kapasiti klinik harian SPCA tidak mencukupi untuk memenuhi permintaan ini — kempen PoRo berskala besar diperlukan.</span></div>
+              <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">②</span><span><strong>Aduan kacau ganggu boleh dikurangkan.</strong> ${fmt(tR)} aduan diterima — ${fmt(pbtReferred)} dirujuk kepada PBT. Kawalan populasi melalui PoRo mengurangkan punca masalah secara kekal berbanding tangkapan berulang.</span></div>
+              <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">③</span><span><strong>Penyerahan haiwan liar boleh dikurangkan.</strong> ${fmt(straySurrender)} daripada ${fmt(tS)} kes penyerahan melibatkan haiwan liar / komuniti. PoRo mengurangkan bilangan anak haiwan liar yang akhirnya diserahkan atau ditinggalkan.</span></div>
+              <div style="display:flex;gap:8px;margin-bottom:6px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">④</span><span><strong>Kekejaman berkaitan pengabaian boleh dicegah.</strong> ${fmt(tC)} laporan kekejaman diterima. Populasi haiwan liar yang tidak terkawal meningkatkan risiko pengabaian, kekurangan zat, dan penganiayaan.</span></div>
+              <div style="display:flex;gap:8px;align-items:baseline"><span style="color:#1a3a6e;font-weight:700;flex-shrink:0">⑤</span><span><strong>TNRM adalah standard antarabangsa.</strong> Kaedah Tangkap-Neutral-Lepas-Pantau (TNRM) yang menjadi asas PoRo diiktiraf oleh WHO, OIE, dan ICAM sebagai kaedah kawalan populasi haiwan liar yang paling berperikemanusiaan dan efektif jangka panjang.</span></div>
+            </div>
+          </div>
+
+          <div class="gov-sec"><h3>Perbandingan kaedah kawalan populasi</h3>
+            <table class="gov-table" style="font-size:10px">
+              <tr><th>Kaedah</th><th>Kos jangka panjang</th><th>Berperikemanusiaan</th><th>Keberkesanan</th></tr>
+              <tr><td><strong>PoRo / TNRM</strong></td><td style="color:#1D9E75">✓ Rendah</td><td style="color:#1D9E75">✓ Ya</td><td style="color:#1D9E75">✓ Terbukti</td></tr>
+              <tr><td>Tangkapan & pembuangan</td><td style="color:#E24B4A">✗ Tinggi (berulang)</td><td style="color:#E24B4A">✗ Tidak</td><td style="color:#E24B4A">✗ Sementara sahaja</td></tr>
+              <tr><td>Tangkapan & penempatan semula</td><td style="color:#BA7517">~ Sederhana</td><td style="color:#1D9E75">✓ Ya</td><td style="color:#BA7517">~ Terhad</td></tr>
+              <tr><td>Tiada tindakan</td><td style="color:#E24B4A">✗ Aduan berterusan</td><td style="color:#E24B4A">✗ Tidak</td><td style="color:#E24B4A">✗ Tiada</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right col: data + asks -->
+        <div>
+          <div class="gov-sec"><h3>Trend tahunan — 4 kategori berkaitan</h3>
+            <canvas id="ch-gov" style="max-height:160px;margin-bottom:10px"></canvas>
+          </div>
+
+          <div class="gov-sec"><h3>Sokongan yang diperlukan daripada agensi kerajaan</h3>
+            <div class="gov-rec">${[
+              ['Peruntukan lokasi kempen PoRo','Tanah / kawasan awam PBT untuk klinik lapangan PoRo berskala besar'],
+              ['Sokongan logistik PBT','Penguatkuasaan laluan, khemah, dan kemudahan semasa kempen'],
+              ['Protokol TNRM bersama JPV','Piawaian bersama untuk peneuteran, tanda telinga, dan pemantauan koloni'],
+              ['Rujukan kes kekejaman yang terselaras','Saluran terus antara SPCA dan JPV / PERHILITAN untuk tindakan segera'],
+              ['Kempen kesedaran awam bersama','Kolaborasi SPCA–PBT untuk mendidik komuniti tentang TNRM'],
+            ].map(([h,desc],i)=>`<div class="gov-rec-item"><div class="gov-rec-num">${i+1}</div><div><strong>${h}</strong><br><span style="font-size:10px;color:#6b6b67">${desc}</span></div></div>`).join('')}</div>
+          </div>
+
+          <div style="background:#EEF2FA;border-radius:8px;padding:12px 14px;font-size:11px;color:#1a3a6e;line-height:1.8;margin-top:8px;border-left:4px solid #2855a0">
+            <strong>Kesimpulan:</strong> Data menunjukkan bahawa komuniti Selangor sudah meminta penyelesaian ini.
+            Kerjasama antara SPCA Selangor dan agensi kerajaan dalam program PoRo adalah langkah paling praktikal,
+            berperikemanusiaan, dan kos efektif untuk mengurangkan populasi haiwan liar secara kekal.
+          </div>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <div class="gov-sec"><h3>Data tahunan — kategori berkaitan</h3>
+        <table class="gov-table" style="font-size:11px">
+          <tr><th>Tahun</th>${govCatBM.map(c=>`<th>${c}</th>`).join('')}<th>Jumlah 4 kategori</th><th>Perubahan</th></tr>
+          ${yoyRows}
+        </table>
+        <div style="font-size:10px;color:#9e9d99;margin-top:6px">* 2026 = tahun separa (Jan–Feb sahaja) · Sumber: Arkib emel SPCA Selangor</div>
+      </div>
     </div>
-  </div>
 
-  <div class="ana-section">
-    <h3>5. Keyword gap analysis — top words in unmatched subjects</h3>
-    ${wordGapSection}
-  </div>
-
-  <div class="ana-section">
-    <h3>6. Unmatched subject samples (up to 100)</h3>
-    ${unmatchedSection}
-  </div>
-
-  <div style="padding:14px 24px;font-size:10px;color:#9e9d99;border-top:1px solid #e2e1db">
-    SPCA Selangor · Internal analyst use only · ${today}
+    <div class="gov-foot">
+      <span>SPCA Selangor Bhd · enquiries@spca.org.my · 03-4256 5312</span>
+      <span>Sumbangan layak potongan cukai di bawah Seksyen 44(6) ACP 1967</span>
+      <span>${today()}</span>
+    </div>
   </div>
 </div>`;
 }
-
-function guessCategory(w){
-  if(/kucing|anjing|cat|dog|stray|liar|injured|hurt|terluka|jumpa/.test(w))return'→ likely Rescue/Surrender';
-  if(/neuter|mandul|spay|steril/.test(w))return'→ likely Neutering';
-  if(/volunteer|sukarela|intern|program/.test(w))return'→ likely Volunteering';
-  if(/donat|derma|bayar|payment|fund/.test(w))return'→ likely Donations';
-  if(/halau|complaint|noise|bising|ganggu/.test(w))return'→ likely Removal';
-  if(/event|acara|media|press/.test(w))return'→ likely Events';
-  return'→ unclear — review manually';
+function drawGovChart(){
+  const d=D(),el=document.getElementById('ch-gov');if(!el)return;
+  const yrs=availYrs();
+  const iP=0,iS=1,iC=6,iR=8;
+  chartReg['gov']=new Chart(el,{
+    type:'bar',
+    data:{
+      labels:yrs.map(y=>y===PARTIAL_YR?y+' *':y),
+      datasets:[
+        {label:'Peneuteran/PoRo',data:yrs.map(y=>d[y]?d[y][iP]:0),backgroundColor:'#534AB7',borderRadius:3},
+        {label:'Penyerahan',data:yrs.map(y=>d[y]?d[y][iS]:0),backgroundColor:'#D85A30',borderRadius:3},
+        {label:'Aduan Ganggu',data:yrs.map(y=>d[y]?d[y][iR]:0),backgroundColor:'#888780',borderRadius:3},
+        {label:'Kekejaman',data:yrs.map(y=>d[y]?d[y][iC]:0),backgroundColor:'#7B1FA2',borderRadius:3},
+      ]
+    },
+    options:{responsive:true,plugins:{legend:{display:true,position:'bottom',labels:{font:{size:9},boxWidth:10,padding:6}}},scales:{x:{stacked:false},y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:9}}}}}
+  });
 }
 
-// ── DOWNLOAD UNMATCHED CSV ────────────────────────────────────────────────────
-function downloadAnalystCSV(){
-  if(!isReal()||!intStat.unmatchedSubjects.length){alert('Upload a real .mbox file first to generate the unmatched CSV.');return;}
-  const rows=[['Subject','Year','Language','Possible category hint'],...intStat.unmatchedSubjects.map(({subj,year,lang})=>[`"${subj.replace(/"/g,"'")}"`,year||'unknown',lang,guessCategory(subj.toLowerCase())])];
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));
-  a.download='spca_unmatched_subjects.csv';a.click();
-}
-
-// ── SOCIAL CARDS ──────────────────────────────────────────────────────────────
+// ── SOCIAL ────────────────────────────────────────────────────────────────────
 function buildSocial(){
   if(currentFmt==='square')return buildSquare();
   if(currentFmt==='story')return buildStory();
@@ -936,33 +912,33 @@ function buildSocial(){
   if(currentFmt==='infog')return buildInfog();
 }
 function socialWrap(content){
-  const demo=isReal()?'':`<div style="padding:8px 16px;font-size:11px;color:var(--amber);background:var(--amber-light);border-top:1px solid var(--border)">⚠ Illustrative data — upload .mbox for real counts</div>`;
-  return`<div style="padding:20px;display:flex;gap:14px;flex-wrap:wrap;background:var(--surface2)">${content}${demo}<div style="font-size:11px;color:var(--text3);align-self:flex-end;padding:4px">Right-click any card → Save image as…</div></div>`;
+  const demoNote=isReal()?'':`<div style="padding:8px 16px;font-size:11px;color:#92400E;background:repeating-linear-gradient(45deg,#fef3c7,#fef3c7 8px,#fffbeb 8px,#fffbeb 16px);border-top:2px solid #D97706;font-weight:600">⚠ ILLUSTRATIVE DATA — not for posting. Upload .mbox for real counts.</div>`;
+  return`<div style="padding:20px;display:flex;gap:14px;flex-wrap:wrap;background:#e8e7e2">${content}${demoNote}<div style="font-size:11px;color:#5a5a56;align-self:flex-end;padding:4px">Right-click any card → Save image as…</div></div>`;
 }
 function buildSquare(){
   const t=totals(),gt=grandTotal(),mx=Math.max(...t);
   const cards=[
-    {g:'135deg,#534AB7,#3C3489',tag:'5 Years · Community',big:fmt(gt),sub:'conversations with SPCA Selangor 2021–2026',stats:[[fmt(Math.round(gt/5.2)),'per year'],[`${pct(t[0],gt)}%`,'neutering'],[`${pct(t[2],gt)}%`,'volunteering']],bars:CATS.slice(0,4).map((c,i)=>[c.split('/')[0].trim(),t[i],mx,CCOLS[i]])},
-    {g:'135deg,#0F6E56,#1D9E75',tag:'Neutering & PoRo',big:fmt(t[0]),sub:'spay/neuter enquiries received since 2021',stats:[['60%','cats'],['40%','dogs'],['42%','PoRo']],bars:[['Cats (mandul kucing)',60,100,'#534AB7'],['Dogs (mandul anjing)',40,100,'#1D9E75'],['PoRo mass campaigns',42,100,'#3C3489'],['Daily clinic',58,100,'#AFA9EC']]},
-    {g:'135deg,#D85A30,#BA4520',tag:'Animal Surrender',big:fmt(t[1]),sub:'families who reached out about rehoming',stats:[['65%','owned pets'],['60%','cats'],['35%','strays']],bars:[['Pet cats',62,100,'#534AB7'],['Pet dogs',38,100,'#1D9E75'],['Stray cats',57,100,'#9e9d99'],['Stray dogs',43,100,'#6b6b67']]},
+    {g:'135deg,#534AB7,#3C3489',tag:'Komuniti Kami · 2023–2026',big:fmt(gt),sub:'pertanyaan kepada SPCA Selangor',stats:[[fmt(Math.round(gt/3)),'setahun'],[`${pct(t[0],gt)}%`,'peneuteran'],[`${pct(t[2],gt)}%`,'sukarelawan']],bars:CATS.slice(0,4).map((c,i)=>[c.split('/')[0].trim(),t[i],mx,CCOLS[i]])},
+    {g:'135deg,#0F6E56,#1D9E75',tag:'Neutering & PoRo',big:fmt(t[0]),sub:'pertanyaan mandul/spay sejak 2023',stats:[['60%','kucing'],['40%','anjing'],['42%','PoRo']],bars:[['Kucing (mandul)',60,100,'#534AB7'],['Anjing (mandul)',40,100,'#1D9E75'],['Kempen PoRo',42,100,'#3C3489'],['Klinik harian',58,100,'#AFA9EC']]},
+    {g:'135deg,#D85A30,#BA4520',tag:'Penyerahan Haiwan',big:fmt(t[1]),sub:'permintaan menyerahkan haiwan peliharaan',stats:[['65%','haiwan peliharaan'],['60%','kucing'],['35%','haiwan liar']],bars:[['Kucing peliharaan',62,100,'#534AB7'],['Anjing peliharaan',38,100,'#1D9E75'],['Kucing liar',57,100,'#9e9d99'],['Anjing liar',43,100,'#6b6b67']]},
   ];
-  return socialWrap(cards.map(c=>`<div class="sc-square"><div class="sc-head" style="background:linear-gradient(${c.g})"><div class="sc-tag">🐾 SPCA Selangor · ${c.tag}</div><div class="sc-big">${c.big}</div><div class="sc-sub">${c.sub}</div></div><div class="sc-body"><div class="sc-stat-row">${c.stats.map(([n,l])=>`<div class="sc-stat"><div class="sc-stat-n">${n}</div><div class="sc-stat-l">${l}</div></div>`).join('')}</div>${c.bars.map(([lbl,v,mx,col])=>`<div class="sc-bar-row"><div class="sc-bar-label">${lbl}</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:${typeof mx==='number'&&mx<=100?v:pct(v,mx)}%;background:${col}"></div></div><div class="sc-val">${typeof mx==='number'&&mx<=100?v+'%':fmt(v)}</div></div>`).join('')}</div><div class="sc-foot" style="background:linear-gradient(${c.g})"><div class="sc-logo">🐾 SPCA Selangor</div><div class="sc-url">spca.org.my</div></div></div>`).join(''));
+  return socialWrap(cards.map(c=>`<div class="sc-square"><div class="sc-head" style="background:linear-gradient(${c.g})"><div class="sc-tag">🐾 SPCA Selangor · ${c.tag}</div><div class="sc-big">${c.big}</div><div class="sc-sub">${c.sub}</div></div><div class="sc-body"><div class="sc-stat-row">${c.stats.map(([n,l])=>`<div class="sc-stat"><div class="sc-stat-n">${n}</div><div class="sc-stat-l">${l}</div></div>`).join('')}</div>${c.bars.map(([lbl,v,mx2,col])=>`<div class="sc-bar-row"><div class="sc-bar-label">${lbl}</div><div class="sc-bar-wrap"><div class="sc-bar" style="width:${mx2<=100?v:pct(v,mx2)}%;background:${col}"></div></div><div class="sc-val">${mx2<=100?v+'%':fmt(v)}</div></div>`).join('')}</div><div class="sc-foot" style="background:linear-gradient(${c.g})"><div class="sc-logo">🐾 SPCA Selangor</div><div class="sc-url">spca.org.my</div></div></div>`).join(''));
 }
 function buildStory(){
   const t=totals(),gt=grandTotal();
   const stories=[
-    {g:'170deg,#534AB7 0%,#3C3489 55%,#1D9E75 100%',eye:'SPCA Selangor · 2021–2026',p:'🐾',big:fmt(gt),sub:'messages from our community',items:[[fmt(t[0]),'spay/neuter enquiries'],[fmt(t[2]),'volunteer enquiries'],[fmt(t[4]),'rescue requests']]},
-    {g:'170deg,#D85A30 0%,#BA4520 55%,#534AB7 100%',eye:'Animal Surrender · 2021–2026',p:'🏠',big:fmt(t[1]),sub:'families asked us to help rehome animals',items:[['65%','owned pets'],['60%','were cats'],['Waitlist','12–14 months for some']]},
+    {g:'170deg,#534AB7 0%,#3C3489 50%,#1D9E75 100%',eye:'SPCA Selangor · 2023–2026',p:'🐾',big:fmt(gt),sub:'mesej daripada komuniti kami',items:[[fmt(t[0]),'pertanyaan peneuteran/spay'],[fmt(t[2]),'pertanyaan sukarelawan'],[fmt(t[5]),'permintaan penyelamatan']]},
+    {g:'170deg,#D85A30 0%,#BA4520 50%,#534AB7 100%',eye:'Penyerahan Haiwan · 2023–2026',p:'🏠',big:fmt(t[1]),sub:'permintaan menyerah atau melepaskan haiwan peliharaan',items:[['65%','haiwan peliharaan milik sendiri'],['60%','adalah kucing'],['Senarai tunggu','hingga 12–14 bulan untuk kes tertentu']]},
   ];
   return socialWrap(stories.map(s=>`<div class="sc-story"><div class="st-head" style="background:linear-gradient(${s.g})"><div class="st-eyebrow">${s.eye}</div><div class="st-paws">${s.p}</div><div class="st-big">${s.big}</div><div class="st-sub">${s.sub}</div>${s.items.map(([n,l])=>`<div class="st-item"><div class="st-item-n">${n}</div><div class="st-item-l">${l}</div></div>`).join('')}</div><div class="st-foot"><div class="st-logo">🐾 SPCA Selangor</div><div class="st-cta">spca.org.my</div></div></div>`).join(''));
 }
 function buildLand(){
   const t=totals(),gt=grandTotal(),mx=Math.max(...t);
-  return socialWrap(`<div class="sc-land"><div class="ld-head" style="background:linear-gradient(135deg,#534AB7,#1D9E75)"><div class="ld-left"><h2>🐾 5 Years of Animal Welfare</h2><p>SPCA Selangor · Email Enquiry Analytics 2021–2026</p></div><div class="ld-right"><div class="ld-big">${fmt(gt)}</div><div class="ld-bigsub">community conversations</div></div></div><div class="ld-body"><div class="ld-stat-row">${[[fmt(Math.round(gt/5.2)),'avg/year'],[fmt(t[0]),'neutering'],[fmt(t[1]),'surrender'],[fmt(t[2]),'volunteering'],[fmt(t[4]),'rescue']].map(([n,l])=>`<div class="ld-stat"><div class="ld-stat-n">${n}</div><div class="ld-stat-l">${l}</div></div>`).join('')}</div><div class="ld-bars">${CATS.map((c,i)=>`<div class="ld-bar-row"><div class="ld-bar-label">${c.split('/')[0].trim()}</div><div class="ld-bar-wrap"><div class="ld-bar" style="width:${pct(t[i],mx)}%;background:${CCOLS[i]}"></div></div><div class="ld-val">${fmt(t[i])}</div></div>`).join('')}</div></div><div class="ld-foot"><div class="ld-foot-l">🐾 SPCA Selangor · spca.org.my</div><div class="ld-foot-r">${isReal()?'Verified data':'Illustrative'} · ${new Date().getFullYear()}</div></div></div>`);
+  return socialWrap(`<div class="sc-land"><div class="ld-head" style="background:linear-gradient(135deg,#534AB7,#1D9E75)"><div class="ld-left"><h2>🐾 Kebajikan Haiwan Selangor</h2><p>SPCA Selangor · Analitik Emel 2023–2026</p></div><div class="ld-right"><div class="ld-big">${fmt(gt)}</div><div class="ld-bigsub">pertanyaan komuniti</div></div></div><div class="ld-body"><div class="ld-stat-row">${[[fmt(Math.round(gt/3)),'purata/tahun'],[fmt(t[0]),'peneuteran'],[fmt(t[1]),'penyerahan'],[fmt(t[2]),'sukarelawan'],[fmt(t[5]),'penyelamatan']].map(([n,l])=>`<div class="ld-stat"><div class="ld-stat-n">${n}</div><div class="ld-stat-l">${l}</div></div>`).join('')}</div><div class="ld-bars">${CATS.map((c,i)=>`<div class="ld-bar-row"><div class="ld-bar-label">${c.split('/')[0].trim()}</div><div class="ld-bar-wrap"><div class="ld-bar" style="width:${pct(t[i],mx)}%;background:${CCOLS[i]}"></div></div><div class="ld-val">${fmt(t[i])}</div></div>`).join('')}</div></div><div class="ld-foot"><div class="ld-foot-l">🐾 SPCA Selangor · spca.org.my</div><div class="ld-foot-r">${isReal()?'Data disahkan':'Data ilustrasi'} · ${new Date().getFullYear()}</div></div></div>`);
 }
 function buildInfog(){
   const t=totals(),gt=grandTotal();
-  return socialWrap(`<div class="sc-infog"><div class="if-head"><div class="if-eyebrow">SPCA Selangor · Email Analytics</div><div class="if-title">5 Years of Community Conversations</div><div class="if-sub">January 2021 – February 2026</div></div><div class="if-body"><div class="if-donut-row"><canvas id="ch-infog" width="110" height="110" style="max-height:110px;max-width:110px"></canvas><div class="if-legend">${CATS.map((c,i)=>`<div class="if-leg-item"><div class="if-leg-dot" style="background:${CCOLS[i]}"></div><div class="if-leg-label">${c.split('/')[0].trim()}</div><div class="if-leg-val">${fmt(t[i])}</div></div>`).join('')}</div></div><div class="if-callouts"><div class="if-callout" style="background:#EEEDFE"><div class="if-callout-n" style="color:#534AB7">${fmt(gt)}</div><div class="if-callout-l" style="color:#3C3489">total conversations</div></div><div class="if-callout" style="background:#E1F5EE"><div class="if-callout-n" style="color:#0F6E56">${fmt(Math.round(gt/5.2))}</div><div class="if-callout-l" style="color:#0F6E56">average per year</div></div><div class="if-callout" style="background:#FAEEDA"><div class="if-callout-n" style="color:#BA7517">+20%</div><div class="if-callout-l" style="color:#633806">growth 2021–2025</div></div><div class="if-callout" style="background:#FDE8E8"><div class="if-callout-n" style="color:#E24B4A">${fmt(t[4])}</div><div class="if-callout-l" style="color:#E24B4A">rescue calls</div></div></div></div><div class="if-foot"><div class="if-foot-logo">🐾 SPCA Selangor</div><div class="if-foot-url">spca.org.my</div></div></div>`);
+  return socialWrap(`<div class="sc-infog"><div class="if-head"><div class="if-eyebrow">SPCA Selangor · Email Analytics</div><div class="if-title">5 Years of Community Conversations</div><div class="if-sub">2023 – February 2026</div></div><div class="if-body"><div class="if-donut-row"><canvas id="ch-infog" width="110" height="110" style="max-height:110px;max-width:110px;flex-shrink:0"></canvas><div class="if-legend">${CATS.map((c,i)=>`<div class="if-leg-item"><div class="if-leg-dot" style="background:${CCOLS[i]}"></div><div class="if-leg-label">${c.split('/')[0].trim()}</div><div class="if-leg-val">${fmt(t[i])}</div></div>`).join('')}</div></div><div class="if-callouts"><div class="if-callout" style="background:#EEEDFE"><div class="if-callout-n" style="color:#534AB7">${fmt(gt)}</div><div class="if-callout-l" style="color:#3C3489">total conversations</div></div><div class="if-callout" style="background:#E1F5EE"><div class="if-callout-n" style="color:#0F6E56">${fmt(Math.round(gt/3))}</div><div class="if-callout-l" style="color:#0F6E56">average per year</div></div><div class="if-callout" style="background:#FAEEDA"><div class="if-callout-n" style="color:#BA7517">+15%</div><div class="if-callout-l" style="color:#7B4700">growth 2023–2025</div></div><div class="if-callout" style="background:#FDE8E8"><div class="if-callout-n" style="color:#E24B4A">${fmt(t[5])}</div><div class="if-callout-l" style="color:#C62828">rescue calls</div></div></div></div><div class="if-foot"><div class="if-foot-logo">🐾 SPCA Selangor</div><div class="if-foot-url">spca.org.my</div></div></div>`);
 }
 function drawInfog(){
   const el=document.getElementById('ch-infog');if(!el)return;
@@ -972,17 +948,18 @@ function drawInfog(){
 // ── PARTNER ───────────────────────────────────────────────────────────────────
 function buildPartner(){
   const t=totals(),gt=grandTotal();
-  const today=new Date().toLocaleDateString('en-MY',{day:'numeric',month:'long',year:'numeric'});
   return`<div class="ptn-wrap">
-  <div class="ptn-hero"><div><h2>🐾 SPCA Selangor — Community Impact</h2><p>Five years of animal welfare enquiries · A case for partnership</p></div><div><div class="ptn-hero-n">${fmt(gt)}</div><div class="ptn-hero-l">community conversations<br>2021–2026</div></div></div>
-  <div class="imp-grid">${[[fmt(t[0]),'spay/neuter enquiries'],[fmt(t[2]),'volunteer enquiries'],[fmt(t[4]),'rescue cases responded'],[fmt(t[1]),'surrender cases managed'],[fmt(t[3]),'donation/CSR enquiries'],['+20%','enquiry growth 5 years']].map(([n,l])=>`<div class="imp-box"><div class="imp-n">${n}</div><div class="imp-l">${l}</div></div>`).join('')}</div>
-  <div class="ptn-2col">
-    <div><div class="ptn-col-head">For Sponsors & CSR Partners</div>${[['Corporate volunteer groups hosted',fmt(t[2])],['CSR / donation enquiries',fmt(t[3])],['Events & media requests',fmt(t[5])],['Avg volunteers placed / year',fmt(Math.round(t[2]/5.2))]].map(([l,v])=>`<div class="ptn-row"><span>${l}</span><strong>${v}</strong></div>`).join('')}<div class="ptn-note teal">Corporate CSR groups (15–20 pax) welcomed weekdays. Student RM80 · Adult RM120.</div></div>
-    <div><div class="ptn-col-head">For NGO & Rescue Partners</div>${[['Rescue referrals/year (no mobile unit)',fmt(Math.round(t[4]*.65))],['Stray colony/overpopulation cases',fmt(Math.round(t[6]*.34))],['Removal → TNRM advocacy',fmt(t[6])],['Active surrender waitlist/month',fmt(Math.round(t[1]/5.2/12))]].map(([l,v])=>`<div class="ptn-row"><span>${l}</span><strong>${v}</strong></div>`).join('')}<div class="ptn-note amber">~${fmt(Math.round(t[4]*.65))} rescue cases/year need referral — mobile unit partnership would fill this gap.</div></div>
+  ${demoBanner('12px 24px')}
+  <div style="${demoOpacity()}">
+    <div class="ptn-hero"><div><h2>🐾 SPCA Selangor — Community Impact</h2><p>Three years of animal welfare enquiries · A case for partnership</p></div><div><div class="ptn-hero-n">${fmt(gt)}</div><div class="ptn-hero-l">community conversations<br>2023–2026</div></div></div>
+    <div class="imp-grid">${[[fmt(t[0]),'spay/neuter enquiries'],[fmt(t[2]),'volunteer enquiries'],[fmt(t[5]),'rescue cases responded'],[fmt(t[1]),'surrender cases managed'],[fmt(t[3]),'donation/CSR enquiries'],[fmt(t[6]),'cruelty reports received']].map(([n,l])=>`<div class="imp-box"><div class="imp-n">${n}</div><div class="imp-l">${l}</div></div>`).join('')}</div>
+    <div class="ptn-2col">
+      <div><div class="ptn-col-head">For Sponsors & CSR Partners</div>${[['Corporate volunteer groups hosted',fmt(t[2])],['CSR / donation enquiries',fmt(t[3])],['Events & media requests',fmt(t[7])],['Avg volunteers placed / year',fmt(Math.round(t[2]/3))]].map(([l,v])=>`<div class="ptn-row"><span>${l}</span><strong>${v}</strong></div>`).join('')}<div class="ptn-note teal">Corporate CSR groups (15–20 pax) welcomed weekdays. Student RM80 · Adult RM120.</div></div>
+      <div><div class="ptn-col-head">For NGO & Rescue Partners</div>${[['Rescue referrals/year (no mobile unit)',fmt(Math.round(t[5]*.65))],['Stray colony/overpopulation cases',fmt(Math.round(t[8]*.34))],['Cruelty reports received',fmt(t[6])],['Active surrender waitlist/month',fmt(Math.round(t[1]/3/12))]].map(([l,v])=>`<div class="ptn-row"><span>${l}</span><strong>${v}</strong></div>`).join('')}<div class="ptn-note amber">~${fmt(Math.round(t[5]*.65))} rescue cases/year need referral — mobile unit partnership would fill this gap.</div></div>
+    </div>
+    <div style="background:#f5f5f0;border-radius:8px;padding:12px 14px;font-size:12px;color:#1a1a18;line-height:1.8;margin-bottom:14px;font-style:italic;border-left:4px solid #0F6E56">"Every email represents a person who didn't know where else to turn. Over three years, that's ${fmt(gt)} moments of trust."</div>
+    <div class="ptn-cta"><h4>Partner with SPCA Selangor</h4><p>info@spca.org.my · spca.org.my · LHDN-approved</p></div>
   </div>
-  <div style="background:#f5f5f0;border-radius:8px;padding:12px 14px;font-size:12px;color:#1a1a18;line-height:1.8;margin-bottom:14px;font-style:italic;border-left:4px solid #0F6E56">"Every email represents a person who didn't know where else to turn. Over five years, that's ${fmt(gt)} moments of trust."</div>
-  <div class="ptn-cta"><h4>Partner with SPCA Selangor</h4><p>info@spca.org.my · spca.org.my · LHDN-approved</p></div>
-  ${isReal()?'':`<div style="background:var(--amber-light);border-radius:8px;padding:8px 14px;font-size:11px;color:#633806;margin-top:10px">⚠ Illustrative data.</div>`}
 </div>`;
 }
 
@@ -990,20 +967,96 @@ function buildPartner(){
 function buildOps(){
   const t=totals(),gt=grandTotal();
   return`<div class="ops-wrap">
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px"><div><div style="font-size:17px;font-weight:700">Internal Operations Report</div><div style="font-size:11px;color:#9e9d99;margin-top:2px">${new Date().toLocaleDateString('en-MY',{month:'long',year:'numeric'})}</div></div><div style="background:#EEEDFE;border-radius:6px;padding:4px 12px;font-size:12px;font-weight:600;color:#534AB7">${isReal()?`✓ Real — ${fmt(intStat.total)} threads`:'⚠ Illustrative'}</div></div>
-  <div class="ops-metric-row"><div class="ops-metric"><div class="ops-metric-n">${fmt(gt)}</div><div class="ops-metric-l">total threads</div><div class="ops-metric-s">2021–2026</div></div><div class="ops-metric"><div class="ops-metric-n">${fmt(Math.round(gt/5.2))}</div><div class="ops-metric-l">avg/year</div><div class="ops-metric-s">~${Math.round(gt/5.2/52)}/week</div></div><div class="ops-metric"><div class="ops-metric-n">${fmt(Math.round(gt*10/60))}</div><div class="ops-metric-l">staff hrs/year</div><div class="ops-metric-s">@10 min/thread</div></div><div class="ops-metric"><div class="ops-metric-n">~68%</div><div class="ops-metric-l">template-able</div><div class="ops-metric-s">automation potential</div></div></div>
-  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9e9d99;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid #e2e1db">Triage Priority Matrix</div>
-  <div class="tri-grid"><div class="tri h"><div class="tri-lbl">🔴 High — same day</div><div class="tri-items">Donations & CSR · Aggressive animal · Government/JAS</div></div><div class="tri m"><div class="tri-lbl">🟡 Medium — 4 hrs</div><div class="tri-items">Rescue referral · Urgent surrender · Events & media</div></div><div class="tri n"><div class="tri-lbl">🟣 Normal — daily batch</div><div class="tri-items">Neutering / PoRo · Volunteering · General surrender</div></div><div class="tri l"><div class="tri-lbl">⚫ Low — auto-reply</div><div class="tri-items">Removal (refer PBT) · Repeat PoRo FAQ · General enquiry</div></div></div>
-  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9e9d99;margin:12px 0 10px;padding-bottom:5px;border-bottom:1px solid #e2e1db">Template Coverage</div>
-  ${[['Removal / Nuisance (PBT referral)',85],['Volunteering (fee + booking)',80],['Neutering / PoRo FAQ',75],['Rescue (referral + JAS)',70],['Donations (e-invoice)',65],['Surrender (waitlist)',60]].map(([l,v])=>`<div class="pb" style="margin-bottom:6px"><div class="pb-label" style="width:220px;font-size:11px">${l}</div><div class="pb-wrap"><div class="pb-fill" style="width:${v}%;background:#534AB7"></div></div><div class="pb-val" style="font-size:11px;color:#534AB7;font-weight:600">${v}%</div></div>`).join('')}
-  <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9e9d99;margin:14px 0 10px;padding-bottom:5px;border-bottom:1px solid #e2e1db">Recommended Actions</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:#1a1a18;line-height:2"><div>→ PoRo FAQ auto-reply (saves ~25%)<br>→ Volunteer slot booking system<br>→ Rescue one-click referral template<br>→ Surrender self-service waitlist</div><div>→ Min. 2 dedicated email staff<br>→ 9:00–9:20am daily triage block<br>→ 4:00pm reply block for backlog<br>→ Weekly unclassified subject review</div></div>
-  <canvas id="ch-ops" style="max-height:150px;margin-top:14px"></canvas>
+  ${demoBanner('12px 24px')}
+  <div style="${demoOpacity()}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <div><div style="font-size:17px;font-weight:700;color:#1a1a18">Internal Operations Report</div><div style="font-size:11px;color:#6b6b67;margin-top:2px">${new Date().toLocaleDateString('en-MY',{month:'long',year:'numeric'})}</div></div>
+      <div style="background:#EEEDFE;border-radius:6px;padding:4px 12px;font-size:12px;font-weight:600;color:#3C3489">${isReal()?`✓ Real — ${fmt(intStat.total)} threads`:'⚠ Illustrative'}</div>
+    </div>
+    <div class="ops-metric-row">
+      <div class="ops-metric"><div class="ops-metric-n">${fmt(gt)}</div><div class="ops-metric-l">total threads</div><div class="ops-metric-s">2023–2026</div></div>
+      <div class="ops-metric"><div class="ops-metric-n">${fmt(Math.round(gt/3))}</div><div class="ops-metric-l">avg/year</div><div class="ops-metric-s">~${Math.round(gt/3/52)}/week</div></div>
+      <div class="ops-metric"><div class="ops-metric-n">${fmt(Math.round(gt*10/60))}</div><div class="ops-metric-l">staff hrs/year</div><div class="ops-metric-s">@10 min/thread</div></div>
+      <div class="ops-metric"><div class="ops-metric-n">~68%</div><div class="ops-metric-l">template-able</div><div class="ops-metric-s">automation potential</div></div>
+    </div>
+    <div class="ops-sec">Triage Priority Matrix</div>
+    <div class="tri-grid">
+      <div class="tri h"><div class="tri-lbl">🔴 High — same day</div><div class="tri-items">Donations & CSR · Cruelty reports · Aggressive animal · Government/JAS</div></div>
+      <div class="tri m"><div class="tri-lbl">🟡 Medium — 4 hrs</div><div class="tri-items">Rescue referral · Clinic appointments · Urgent surrender · Events & media</div></div>
+      <div class="tri n"><div class="tri-lbl">🟣 Normal — daily batch</div><div class="tri-items">Neutering / PoRo · Volunteering · General surrender enquiry</div></div>
+      <div class="tri l"><div class="tri-lbl">⚫ Low — auto-reply</div><div class="tri-items">Removal (refer PBT) · Repeat PoRo FAQ · General enquiry</div></div>
+    </div>
+    <div class="ops-sec">Template / Automation Coverage</div>
+    ${[['Removal / Nuisance (PBT referral)',85],['Volunteering (fee + booking)',80],['Neutering / PoRo FAQ',75],['Rescue (referral + JAS)',70],['Donations (e-invoice)',65],['Surrender (waitlist)',60],['Clinic (appointment booking)',55],['Cruelty (JPV referral)',50]].map(([l,v])=>`<div class="pb" style="margin-bottom:6px"><div class="pb-label" style="width:220px;font-size:11px;color:#4a4a46">${l}</div><div class="pb-wrap"><div class="pb-fill" style="width:${v}%;background:#534AB7"></div></div><div class="pb-val" style="font-size:11px;color:#3C3489;font-weight:600">${v}%</div></div>`).join('')}
+    <div class="ops-sec">Category Workload</div>
+    <canvas id="ch-ops" style="max-height:150px;margin-bottom:16px"></canvas>
+    <div class="ops-sec">Recommended Actions</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:#1a1a18;line-height:2">
+      <div>→ PoRo FAQ auto-reply (saves ~25%)<br>→ Volunteer slot booking system<br>→ Rescue one-click referral template<br>→ Surrender self-service waitlist</div>
+      <div>→ Min. 2 dedicated email staff<br>→ 9:00–9:20am daily triage block<br>→ 4:00pm reply block for backlog<br>→ Cruelty → JPV same-day escalation</div>
+    </div>
+  </div>
 </div>`;
 }
 function drawOpsChart(){
   const el=document.getElementById('ch-ops');if(!el)return;
   chartReg['ops']=new Chart(el,{type:'bar',data:{labels:CATS.map(c=>c.split('/')[0].trim()),datasets:[{data:totals(),backgroundColor:CCOLS,borderRadius:4}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:9}}}}}});
+}
+
+// ── ANALYST ───────────────────────────────────────────────────────────────────
+function buildAnalyst(){
+  const d=D();const yrs=availYrs();const t=totals();const gt=grandTotal();
+  const matrixRows=yrs.map(y=>`<tr><td><strong>${y}${y===PARTIAL_YR?' *':''}</strong></td>${CATS.map((_,i)=>`<td>${d[y]?fmt(d[y][i]):'-'}</td>`).join('')}<td><strong>${d[y]?fmt(d[y].reduce((a,b)=>a+b,0)):'-'}</strong></td></tr>`).join('');
+  const kwSection=Object.entries(KW).map(([cat,pats])=>`<div style="margin-bottom:10px"><div style="font-size:11px;font-weight:600;color:#1a1a18;margin-bottom:4px">${cat}</div><div>${pats.map(p=>{const s=p.toString().replace(/\/[gi]*$/,'').replace(/^\//,'');return`<span class="kw-tag">${s}</span>`;}).join('')}</div></div>`).join('');
+  let unmatchedSection='<div style="font-size:12px;color:#9e9d99;padding:8px 0">Upload a real .mbox file to see unmatched subjects.</div>';
+  let wordGapSection=unmatchedSection;
+  if(isReal()&&intStat.unmatchedSubjects.length>0){
+    const sample=intStat.unmatchedSubjects.slice(0,100);
+    unmatchedSection=`<div style="font-size:11px;color:#9e9d99;margin-bottom:10px">Showing ${Math.min(100,intStat.unmatchedSubjects.length)} of ${fmt(intStat.unmatched)} · Download CSV for full list</div>${sample.map(({subj,year,lang})=>{let sug='';if(/kucing|cat|kitten/i.test(subj))sug='Rescue/Surrender?';else if(/anjing|dog|puppy/i.test(subj))sug='Rescue/Surrender?';else if(/ambil|collect|pickup/i.test(subj))sug='Surrender?';else if(/bayar|payment|resit|receipt/i.test(subj))sug='Donations?';else if(/bila|when|tarikh|date/i.test(subj))sug='Volunteering?';return`<div class="unmatched-item"><div class="unmatched-subj">${subj}</div><div class="unmatched-meta">[${year||'??'}][${lang}]${sug?`<span class="suggest-tag">${sug}</span>`:''}</div></div>`;}).join('')}`;
+    const topWords=Object.entries(intStat.wordFreq).sort((a,b)=>b[1]-a[1]).slice(0,30);
+    const maxWf=topWords[0]?.[1]||1;
+    wordGapSection=`<div style="font-size:11px;color:#9e9d99;margin-bottom:10px">Top words in unmatched subjects — your keyword gaps.</div>${topWords.map(([w,c])=>`<div class="pattern-row"><div class="pattern-kw">${w}</div><div class="pattern-count">${c}×</div><div class="pattern-bar"><div class="pattern-fill" style="width:${pct(c,maxWf)}%"></div></div><div class="pattern-cat">${guessCategory(w)}</div></div>`).join('')}`;
+  }
+  return`<div class="ana-wrap">
+  <div class="ana-head"><h2>🔍 Full Analyst Report — SPCA Selangor</h2><p>Internal use only · ${today()} · ${isReal()?`Real data — ${fmt(intStat.total)} threads · ${intStat.total?Math.round(intStat.matched/intStat.total*100):0}% match rate · ${fmt(intStat.spam)} spam filtered`:'Illustrative demo data'} · * 2026 = partial year</p></div>
+  <div class="ana-section"><h3>1. Year × Category Matrix</h3>
+    <table class="ana-table"><tr><th>Year</th>${CATS.map(c=>`<th>${c.split('/')[0].trim()}</th>`).join('')}<th>TOTAL</th></tr>${matrixRows}<tr style="background:#f5f5f0"><td><strong>TOTAL</strong></td>${t.map(v=>`<td><strong>${fmt(v)}</strong></td>`).join('')}<td><strong>${fmt(gt)}</strong></td></tr></table>
+  </div>
+  <div class="ana-section"><h3>2. Parse stats</h3>
+    <table class="ana-table">
+      <tr><th>Metric</th><th>Value</th></tr>
+      <tr><td>Total threads scanned</td><td>${isReal()?fmt(intStat.total):'n/a (demo)'}</td></tr>
+      <tr><td>Classified</td><td>${isReal()?fmt(intStat.matched)+' ('+pct(intStat.matched,intStat.total)+'%)':'—'}</td></tr>
+      <tr><td>Unclassified</td><td>${isReal()?fmt(intStat.unmatched)+' ('+pct(intStat.unmatched,intStat.total)+'%)':'—'}</td></tr>
+      <tr><td>Spam filtered</td><td>${isReal()?fmt(intStat.spam):'—'}</td></tr>
+      <tr><td>English subjects</td><td>${isReal()?fmt(intStat.langs.EN||0):'—'}</td></tr>
+      <tr><td>Malay / BM</td><td>${isReal()?fmt(intStat.langs.BM||0):'—'}</td></tr>
+      <tr><td>Mixed BM+EN</td><td>${isReal()?fmt(intStat.langs.Mixed||0):'—'}</td></tr>
+    </table>
+  </div>
+  <div class="ana-section"><h3>3. Active keyword list</h3>${kwSection}</div>
+  <div class="ana-section"><h3>4. Keyword gap analysis</h3>${wordGapSection}</div>
+  <div class="ana-section"><h3>5. Unmatched subject samples</h3>${unmatchedSection}</div>
+  <div style="padding:12px 24px;font-size:10px;color:#9e9d99;border-top:1px solid #e2e1db">SPCA Selangor · Internal analyst use only · ${today()}</div>
+</div>`;
+}
+function guessCategory(w){
+  if(/kucing|anjing|cat|dog|stray|liar|injured|hurt|terluka|jumpa/.test(w))return'→ Rescue/Surrender?';
+  if(/neuter|mandul|spay|steril/.test(w))return'→ Neutering?';
+  if(/volunteer|sukarela|intern|program/.test(w))return'→ Volunteering?';
+  if(/donat|derma|bayar|payment|fund/.test(w))return'→ Donations?';
+  if(/halau|complaint|noise|bising|ganggu/.test(w))return'→ Removal?';
+  if(/event|acara|media|press/.test(w))return'→ Events?';
+  if(/klinik|clinic|rawatan|appointment/.test(w))return'→ Clinic?';
+  if(/dera|abuse|neglect|cruelty/.test(w))return'→ Cruelty?';
+  return'→ unclear';
+}
+function downloadAnalystCSV(){
+  if(!isReal()||!intStat.unmatchedSubjects.length){alert('Upload a real .mbox file first.');return;}
+  const rows=[['Subject','Year','Language','Category hint'],...intStat.unmatchedSubjects.map(({subj,year,lang})=>[`"${subj.replace(/"/g,"'")}"`,year||'unknown',lang,guessCategory(subj.toLowerCase())])];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));
+  a.download='spca_unmatched_subjects.csv';a.click();
 }
 
 // ── PRINT ─────────────────────────────────────────────────────────────────────
@@ -1015,7 +1068,6 @@ function printReport(){
   w.document.close();setTimeout(()=>w.print(),800);
 }
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
 buildReport();
 </script>
 </body>
