@@ -398,13 +398,15 @@ async function fetchDoneToday(){
     },
     page_size: 20,
   };
-  const res2 = await fetch(
-    `${NOTION_PROXY}/v1/databases/${DB_ID}/query`,
-    { method:'POST', headers, body: JSON.stringify(body) }
-  );
-  if(!res2.ok) return [];
-  const data2 = await res2.json();
-  return parseNotionResults(data2.results, true);
+  try {
+    const res = await fetch(
+      `${NOTION_PROXY}/v1/databases/${DB_ID}/query`,
+      { method:'POST', headers, body: JSON.stringify(body) }
+    );
+    if(!res.ok) return [];
+    const data = await res.json();
+    return parseNotionResults(data.results, true);
+  } catch{ return []; }
 }
 
 function parseNotionResults(results, isDone){
