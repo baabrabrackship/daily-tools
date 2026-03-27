@@ -3,562 +3,653 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Command Centre</title>
+<title>Daily Control — Kelvin</title>
 <style>
 :root{
   --bg:#f5f5f0;--surface:#fff;--surface2:#f0efea;--border:#e2e1db;--border2:#cccbc4;
   --text:#1a1a18;--text2:#6b6b67;--text3:#9e9d99;
-  --purple:#534AB7;--purple-l:#EEEDFE;--purple-d:#3C3489;
-  --green:#1D9E75;--red:#E24B4A;--amber:#854F0B;--amber-l:#FAEEDA;
-  --blue:#185FA5;--blue-l:#E6F1FB;
-  --r:10px;--r-sm:6px;--fs:15px;--fs-sm:13px;--fs-xs:11px;
+  --purple:#534AB7;--purple-light:#EEEDFE;--purple-dark:#3C3489;
+  --teal:#0F6E56;--teal-light:#E1F5EE;
+  --amber:#854F0B;--amber-light:#FAEEDA;
+  --blue:#185FA5;--blue-light:#E6F1FB;
+  --green:#1D9E75;--red:#E24B4A;--orange:#D4622A;
+  --radius:10px;--radius-sm:6px;
+  --fs:15px;--fs-sm:13px;--fs-xs:11px;
 }
 @media(prefers-color-scheme:dark){
-  :root{--bg:#1a1a18;--surface:#242422;--surface2:#2e2e2b;--border:#3a3a36;--border2:#4e4e4a;
-    --text:#e8e7e2;--text2:#9e9d99;--text3:#6b6b67;--purple-l:#2a2660;--amber-l:#2e1e06;--blue-l:#0a1e36;}
+  :root{
+    --bg:#1a1a18;--surface:#242422;--surface2:#2e2e2b;--border:#3a3a36;--border2:#4e4e4a;
+    --text:#e8e7e2;--text2:#9e9d99;--text3:#6b6b67;
+    --purple-light:#2a2660;--purple-dark:#AFA9EC;
+    --teal-light:#0a2e26;--amber-light:#2e1e06;--blue-light:#0a1e36;
+  }
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:var(--fs);min-height:100vh;padding:20px 16px 48px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:var(--fs);min-height:100vh;padding:20px 16px 40px}
 .app{max-width:580px;margin:0 auto}
 
-/* header */
-.top-bar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;gap:10px;flex-wrap:wrap}
+/* TOP BAR */
+.top-bar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:10px;flex-wrap:wrap}
 .day-name{font-size:26px;font-weight:700;line-height:1.1}
-.day-date{font-size:var(--fs-sm);color:var(--text2);margin-top:2px}
+.day-date{font-size:var(--fs-sm);color:var(--text2);margin-top:3px}
+.top-right{display:flex;align-items:center;gap:10px}
+.font-ctrl{display:flex;background:var(--surface2);border-radius:var(--radius-sm);padding:3px;gap:3px}
+.fbtn{width:28px;height:28px;border:none;background:transparent;color:var(--text2);font-size:13px;font-weight:700;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center}
+.fbtn:hover,.fbtn.active{background:var(--surface);color:var(--text)}
 .score-box{text-align:right}
 .score-n{font-size:26px;font-weight:700;color:var(--purple);line-height:1}
 .score-l{font-size:var(--fs-xs);color:var(--text3)}
 
-/* sync */
-.sync-bar{display:flex;align-items:center;gap:6px;margin-bottom:18px;height:18px}
-.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .3s}
-.dot.synced{background:var(--green)}.dot.syncing{background:var(--amber);animation:pulse 1s infinite}
-.dot.error{background:var(--red)}.dot.offline{background:var(--text3)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.sync-lbl{font-size:var(--fs-xs);color:var(--text3)}
+/* SYNC */
+.sync-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px;height:18px}
+.sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.sync-dot.synced{background:var(--green)}
+.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite}
+.sync-dot.error{background:var(--red)}
+.sync-dot.offline{background:var(--text3)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-label{font-size:var(--fs-xs);color:var(--text3)}
 
-/* pips */
-.pips{display:flex;gap:5px;margin-bottom:24px}
-.pip{flex:1;height:5px;border-radius:3px;background:var(--border);transition:background .3s}
+/* PIPS */
+.pips{display:flex;gap:5px;margin-bottom:20px}
+.pip{flex:1;height:5px;border-radius:3px;background:var(--border);transition:background .4s}
 .pip.done{background:var(--purple)}
 
-/* sections */
-.sec{margin-bottom:24px}
-.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.sec-lbl{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--text3)}
-.sec-action{font-size:var(--fs-xs);color:var(--purple);cursor:pointer;background:none;border:none;padding:2px 6px}
+/* SECTIONS */
+.sec{margin-bottom:22px}
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sec-label{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--text3)}
+.sec-action{font-size:var(--fs-xs);color:var(--purple);cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
 
-/* notion task card */
-.task-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;overflow:hidden;transition:opacity .3s}
-.task-card.completing{opacity:.5}
-.task-main{display:flex;align-items:center;gap:10px;padding:12px 14px}
-.cb{width:24px;height:24px;min-width:24px;border-radius:6px;border:2px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+/* AREA TABS */
+.area-tabs{display:flex;gap:6px;margin-bottom:16px}
+.area-tab{padding:6px 16px;border-radius:20px;font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);transition:all .15s}
+.area-tab.active{background:var(--purple);border-color:var(--purple);color:#fff}
+
+/* FOCUS CARD — top 3 */
+.focus-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px}
+.focus-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid var(--border);transition:background .15s}
+.focus-item:last-child{border-bottom:none}
+.focus-item.completing{background:var(--purple-light);opacity:.6;transition:all .4s}
+.rank{width:20px;height:20px;border-radius:50%;background:var(--purple-light);color:var(--purple);font-size:var(--fs-xs);font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.rank.r1{background:var(--purple);color:#fff}
+.cb{width:22px;height:22px;min-width:22px;border-radius:6px;border:2px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;background:transparent;margin-top:1px}
 .cb.done{background:var(--purple);border-color:var(--purple)}
-.cb svg{display:none;width:12px;height:12px}
 .cb.done svg{display:block}
+.cb svg{display:none;width:11px;height:11px}
 .task-info{flex:1;min-width:0}
-.task-name{font-size:var(--fs);color:var(--text);line-height:1.4;word-break:break-word}
+.task-name{font-size:var(--fs);color:var(--text);line-height:1.35;word-break:break-word}
 .task-name.done{text-decoration:line-through;color:var(--text3)}
-.task-meta{font-size:var(--fs-xs);color:var(--text3);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap}
-.overdue{color:var(--red)}
-.score-badge{font-size:var(--fs-xs);font-weight:700;padding:3px 9px;border-radius:20px;flex-shrink:0}
-.score-hi{background:var(--purple-l);color:var(--purple)}
-.score-md{background:var(--blue-l);color:var(--blue)}
-.score-lo{background:var(--surface2);color:var(--text3)}
+.task-meta{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;align-items:center}
+.badge{font-size:var(--fs-xs);padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap}
+.b-high{background:#fde8e8;color:var(--red)}
+.b-medium{background:var(--amber-light);color:var(--amber)}
+.b-low{background:var(--teal-light);color:var(--teal)}
+.b-due{background:var(--surface2);color:var(--text2)}
+.b-overdue{background:#fde8e8;color:var(--red)}
+.score-badge{font-size:var(--fs-xs);color:var(--text3)}
 
-/* score row */
-.score-row{background:var(--surface2);border-top:1px solid var(--border);padding:8px 14px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.sl-wrap{display:flex;align-items:center;gap:6px;flex:1;min-width:120px}
-.sl-lbl{font-size:var(--fs-xs);color:var(--text2);white-space:nowrap;width:56px}
-input[type=range]{flex:1;accent-color:var(--purple);height:3px;cursor:pointer}
-.sl-val{font-size:var(--fs-xs);font-weight:700;color:var(--purple);width:14px;text-align:right}
+/* ALL TASKS */
+.all-tasks-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.task-row{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);transition:background .15s}
+.task-row:last-child{border-bottom:none}
+.task-row.done-row .task-name{text-decoration:line-through;color:var(--text3)}
 
-/* empty */
-.empty{font-size:var(--fs-sm);color:var(--text3);font-style:italic;padding:14px 0;text-align:center}
-
-/* add row */
-.add-row{display:flex;gap:7px;align-items:stretch;margin-top:10px}
-.add-row input{flex:1;font-size:var(--fs-sm);padding:9px 11px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);color:var(--text);outline:none}
-.add-row input:focus{border-color:var(--purple)}
-.add-btn{padding:9px 14px;border-radius:var(--r-sm);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:none;background:var(--purple);color:#fff;white-space:nowrap}
-.add-btn:hover{background:var(--purple-d)}
-
-/* delegate */
-.del-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:4px 14px 10px}
-.del-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:var(--fs-sm);color:var(--text2)}
-.del-item:last-child{border-bottom:none}
-.del-rm{font-size:var(--fs-xs);color:var(--red);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px}
-.del-rm:hover{background:rgba(226,75,74,.1)}
-
-/* blocks */
+/* BLOCKS */
 .block-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.block{background:var(--surface2);border:1px solid transparent;border-radius:var(--r);padding:11px 13px;transition:all .2s}
-.block.active{background:var(--purple-l);border-color:#AFA9EC}
+.block{background:var(--surface2);border:1.5px solid transparent;border-radius:var(--radius);padding:11px 13px;transition:all .2s;cursor:default}
+.block.active{background:var(--purple-light);border-color:#AFA9EC}
 .block-time{font-size:var(--fs-sm);font-weight:600;color:var(--text2)}
 .block.active .block-time{color:var(--purple)}
 .block-label{font-size:var(--fs);color:var(--text);margin-top:3px;line-height:1.3}
+.block-tip{font-size:var(--fs-xs);color:var(--text3);margin-top:4px;line-height:1.3}
 
-/* stats */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center}
-.stat-n{font-size:22px;font-weight:700;color:var(--text)}
+/* ADHD nudge banner */
+.nudge{background:var(--purple-light);border:1px solid #AFA9EC;border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:14px;font-size:var(--fs-sm);color:var(--purple);line-height:1.4;display:none}
+.nudge.show{display:block}
+
+/* DELEGATE */
+.del-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px 12px 10px}
+.del-item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:var(--fs-sm);color:var(--text2)}
+.del-item:last-child{border-bottom:none}
+.del-btn{font-size:var(--fs-xs);color:var(--red);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px}
+.del-btn:hover{background:rgba(226,75,74,.1)}
+
+/* ADD ROW */
+.add-row{display:flex;gap:7px;align-items:stretch;margin-top:8px}
+.add-row input,.add-row select{font-size:var(--fs-sm);padding:9px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
+.add-row input:focus,.add-row select:focus{border-color:var(--purple)}
+.add-row input{flex:1;min-width:0}
+.add-btn{padding:9px 14px;border-radius:var(--radius-sm);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border:none;background:var(--purple);color:#fff;white-space:nowrap;flex-shrink:0;transition:background .15s}
+.add-btn:hover{background:var(--purple-dark)}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
+.stat-n{font-size:20px;font-weight:700;color:var(--text)}
 .stat-l{font-size:var(--fs-xs);color:var(--text3);margin-top:3px}
 
-/* tabs */
-.tabs{display:flex;gap:2px;background:var(--surface2);border-radius:var(--r-sm);padding:3px;margin-bottom:20px}
-.tab{flex:1;padding:7px;border:none;background:transparent;color:var(--text2);font-size:var(--fs-sm);font-weight:500;cursor:pointer;border-radius:5px;transition:all .15s}
-.tab.active{background:var(--surface);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+/* EMPTY */
+.empty{font-size:var(--fs-sm);color:var(--text3);font-style:italic;padding:14px}
 
-/* api setup */
-.setup-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px}
-.setup-card h3{font-size:var(--fs);font-weight:600;margin-bottom:6px}
-.setup-card p{font-size:var(--fs-sm);color:var(--text2);margin-bottom:14px;line-height:1.5}
-.setup-card input{width:100%;font-size:var(--fs-sm);padding:10px 12px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface2);color:var(--text);outline:none;margin-bottom:10px}
-.setup-card input:focus{border-color:var(--purple)}
-.setup-card label{font-size:var(--fs-xs);color:var(--text3);display:block;margin-bottom:4px;margin-top:8px}
-
-/* loading spinner */
-.spinner{display:flex;justify-content:center;padding:30px}
-.sp{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .7s linear infinite}
+/* LOADING */
+.loading{display:flex;align-items:center;gap:8px;padding:16px;color:var(--text3);font-size:var(--fs-sm)}
+.spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* FOOTER */
 .footer{text-align:center;margin-top:24px;font-size:var(--fs-xs);color:var(--text3)}
 .footer a{color:var(--purple);text-decoration:none}
 .reset-btn{display:block;margin:14px auto 0;font-size:var(--fs-xs);color:var(--text3);background:none;border:1px solid var(--border);border-radius:20px;padding:4px 14px;cursor:pointer}
+.reset-btn:hover{border-color:var(--border2);color:var(--text2)}
+
+/* NOTION LINK */
+.notion-link{font-size:var(--fs-xs);color:var(--text3);text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.notion-link:hover{color:var(--purple)}
 </style>
 </head>
 <body>
 <div class="app">
 
+  <!-- TOP BAR -->
   <div class="top-bar">
     <div>
       <div class="day-name" id="day-name"></div>
       <div class="day-date" id="day-date"></div>
     </div>
-    <div class="score-box">
-      <div class="score-n" id="pct">—</div>
-      <div class="score-l">done today</div>
+    <div class="top-right">
+      <div class="font-ctrl">
+        <button class="fbtn" id="fs-s" onclick="setFont('s')">S</button>
+        <button class="fbtn active" id="fs-m" onclick="setFont('m')">M</button>
+        <button class="fbtn" id="fs-l" onclick="setFont('l')">L</button>
+        <button class="fbtn" id="fs-xl" onclick="setFont('xl')">XL</button>
+      </div>
+      <div class="score-box">
+        <div class="score-n" id="pct">—</div>
+        <div class="score-l">today</div>
+      </div>
     </div>
   </div>
 
+  <!-- SYNC -->
   <div class="sync-bar">
-    <div class="dot offline" id="sync-dot"></div>
-    <div class="sync-lbl" id="sync-lbl">Connecting…</div>
+    <div class="sync-dot offline" id="sync-dot"></div>
+    <div class="sync-label" id="sync-label">Connecting to Notion…</div>
   </div>
 
-  <div class="pips" id="pips"></div>
+  <!-- PIPS -->
+  <div class="pips" id="pips"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('today')">Today</button>
-    <button class="tab" onclick="switchTab('all')">All Tasks</button>
-    <button class="tab" onclick="switchTab('setup')">⚙ Setup</button>
+  <!-- ADHD NUDGE -->
+  <div class="nudge" id="nudge"></div>
+
+  <!-- AREA TABS -->
+  <div class="area-tabs">
+    <button class="area-tab active" id="tab-all" onclick="setArea('all')">All</button>
+    <button class="area-tab" id="tab-work" onclick="setArea('work')">Work</button>
+    <button class="area-tab" id="tab-personal" onclick="setArea('personal')">Personal</button>
   </div>
 
-  <div id="tab-today">
-
-    <div class="sec">
-      <div class="sec-hd">
-        <div class="sec-lbl">🎯 Top 3 — highest impact now</div>
-        <button class="sec-action" onclick="refreshNotion()">↻ Refresh</button>
-      </div>
-      <div id="top3-list"></div>
+  <!-- TOP 3 FOCUS -->
+  <div class="sec">
+    <div class="sec-header">
+      <div class="sec-label">🎯 Top 3 — focus here first</div>
+      <a class="notion-link" href="https://www.notion.so/baabrabrackship/da25681b3f2e4740aa351184d09f4701" target="_blank">Open Notion ↗</a>
     </div>
-
-    <div class="sec">
-      <div class="sec-hd"><div class="sec-lbl">📋 Remaining tasks</div></div>
-      <div id="rest-list"></div>
-    </div>
-
-    <div class="sec">
-      <div class="sec-hd"><div class="sec-lbl">Engine blocks</div></div>
-      <div class="block-grid">
-        <div class="block" id="bl0"><div class="block-time">9:00–9:20am</div><div class="block-label">Gmail triage</div></div>
-        <div class="block" id="bl1"><div class="block-time">11:00am–12pm</div><div class="block-label">Reply block 1</div></div>
-        <div class="block" id="bl2"><div class="block-time">2:00–3:30pm</div><div class="block-label">Ops / project work</div></div>
-        <div class="block" id="bl3"><div class="block-time">4:00–5:00pm</div><div class="block-label">Reply block 2</div></div>
-      </div>
-    </div>
-
-    <div class="sec">
-      <div class="sec-hd"><div class="sec-lbl">Delegate / systemise</div></div>
-      <div class="del-card">
-        <div id="del-list"></div>
-        <div class="add-row" style="margin-top:8px">
-          <input id="del-input" placeholder="Task I should stop doing myself…" maxlength="120"/>
-          <button class="add-btn" onclick="addDel()">Flag</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat"><div class="stat-n" id="s-done">—</div><div class="stat-l">done</div></div>
-      <div class="stat"><div class="stat-n" id="s-rem">—</div><div class="stat-l">remaining</div></div>
-      <div class="stat"><div class="stat-n" id="s-del">0</div><div class="stat-l">delegated</div></div>
-    </div>
-
-  </div>
-
-  <div id="tab-all" style="display:none">
-    <div class="sec">
-      <div class="sec-hd">
-        <div class="sec-lbl">All open tasks from Notion</div>
-        <button class="sec-action" onclick="refreshNotion()">↻ Refresh</button>
-      </div>
-      <div id="all-list"></div>
+    <div class="focus-card" id="top3-list">
+      <div class="loading"><div class="spinner"></div>Loading from Notion…</div>
     </div>
   </div>
 
-  <div id="tab-setup" style="display:none">
-    <div class="setup-card">
-      <h3>Notion Connection</h3>
-      <p>Your credentials are stored locally in this browser only — never sent anywhere except directly to Notion's API.</p>
-      <label>Notion API Key (secret_...)</label>
-      <input id="cfg-key" type="password" placeholder="secret_xxxxxxxxxxxxxxxx"/>
-      <label>Tasks Database ID</label>
-      <input id="cfg-db" placeholder="da25681b3f2e4740aa351184d09f4701"/>
-      <div style="margin-top:14px;display:flex;gap:8px">
-        <button class="add-btn" onclick="saveConfig()">Save & Connect</button>
-        <button class="add-btn" style="background:var(--surface2);color:var(--text2);border:1px solid var(--border)" onclick="clearConfig()">Clear</button>
-      </div>
-      <div id="cfg-status" style="margin-top:10px;font-size:var(--fs-xs);color:var(--text3)"></div>
+  <!-- ALL TASKS -->
+  <div class="sec">
+    <div class="sec-header">
+      <div class="sec-label">All tasks</div>
+      <button class="sec-action" onclick="toggleAllTasks()">show/hide</button>
     </div>
-    <button class="reset-btn" style="margin-top:16px" onclick="resetDelegate()">Clear delegate list</button>
+    <div id="all-tasks-wrap" style="display:none">
+      <div class="all-tasks-wrap" id="all-tasks-list">
+        <div class="loading"><div class="spinner"></div>Loading…</div>
+      </div>
+    </div>
   </div>
+
+  <!-- ENGINE BLOCKS -->
+  <div class="sec">
+    <div class="sec-header"><div class="sec-label">⏱ Engine blocks</div></div>
+    <div class="block-grid" id="block-grid"></div>
+  </div>
+
+  <!-- DELEGATE -->
+  <div class="sec">
+    <div class="sec-header"><div class="sec-label">🚩 Delegate / stop doing</div></div>
+    <div class="del-card">
+      <div id="del-list"></div>
+      <div class="add-row">
+        <input id="del-input" placeholder="Task I should stop doing myself…" maxlength="80"/>
+        <button class="add-btn" onclick="addDel()">Flag</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat"><div class="stat-n" id="s-done">—</div><div class="stat-l">done</div></div>
+    <div class="stat"><div class="stat-n" id="s-rem">—</div><div class="stat-l">remaining</div></div>
+    <div class="stat"><div class="stat-n" id="s-over">—</div><div class="stat-l">overdue</div></div>
+    <div class="stat"><div class="stat-n" id="s-del">—</div><div class="stat-l">delegated</div></div>
+  </div>
+
+  <button class="reset-btn" onclick="hardRefresh()">↺ Refresh from Notion</button>
 
   <div class="footer">
-    SPCA Selangor — Command Centre &nbsp;·&nbsp;
-    <a href="https://notion.so" target="_blank">Notion</a> &nbsp;·&nbsp;
-    <a href="https://claude.ai" target="_blank">Claude</a>
+    Kelvin Cheah · Daily Control &nbsp;·&nbsp;
+    <a href="https://claude.ai" target="_blank">Refine in Claude</a>
   </div>
 
 </div>
 
 <script>
-// ── Config ──────────────────────────────────────────────────
-const SUPA_URL='https://ityciofmpvqsqhonhxvd.supabase.co';
-const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eWNpb2ZtcHZxc3Fob25oeHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MzMwMDgsImV4cCI6MjA5MDAwOTAwOH0.Wnh0a1xPBogKuMdj3O658Tz7DCRnXpgE7Tapkq32Tj4';
-const SUPA_H={'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
-const PROXY='https://notion-proxy.notionproxy.workers.dev'; // fallback CORS proxy
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const NOTION_KEY = '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';
+const DB_ID      = 'da25681b3f2e4740aa351184d09f4701';
+const NOTION_VER = '2022-06-28';
+const NOTION_PROXY = 'https://notion-proxy.vercel.app'; // fallback CORS proxy
 
-const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SUPA_URL  = 'https://ityciofmpvqsqhonhxvd.supabase.co';
+const SUPA_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eWNpb2ZtcHZxc3Fob25oeHZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ0MzMwMDgsImV4cCI6MjA5MDAwOTAwOH0.Wnh0a1xPBogKuMdj3O658Tz7DCRnXpgE7Tapkq32Tj4';
+const SB_HDR    = {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
 
-// ── State ────────────────────────────────────────────────────
-const now=new Date();
-const TODAY=now.toISOString().split('T')[0];
-let notionTasks=[];   // raw from Notion
-let localScores={};   // {pageId:{impact,urgency}} stored in Supabase
-let delegates=[];
-let supaRowId=null;
-let syncTmr=null;
+const TODAY     = new Date().toISOString().split('T')[0];
+const DAYS      = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS    = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const now       = new Date();
 
-// ── Init ─────────────────────────────────────────────────────
-document.getElementById('day-name').textContent=DAYS[now.getDay()];
-document.getElementById('day-date').textContent=`${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+// ── STATE ────────────────────────────────────────────────────────────────────
+let allTasks    = [];   // raw from Notion
+let delegates   = [];
+let sbRowId     = null;
+let currentArea = 'all';
+let allTasksVisible = false;
 
-// Pre-fill setup fields if saved
-const savedKey=localStorage.getItem('notion_key');
-const savedDb=localStorage.getItem('notion_db');
-if(savedKey) document.getElementById('cfg-key').value=savedKey;
-if(savedDb)  document.getElementById('cfg-db').value=savedDb;
+// ── INIT DATE ────────────────────────────────────────────────────────────────
+document.getElementById('day-name').textContent = DAYS[now.getDay()];
+document.getElementById('day-date').textContent = now.getDate()+' '+MONTHS[now.getMonth()]+' '+now.getFullYear();
 
-async function boot(){
-  await loadSupabase();
-  await refreshNotion();
-  highlightBlocks();
-  setInterval(highlightBlocks,60000);
+// ── FONT ─────────────────────────────────────────────────────────────────────
+const FS = {s:'13px',m:'15px',l:'17px',xl:'19px'};
+function setFont(sz){
+  const base = parseInt(FS[sz]);
+  document.documentElement.style.setProperty('--fs', FS[sz]);
+  document.documentElement.style.setProperty('--fs-sm', (base-2)+'px');
+  document.documentElement.style.setProperty('--fs-xs', (base-4)+'px');
+  ['s','m','l','xl'].forEach(s=>document.getElementById('fs-'+s)?.classList.toggle('active',s===sz));
+  localStorage.setItem('k_font', sz);
 }
-boot();
+setFont(localStorage.getItem('k_font')||'m');
 
-// ── Tabs ─────────────────────────────────────────────────────
-function switchTab(t){
-  ['today','all','setup'].forEach(id=>{
-    document.getElementById('tab-'+id).style.display=id===t?'block':'none';
-    document.querySelectorAll('.tab').forEach((el,i)=>{
-      el.classList.toggle('active',['today','all','setup'][i]===t);
-    });
-  });
-}
-
-// ── Notion API ───────────────────────────────────────────────
-function getConfig(){
-  return{
-    key: document.getElementById('cfg-key').value.trim() || localStorage.getItem('notion_key') || '',
-    db:  document.getElementById('cfg-db').value.trim()  || localStorage.getItem('notion_db')  || ''
-  };
-}
-
-async function notionFetch(path,opts={}){
-  const {key}=getConfig();
-  if(!key) throw new Error('No API key');
-  // Use Notion API directly (works when CORS allowed, e.g. localhost / deployed)
-  const url=`https://api.notion.com${path}`;
-  const res=await fetch(url,{
-    ...opts,
-    headers:{
-      'Authorization':'Bearer '+key,
-      'Notion-Version':'2022-06-28',
-      'Content-Type':'application/json',
-      ...(opts.headers||{})
-    }
-  });
-  if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
-  return res.json();
-}
-
-async function refreshNotion(){
-  const {key,db}=getConfig();
-  if(!key||!db){
-    setSyncStatus('offline','No Notion key — go to Setup tab');
-    renderTasks();
-    return;
-  }
-  setSyncStatus('syncing','Loading from Notion…');
-  try{
-    const data=await notionFetch(`/v1/databases/${db}/query`,{
-      method:'POST',
-      body:JSON.stringify({
-        filter:{property:'Done',checkbox:{equals:false}},
-        sorts:[{property:'Due Date',direction:'ascending'}],
-        page_size:50
-      })
-    });
-    notionTasks=data.results.map(p=>({
-      id:p.id,
-      name: p.properties['Task']?.title?.[0]?.plain_text
-           || p.properties['Name']?.title?.[0]?.plain_text
-           || '(Untitled)',
-      dueDate: p.properties['Due Date']?.date?.start || null,
-      done: p.properties['Done']?.checkbox || false,
-    }));
-    setSyncStatus('synced','Synced from Notion · '+new Date().toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}));
-    renderTasks();
-  } catch(e){
-    setSyncStatus('error','Notion error: '+e.message);
-    renderTasks();
-  }
-}
-
-async function markDone(pageId){
-  const card=document.querySelector(`[data-id="${pageId}"]`);
-  if(card) card.classList.add('completing');
-  try{
-    await notionFetch(`/v1/pages/${pageId}`,{
-      method:'PATCH',
-      body:JSON.stringify({properties:{Done:{checkbox:true}}})
-    });
-    notionTasks=notionTasks.filter(t=>t.id!==pageId);
-    setSyncStatus('synced','Task marked done in Notion ✓');
-  } catch(e){
-    setSyncStatus('error','Could not update Notion: '+e.message);
-    if(card) card.classList.remove('completing');
-  }
-  renderTasks();
-}
-
-// ── Priority scoring ─────────────────────────────────────────
-function getScore(task){
-  const ls=localScores[task.id]||{impact:5,urgency:5};
-  let score=ls.impact*ls.urgency;
-  // boost overdue/due today
-  if(task.dueDate){
-    const d=new Date(task.dueDate+'T00:00:00');
-    const diff=Math.floor((d-now)/(1000*60*60*24));
-    if(diff<0)  score+=40;
-    else if(diff===0) score+=20;
-    else if(diff<=2)  score+=10;
-  }
-  return score;
-}
-
-function scoredTasks(){
-  return [...notionTasks].sort((a,b)=>getScore(b)-getScore(a));
-}
-
-function scoreLabel(task){
-  const s=getScore(task);
-  if(s>=60) return['score-badge score-hi','High impact'];
-  if(s>=30) return['score-badge score-md','Medium'];
-  return['score-badge score-lo','Low'];
-}
-
-// ── Render ───────────────────────────────────────────────────
-function renderTasks(){
-  const sorted=scoredTasks();
-  const top3=sorted.slice(0,3);
-  const rest=sorted.slice(3);
-  const done=0; // all loaded tasks are undone (we filter Done=false)
-  const total=notionTasks.length;
-
-  // pct / pips — use supabase done count
-  const doneCnt=parseInt(document.getElementById('s-done').textContent)||0;
-  const allCnt=doneCnt+total;
-  const pct=allCnt?Math.round(doneCnt/allCnt*100):0;
-  document.getElementById('pct').textContent=pct+'%';
-  const pipN=Math.max(allCnt,3);
-  document.getElementById('pips').innerHTML=
-    Array.from({length:Math.min(pipN,10)},(_,i)=>`<div class="pip ${i<doneCnt?'done':''}"></div>`).join('');
-
-  document.getElementById('s-rem').textContent=total;
-
-  renderList('top3-list',top3,true);
-  renderList('rest-list',rest,false);
-  renderList('all-list',sorted,true);
-  renderDelegates();
-}
-
-function renderList(elId,tasks,showScore){
-  const el=document.getElementById(elId);
-  if(!tasks.length){el.innerHTML=`<div class="empty">${elId==='top3-list'?'All caught up 🎉':'No more tasks'}</div>`;return;}
-  el.innerHTML=tasks.map(t=>{
-    const ls=localScores[t.id]||{impact:5,urgency:5};
-    const [sCls,sLbl]=scoreLabel(t);
-    const overdue=t.dueDate&&new Date(t.dueDate+'T00:00:00')<now;
-    const dueTxt=t.dueDate?`<span class="${overdue?'overdue':''}">${overdue?'⚠ overdue: ':'due '}${fmtDate(t.dueDate)}</span>`:'<span>no due date</span>';
-    return`<div class="task-card" data-id="${t.id}">
-      <div class="task-main">
-        <div class="cb" onclick="markDone('${t.id}')">
-          <svg viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="task-info">
-          <div class="task-name">${esc(t.name)}</div>
-          <div class="task-meta">${dueTxt}</div>
-        </div>
-        ${showScore?`<span class="${sCls}">${sLbl}</span>`:''}
-      </div>
-      <div class="score-row">
-        <div class="sl-wrap">
-          <span class="sl-lbl">Impact</span>
-          <input type="range" min="1" max="10" value="${ls.impact}" oninput="updateScore('${t.id}','impact',this.value)" onchange="scheduleSave()"/>
-          <span class="sl-val" id="iv-${t.id}">${ls.impact}</span>
-        </div>
-        <div class="sl-wrap">
-          <span class="sl-lbl">Urgency</span>
-          <input type="range" min="1" max="10" value="${ls.urgency}" oninput="updateScore('${t.id}','urgency',this.value)" onchange="scheduleSave()"/>
-          <span class="sl-val" id="uv-${t.id}">${ls.urgency}</span>
-        </div>
-      </div>
+// ── ENGINE BLOCKS ────────────────────────────────────────────────────────────
+const BLOCKS = [
+  {time:'9:00–9:20am',  label:'Gmail triage',      tip:'Set your 3 priorities. Nothing else.',       s:9,   e:9.33},
+  {time:'9:20–11:00am', label:'Deep work',          tip:'No email. Do the hard thing first.',         s:9.33,e:11},
+  {time:'11:00am–12pm', label:'Reply block 1',      tip:'Gov, sponsors, urgent external.',            s:11,  e:12},
+  {time:'2:00–3:30pm',  label:'Ops / project work', tip:'Campaigns, reports, system tasks.',          s:14,  e:15.5},
+  {time:'4:00–5:00pm',  label:'Reply block 2',      tip:'PoRo, volunteers, donations.',               s:16,  e:17},
+  {time:'5:00–5:15pm',  label:'Wrap + plan tmrw',   tip:'Update Notion. One win, one thing to drop.', s:17,  e:17.25},
+];
+function renderBlocks(){
+  const hr = now.getHours() + now.getMinutes()/60;
+  document.getElementById('block-grid').innerHTML = BLOCKS.map((b,i)=>{
+    const active = hr >= b.s && hr < b.e;
+    return `<div class="block ${active?'active':''}" id="bl${i}">
+      <div class="block-time">${b.time}</div>
+      <div class="block-label">${b.label}</div>
+      <div class="block-tip">${b.tip}</div>
     </div>`;
   }).join('');
 }
+renderBlocks();
 
-function renderDelegates(){
-  const el=document.getElementById('del-list');
-  document.getElementById('s-del').textContent=delegates.length;
-  if(!delegates.length){el.innerHTML='<div class="empty" style="text-align:left;padding:10px 0">Flag tasks you shouldn\'t repeat…</div>';return;}
-  el.innerHTML=delegates.map((d,i)=>`
-    <div class="del-item">
-      <span>${esc(d)}</span>
-      <button class="del-rm" onclick="removeDel(${i})">remove</button>
-    </div>`).join('');
+// ── ADHD NUDGE ───────────────────────────────────────────────────────────────
+const NUDGES = [
+  "You don't have to do everything. What's the ONE thing that moves the needle today?",
+  "Feeling overwhelmed? Pick task #1 only. Ignore the rest for now.",
+  "Brain full? That's normal. Start with 5 minutes on the top task.",
+  "It's okay if the plan changes. You adapted — that's the skill.",
+  "The list isn't the job. Doing one thing well is the job.",
+];
+function showNudge(){
+  const n = document.getElementById('nudge');
+  n.textContent = NUDGES[Math.floor(Math.random()*NUDGES.length)];
+  n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'), 8000);
+}
+// Show nudge if it's a work hour and tasks > 5
+function maybeNudge(tasks){
+  const hr = now.getHours();
+  if(hr >= 9 && hr <= 17 && tasks.length > 5) showNudge();
 }
 
-function updateScore(id,field,val){
-  if(!localScores[id]) localScores[id]={impact:5,urgency:5};
-  localScores[id][field]=parseInt(val);
-  const pfx=field==='impact'?'iv':'uv';
-  const el=document.getElementById(pfx+'-'+id);
-  if(el) el.textContent=val;
-  // re-sort after a brief delay
-  clearTimeout(syncTmr);
-  syncTmr=setTimeout(()=>{renderTasks();scheduleSave();},400);
+// ── SYNC STATUS ──────────────────────────────────────────────────────────────
+function setSyncStatus(state, msg){
+  document.getElementById('sync-dot').className = 'sync-dot '+state;
+  document.getElementById('sync-label').textContent = msg;
 }
 
-// ── Delegate ─────────────────────────────────────────────────
-function addDel(){
-  const inp=document.getElementById('del-input');
-  const t=inp.value.trim();
-  if(!t) return;
-  delegates.push(t);inp.value='';
-  renderDelegates();scheduleSave();
-}
-function removeDel(i){delegates.splice(i,1);renderDelegates();scheduleSave();}
-function resetDelegate(){if(confirm('Clear delegate list?')){delegates=[];renderDelegates();scheduleSave();}}
+// ── PRIORITY SCORING ─────────────────────────────────────────────────────────
+// Score = priority_weight (40) + due_urgency (40) + done_penalty
+function scoreTask(t){
+  const priW = {High:40, Medium:25, Low:10, '':15}[t.priority||''] || 15;
 
-// ── Supabase ─────────────────────────────────────────────────
-async function loadSupabase(){
-  setSyncStatus('syncing','Loading…');
-  try{
-    const res=await fetch(`${SUPA_URL}/rest/v1/daily_tasks?date=eq.${TODAY}&select=*`,{headers:SUPA_H});
-    if(!res.ok) throw new Error();
-    const rows=await res.json();
-    if(rows.length){
-      const r=rows[0];supaRowId=r.id;
-      delegates=Array.isArray(r.delegates)?r.delegates:[];
-      localScores=r.scores&&typeof r.scores==='object'?r.scores:{};
-      const doneCount=typeof r.done_count==='number'?r.done_count:0;
-      document.getElementById('s-done').textContent=doneCount;
-    }
-  } catch(e){
-    const local=localStorage.getItem('spca_daily_'+TODAY);
-    if(local){const d=JSON.parse(local);delegates=d.delegates||[];localScores=d.scores||{};}
+  let dueW = 0;
+  if(t.due){
+    const diff = Math.floor((new Date(t.due) - new Date(TODAY)) / 86400000);
+    if(diff < 0)      dueW = 40;  // overdue
+    else if(diff===0) dueW = 35;  // due today
+    else if(diff===1) dueW = 25;  // tomorrow
+    else if(diff<=3)  dueW = 15;
+    else if(diff<=7)  dueW = 8;
+    else              dueW = 2;
   }
+
+  return t.done ? -999 : priW + dueW;
 }
 
-function scheduleSave(){clearTimeout(syncTmr);syncTmr=setTimeout(saveToSupabase,900);}
-
-async function saveToSupabase(){
-  const payload={
-    date:TODAY,
-    delegates,
-    scores:localScores,
-    updated_at:new Date().toISOString()
+// ── NOTION API ────────────────────────────────────────────────────────────────
+async function fetchNotion(){
+  setSyncStatus('syncing','Loading from Notion…');
+  const headers = {
+    'Authorization': 'Bearer '+NOTION_KEY,
+    'Notion-Version': NOTION_VER,
+    'Content-Type': 'application/json',
   };
-  try{
-    let res;
-    if(supaRowId){
-      res=await fetch(`${SUPA_URL}/rest/v1/daily_tasks?id=eq.${supaRowId}`,{
-        method:'PATCH',headers:{...SUPA_H,'Prefer':'return=representation'},
-        body:JSON.stringify({delegates,scores:localScores,updated_at:payload.updated_at})
-      });
-    } else {
-      res=await fetch(`${SUPA_URL}/rest/v1/daily_tasks`,{
-        method:'POST',headers:{...SUPA_H,'Prefer':'return=representation'},
-        body:JSON.stringify(payload)
-      });
-      if(res.ok){const rows=await res.json();if(rows[0])supaRowId=rows[0].id;}
-    }
-    localStorage.setItem('spca_daily_'+TODAY,JSON.stringify({delegates,scores:localScores}));
-    setSyncStatus('synced','Synced · '+new Date().toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}));
+
+  // Filter: not done (we'll load all and sort — Notion checkbox filter)
+  const body = {
+    filter: {
+      property: 'Done',
+      checkbox: { equals: false }
+    },
+    sorts: [{ property: 'Due Date', direction: 'ascending' }],
+    page_size: 50,
+  };
+
+  try {
+    const res = await fetch(
+      `https://api.notion.com/v1/databases/${DB_ID}/query`,
+      { method:'POST', headers, body: JSON.stringify(body) }
+    );
+    if(!res.ok) throw new Error(`Notion ${res.status}`);
+    const data = await res.json();
+    return parseNotionResults(data.results, false);
   } catch(e){
-    setSyncStatus('error','Sync failed — saved locally');
-    localStorage.setItem('spca_daily_'+TODAY,JSON.stringify({delegates,scores:localScores}));
+    // Try CORS proxy
+    try {
+      const res2 = await fetch(
+        `https://corsproxy.io/?https://api.notion.com/v1/databases/${DB_ID}/query`,
+        { method:'POST', headers, body: JSON.stringify(body) }
+      );
+      if(!res2.ok) throw new Error(`Proxy ${res2.status}`);
+      const data2 = await res2.json();
+      return parseNotionResults(data2.results, false);
+    } catch(e2){
+      throw e2;
+    }
   }
 }
 
-// ── Notion key config ────────────────────────────────────────
-function saveConfig(){
-  const k=document.getElementById('cfg-key').value.trim();
-  const db=document.getElementById('cfg-db').value.trim();
-  if(!k||!db){document.getElementById('cfg-status').textContent='Please fill both fields.';return;}
-  localStorage.setItem('notion_key',k);
-  localStorage.setItem('notion_db',db);
-  document.getElementById('cfg-status').textContent='Saved! Connecting…';
-  switchTab('today');
-  refreshNotion();
-}
-function clearConfig(){
-  localStorage.removeItem('notion_key');localStorage.removeItem('notion_db');
-  document.getElementById('cfg-key').value='';document.getElementById('cfg-db').value='';
-  document.getElementById('cfg-status').textContent='Cleared.';
+async function fetchDoneToday(){
+  const headers = {
+    'Authorization': 'Bearer '+NOTION_KEY,
+    'Notion-Version': NOTION_VER,
+    'Content-Type': 'application/json',
+  };
+  const body = {
+    filter: {
+      and: [
+        { property:'Done', checkbox:{ equals:true } },
+        { property:'Due Date', date:{ equals: TODAY } }
+      ]
+    },
+    page_size: 20,
+  };
+  try {
+    const res = await fetch(
+      `https://api.notion.com/v1/databases/${DB_ID}/query`,
+      { method:'POST', headers, body: JSON.stringify(body) }
+    );
+    if(!res.ok) return [];
+    const data = await res.json();
+    return parseNotionResults(data.results, true);
+  } catch{ return []; }
 }
 
-// ── Utils ────────────────────────────────────────────────────
-function setSyncStatus(state,msg){
-  document.getElementById('sync-dot').className='dot '+state;
-  document.getElementById('sync-lbl').textContent=msg;
-}
-function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function fmtDate(d){
-  const dt=new Date(d+'T00:00:00');
-  return dt.toLocaleDateString('en-MY',{day:'numeric',month:'short'});
-}
-function highlightBlocks(){
-  const h=now.getHours()+now.getMinutes()/60;
-  [[9,9.33],[11,12],[14,15.5],[16,17]].forEach(([s,e],i)=>{
-    document.getElementById('bl'+i)?.classList.toggle('active',h>=s&&h<e);
+function parseNotionResults(results, isDone){
+  return (results||[]).map(p=>{
+    const props = p.properties;
+    const title = props['Task']?.title?.[0]?.plain_text
+               || props['Name']?.title?.[0]?.plain_text
+               || props['name']?.title?.[0]?.plain_text
+               || '(untitled)';
+    const due   = props['Due Date']?.date?.start || null;
+    const done  = isDone || (props['Done']?.checkbox === true);
+    const pri   = props['Priority']?.select?.name || '';
+    const area  = props['Area']?.select?.name || '';
+    return { id:p.id, title, due, done, priority:pri, area, score:0 };
   });
 }
+
+// ── MARK COMPLETE IN NOTION ────────────────────────────────────────────────────
+async function markDoneNotion(pageId, done){
+  const headers = {
+    'Authorization': 'Bearer '+NOTION_KEY,
+    'Notion-Version': NOTION_VER,
+    'Content-Type': 'application/json',
+  };
+  const body = { properties: { Done: { checkbox: done } } };
+  try {
+    await fetch(`https://api.notion.com/v1/pages/${pageId}`,
+      { method:'PATCH', headers, body: JSON.stringify(body) });
+  } catch(e){
+    try {
+      await fetch(`https://corsproxy.io/?https://api.notion.com/v1/pages/${pageId}`,
+        { method:'PATCH', headers, body: JSON.stringify(body) });
+    } catch{}
+  }
+}
+
+// ── SUPABASE DELEGATE SYNC ────────────────────────────────────────────────────
+async function loadDelegates(){
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/daily_tasks?date=eq.${TODAY}&select=*`,{headers:SB_HDR});
+    if(!res.ok) return;
+    const rows = await res.json();
+    if(rows[0]){ sbRowId = rows[0].id; delegates = rows[0].delegates || []; }
+  } catch{}
+}
+
+async function saveDelegates(){
+  const payload = { date:TODAY, delegates, wins:[], updated_at: new Date().toISOString() };
+  try {
+    if(sbRowId){
+      await fetch(`${SUPA_URL}/rest/v1/daily_tasks?id=eq.${sbRowId}`,
+        {method:'PATCH', headers:{...SB_HDR,'Prefer':'return=representation'}, body:JSON.stringify({delegates, updated_at:new Date().toISOString()})});
+    } else {
+      const res = await fetch(`${SUPA_URL}/rest/v1/daily_tasks`,
+        {method:'POST', headers:{...SB_HDR,'Prefer':'return=representation'}, body:JSON.stringify(payload)});
+      if(res.ok){ const rows=await res.json(); if(rows[0]) sbRowId=rows[0].id; }
+    }
+  } catch{}
+}
+
+// ── AREA FILTER ───────────────────────────────────────────────────────────────
+function setArea(a){
+  currentArea = a;
+  ['all','work','personal'].forEach(x=>document.getElementById('tab-'+x)?.classList.toggle('active',x===a));
+  renderAll();
+}
+
+function filterByArea(tasks){
+  if(currentArea==='all') return tasks;
+  return tasks.filter(t=> {
+    const area = (t.area||'').toLowerCase();
+    if(currentArea==='work') return area==='work' || area==='';
+    if(currentArea==='personal') return area==='personal';
+    return true;
+  });
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function formatDue(due){
+  if(!due) return null;
+  const diff = Math.floor((new Date(due) - new Date(TODAY)) / 86400000);
+  if(diff < 0)  return { label:`${Math.abs(diff)}d overdue`, cls:'b-overdue' };
+  if(diff===0)  return { label:'due today', cls:'b-due' };
+  if(diff===1)  return { label:'tomorrow', cls:'b-due' };
+  if(diff<=7)   return { label:`${diff}d`, cls:'b-due' };
+  const d = new Date(due);
+  return { label: d.getDate()+' '+ ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()], cls:'b-due' };
+}
+
+function priCls(p){ return {High:'b-high',Medium:'b-medium',Low:'b-low'}[p]||'b-low'; }
+
+function renderAll(){
+  const filtered = filterByArea(allTasks);
+  const sorted   = [...filtered].sort((a,b)=>b.score-a.score);
+  const top3     = sorted.filter(t=>!t.done).slice(0,3);
+  const remaining= sorted.filter(t=>!t.done);
+  const done     = sorted.filter(t=>t.done);
+  const overdue  = allTasks.filter(t=>!t.done&&t.due&&new Date(t.due)<new Date(TODAY));
+
+  // pips
+  const total = allTasks.filter(t=>t.done||!t.done).length;
+  const doneN = allTasks.filter(t=>t.done).length;
+  const pct   = total ? Math.round(doneN/total*100) : 0;
+  document.getElementById('pct').textContent = total ? pct+'%' : '—';
+  const pipCount = Math.max(total, 3);
+  document.getElementById('pips').innerHTML =
+    Array.from({length:pipCount},(_,i)=>`<div class="pip ${i<doneN?'done':''}"></div>`).join('');
+
+  // stats
+  document.getElementById('s-done').textContent = doneN;
+  document.getElementById('s-rem').textContent  = allTasks.filter(t=>!t.done).length;
+  document.getElementById('s-over').textContent = overdue.length;
+  document.getElementById('s-del').textContent  = delegates.length;
+
+  // top 3
+  const t3el = document.getElementById('top3-list');
+  if(!top3.length){
+    t3el.innerHTML = `<div class="empty">🎉 No pending tasks in this view — you're clear!</div>`;
+  } else {
+    t3el.innerHTML = top3.map((t,i)=>{
+      const due = formatDue(t.due);
+      return `<div class="focus-item" id="fi-${t.id}">
+        <div class="rank ${i===0?'r1':''}">${i+1}</div>
+        <div class="cb ${t.done?'done':''}" onclick="toggleTask('${t.id}')">
+          <svg viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="task-info">
+          <div class="task-name ${t.done?'done':''}">${esc(t.title)}</div>
+          <div class="task-meta">
+            ${t.priority?`<span class="badge ${priCls(t.priority)}">${t.priority}</span>`:''}
+            ${t.area?`<span class="badge b-due">${t.area}</span>`:''}
+            ${due?`<span class="badge ${due.cls}">${due.label}</span>`:''}
+            <span class="score-badge">score ${t.score}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // all tasks
+  const atel = document.getElementById('all-tasks-list');
+  const allRows = [...remaining, ...done];
+  if(!allRows.length){
+    atel.innerHTML = `<div class="empty">Nothing here.</div>`;
+  } else {
+    atel.innerHTML = allRows.map(t=>{
+      const due = formatDue(t.due);
+      return `<div class="task-row ${t.done?'done-row':''}">
+        <div class="cb ${t.done?'done':''}" onclick="toggleTask('${t.id}')">
+          <svg viewBox="0 0 12 9" fill="none"><path d="M1 4L4.5 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="task-info">
+          <div class="task-name ${t.done?'done':''}">${esc(t.title)}</div>
+          <div class="task-meta">
+            ${t.priority?`<span class="badge ${priCls(t.priority)}">${t.priority}</span>`:''}
+            ${t.area?`<span class="badge b-due">${t.area}</span>`:''}
+            ${due?`<span class="badge ${due.cls}">${due.label}</span>`:''}
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // delegates
+  const dl = document.getElementById('del-list');
+  dl.innerHTML = delegates.length
+    ? delegates.map((d,i)=>`<div class="del-item"><span>${esc(d)}</span><button class="del-btn" onclick="removeDel(${i})">remove</button></div>`).join('')
+    : `<div class="empty">Flag tasks you shouldn't repeat…</div>`;
+}
+
+// ── TOGGLE TASK ───────────────────────────────────────────────────────────────
+async function toggleTask(id){
+  const task = allTasks.find(t=>t.id===id);
+  if(!task) return;
+  task.done = !task.done;
+  task.score = scoreTask(task);
+  renderAll();
+  setSyncStatus('syncing', task.done ? 'Marking done in Notion…' : 'Updating Notion…');
+  await markDoneNotion(id, task.done);
+  setSyncStatus('synced', 'Synced · '+new Date().toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}));
+}
+
+// ── DELEGATES ─────────────────────────────────────────────────────────────────
+function addDel(){
+  const inp = document.getElementById('del-input');
+  const text = inp.value.trim();
+  if(!text) return;
+  delegates.push(text);
+  inp.value='';
+  renderAll();
+  saveDelegates();
+}
+function removeDel(i){
+  delegates.splice(i,1);
+  renderAll();
+  saveDelegates();
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────────
+function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toggleAllTasks(){
+  allTasksVisible = !allTasksVisible;
+  document.getElementById('all-tasks-wrap').style.display = allTasksVisible ? 'block' : 'none';
+}
+function hardRefresh(){ allTasks=[]; init(); }
+
+// ── MAIN INIT ─────────────────────────────────────────────────────────────────
+async function init(){
+  document.getElementById('top3-list').innerHTML = '<div class="loading"><div class="spinner"></div>Loading from Notion…</div>';
+  await loadDelegates();
+  try {
+    const [pending, done] = await Promise.all([fetchNotion(), fetchDoneToday()]);
+    allTasks = [...pending, ...done].map(t=>({...t, score: scoreTask(t)}));
+    setSyncStatus('synced','Notion synced · '+new Date().toLocaleTimeString('en-MY',{hour:'2-digit',minute:'2-digit'}));
+    maybeNudge(allTasks.filter(t=>!t.done));
+  } catch(e){
+    setSyncStatus('error','Notion unreachable — check CORS proxy or API key');
+    document.getElementById('top3-list').innerHTML = `<div class="empty">⚠️ Could not load Notion tasks.<br><br>
+      This dashboard must be hosted (GitHub Pages) to call the Notion API.<br>
+      <a href="https://www.notion.so/baabrabrackship/da25681b3f2e4740aa351184d09f4701" target="_blank" style="color:var(--purple)">Open Notion directly ↗</a></div>`;
+  }
+  renderAll();
+}
+
+init();
+
+// Refresh blocks every minute
+setInterval(renderBlocks, 60000);
 </script>
 </body>
 </html>
