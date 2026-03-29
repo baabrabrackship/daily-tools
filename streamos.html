@@ -536,6 +536,18 @@ async function dbUpdate(id,patch){
   try{await SB.from('stream_items').update(patch).eq('id',id).eq('user_id',USER.id)}
   catch(e){showToast('Update failed')}
 }
+async function dbDelete(id){
+  if(!USER)return;
+  try{await SB.from('stream_items').delete().eq('id',id).eq('user_id',USER.id)}
+  catch(e){showToast('Delete failed')}
+}
+async function deleteItem(id){
+  if(!confirm('Delete this item permanently?'))return;
+  items=items.filter(i=>i.id!==id);
+  render();
+  await dbDelete(id);
+  showToast('Deleted');
+}
 
 function enrichItem(i){
   if(!i.effort){const txt=i.content?.text||i.content?.title||i.content?.preview||'';i.effort=detectEffort(txt,i.type)}
@@ -900,6 +912,7 @@ function renderCard(item){
   const ctxBadge=`<button class="ctx-toggle badge ${ctx==='personal'?'badge-personal':'badge-work'}" onclick="toggleCtx('${item.id}')">${ctx==='personal'?'🌿':'💼'}</button>`;
   const impToggle=`<button class="action-btn imp-btn${imp?' active':''}" onclick="toggleImp('${item.id}')">${imp?'🌟':'☆ Imp'}</button>`;
   const todayBtn=`<button class="action-btn today-btn${pinned?' pinned':''}" onclick="pinItem('${item.id}')">${pinned?'📌':'Pin'}</button>`;
+  const delBtn=`<button class="action-btn" style="color:var(--red);border-color:transparent;padding:5px 6px" onclick="deleteItem('${item.id}')" title="Delete">✕</button>`;
   let inner='';
 
   if(item.type==='communication'){
@@ -927,7 +940,7 @@ function renderCard(item){
       ${!done?`<button class="action-btn" onclick="keepItem('${item.id}')">Keep</button>
         <button class="action-btn primary" onclick="convertToTask('${item.id}')">→ Task</button>
         <button class="action-btn" onclick="archiveItem('${item.id}')">Archive</button>
-        ${impToggle}`:'<span class="badge badge-done">Kept</span>'}
+        ${impToggle}${delBtn}`:'<span class="badge badge-done">Kept</span>'+delBtn}
     </div>`;
   }else if(item.type==='routine'){
     const freq=c.frequency||'';
@@ -937,7 +950,7 @@ function renderCard(item){
     <div class="card-title">${esc(c.title||c.text||'Routine')}</div>
     <div class="routine-freq">${lastDone}${nd?' · Next: '+nd:''}</div>
     <div class="card-actions">
-      ${!done?`<button class="action-btn success" onclick="completeRoutine('${item.id}')">Done for today</button>${todayBtn}${impToggle}`:'<span class="badge badge-done">Completed</span>'}
+      ${!done?`<button class="action-btn success" onclick="completeRoutine('${item.id}')">Done for today</button>${todayBtn}${impToggle}${delBtn}`:'<span class="badge badge-done">Completed</span>'+delBtn}
     </div>`;
   }else if(item.type==='obligation'){
     const over=isOverdue(c.due),tod=isToday(c.due);
@@ -958,7 +971,7 @@ function renderCard(item){
     <div class="card-actions">
       ${!done?`<button class="action-btn success" onclick="markDone('${item.id}')">✓ Done</button>
         ${item._editing?`<button class="action-btn primary" onclick="saveInlineEdit('${item.id}')">Save</button><button class="action-btn" onclick="cancelEdit('${item.id}')">✕</button>`:`<button class="action-btn" onclick="startEdit('${item.id}')">Edit</button>`}
-        ${todayBtn}${impToggle}`:'<span class="badge badge-done">Done</span>'}
+        ${todayBtn}${impToggle}${delBtn}`:'<span class="badge badge-done">Done</span>'+delBtn}
     </div>`;
   }else{
     // idea
@@ -968,7 +981,7 @@ function renderCard(item){
     <div class="card-content">${esc(c.text||'')}</div>
     <div class="card-actions">
       <button class="action-btn primary" onclick="convertToTask('${item.id}')">→ Task</button>
-      ${!done?`<button class="action-btn" onclick="archiveItem('${item.id}')">Archive</button>${todayBtn}`:''}
+      ${!done?`<button class="action-btn" onclick="archiveItem('${item.id}')">Archive</button>${todayBtn}${delBtn}`:''}
     </div>
     ${showReview?`<div class="review-actions"><span style="font-size:11px;color:var(--text3);font-weight:600;margin-right:4px">Review:</span>
       <button class="action-btn today-btn" onclick="convertToTask('${item.id}')">→ Task</button>
