@@ -473,17 +473,36 @@ SB.auth.onAuthStateChange(async(event,session)=>{
     USER=session.user;
     document.getElementById('auth-screen').style.display='none';
     document.getElementById('app-screen').style.display='block';
-    document.getElementById('profile-chip').textContent=USER.email.split('@')[0];
+    document.getElementById('profile-chip').textContent=USER.email.split('@')[0]+' · sign out';
     document.getElementById('profile-chip').title=`${USER.email} — click to sign out`;
     document.getElementById('topbar-date').textContent=`${DAYS[NOW.getDay()]}, ${NOW.getDate()} ${MONTHS[NOW.getMonth()]}`;
-    await loadBMem();
-    await loadItems();
+    if(event==='SIGNED_IN'||event==='INITIAL_SESSION'){
+      await loadBMem();
+      await loadItems();
+    }
+    if(event==='TOKEN_REFRESHED'){
+      // session refreshed silently, no reload needed
+    }
   }else{
     USER=null;
+    items=[];
     document.getElementById('auth-screen').style.display='flex';
     document.getElementById('app-screen').style.display='none';
   }
 });
+
+// Proactively refresh session every 10 minutes to prevent expiry freeze
+setInterval(async()=>{
+  if(USER){
+    const{data,error}=await SB.auth.refreshSession();
+    if(error||!data.session){
+      USER=null;
+      document.getElementById('auth-screen').style.display='flex';
+      document.getElementById('app-screen').style.display='none';
+      setAuthMsg('Session expired. Please sign in again.','error');
+    }
+  }
+},10*60*1000);
 
 function showPasswordForm(){document.getElementById('auth-form-magic').style.display='none';document.getElementById('auth-form-pw').style.display='block';document.getElementById('auth-msg').textContent=''}
 function showMagicForm(){document.getElementById('auth-form-pw').style.display='none';document.getElementById('auth-form-magic').style.display='block';document.getElementById('auth-msg').textContent=''}
@@ -503,8 +522,16 @@ async function signInWithPassword(){
   if(error)setAuthMsg(error.message,'error');
 }
 async function signOut(){
-  await SB.auth.signOut();
-  items=[];bMem={completedLow:0,completedMed:0,completedHigh:0,avoidedHigh:0};
+  try{
+    await SB.auth.signOut();
+  }catch(e){}
+  USER=null;
+  items=[];
+  localStorage.removeItem('streamos-auth');
+  localStorage.removeItem('tf');
+  document.getElementById('auth-screen').style.display='flex';
+  document.getElementById('app-screen').style.display='none';
+  document.getElementById('auth-msg').textContent='';
 }
 function setAuthMsg(msg,type=''){
   const el=document.getElementById('auth-msg');el.textContent=msg;el.className='auth-msg'+( type?' '+type:'');
@@ -756,7 +783,11 @@ function renderPersonalAnchor(){
   const top=[...personal.filter(i=>i.important_personal||i.priority==='high'),...personal].slice(0,2);
   const uniq=[...new Map(top.map(i=>[i.id,i])).values()];
   if(!uniq.length){el.innerHTML='';return}
-  el.innerHTML='<span class="personal-anchor-label">🌿</span>'+uniq.map(i=>`<span class="personal-anchor-item" onclick="scrollToCard('${i.id}')">${i.important_personal?'🌟 ':''}${esc(trunc(itemTitle(i),26))}</span>`).join('');
+  el.innerHTML='<span class="personal-anchor-label">🌿</span>'+uniq.map(i=>{
+    const title=trunc(itemTitle(i),24);
+    const prefix=i.type==='routine'?'🔄 ':i.type==='obligation'?'📋 ':i.important_personal?'🌟 ':'';
+    return`<span class="personal-anchor-item" onclick="scrollToCard('${i.id}')">${prefix}${esc(title)}</span>`;
+  }).join('');
 }
 function effortBadge(e){
   const m={low:'⚡ low',medium:'⚙️ med',high:'🧱 high'};
