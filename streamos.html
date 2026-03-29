@@ -413,7 +413,16 @@ body.low-mode .low-spacer{height:16px}
 const {createClient}=supabase;
 const SB=createClient(
   'https://ityciofmpvqsqhonhxvd.supabase.co',
-  'sb_publishable_tpsNlUn2PEKoFUgcUdyTNg_0gZKyELZ'
+  'sb_publishable_tpsNlUn2PEKoFUgcUdyTNg_0gZKyELZ',
+  {
+    auth:{
+      storage:window.localStorage,
+      storageKey:'streamos-auth',
+      autoRefreshToken:true,
+      persistSession:true,
+      detectSessionInUrl:true
+    }
+  }
 );
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -516,12 +525,18 @@ async function saveBMem(){
 // ── DB ─────────────────────────────────────────────────────────────────────
 async function loadItems(){
   if(!USER)return;
+  const timeout=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),8000));
   try{
-    const{data,error}=await SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false});
+    const{data,error}=await Promise.race([
+      SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),
+      timeout
+    ]);
     if(error)throw error;
     items=(data||[]).map(enrichItem);
     render();
-  }catch(e){showToast('Could not load — check connection');render();}
+  }catch(e){
+    document.getElementById('stream').innerHTML=`<div class="stream-empty"><div class="emoji">⚠️</div><p>Could not load stream.<br><button onclick="loadItems()" style="margin-top:12px;background:var(--purple);color:#fff;border:none;padding:8px 18px;border-radius:20px;cursor:pointer;font-family:inherit;font-weight:600">Retry</button></p></div>`;
+  }
 }
 async function dbSave(item){
   if(!USER)return null;
