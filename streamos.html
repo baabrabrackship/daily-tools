@@ -7,36 +7,17 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --md-bg:#f8f9fa;
-  --md-surface:#ffffff;
-  --md-surface2:#f1f3f4;
-  --md-surface3:#e8eaed;
-  --md-on-surface:#202124;
-  --md-on-surface2:#5f6368;
-  --md-on-surface3:#80868b;
-  --md-on-surface4:#bdc1c6;
-  --md-border:#dadce0;
-  --md-border-light:#e8eaed;
-  --md-accent:#1a73e8;
-  --md-accent-light:#e8f0fe;
-  --md-accent-dark:#1557b0;
-  --md-green:#188038;
-  --md-green-light:#e6f4ea;
-  --md-green-border:#ceead6;
-  --md-orange:#e37400;
-  --md-orange-light:#fef7e0;
-  --md-orange-border:#fce8b2;
-  --md-red:#d93025;
-  --md-red-light:#fce8e6;
-  --md-red-border:#f5c6c3;
-  --md-blue:#1a73e8;
-  --md-blue-light:#e8f0fe;
-  --md-teal:#007b83;
-  --md-teal-light:#e0f7fa;
-  --md-purple:#7b1fa2;
-  --md-purple-light:#f3e5f5;
-  --md-personal-bg:#e6f4ea;
-  --md-personal-border:#ceead6;
+  --md-bg:#f8f9fa;--md-surface:#fff;--md-surface2:#f1f3f4;--md-surface3:#e8eaed;
+  --md-on-surface:#202124;--md-on-surface2:#5f6368;--md-on-surface3:#80868b;--md-on-surface4:#bdc1c6;
+  --md-border:#dadce0;--md-border-light:#e8eaed;
+  --md-accent:#1a73e8;--md-accent-light:#e8f0fe;--md-accent-dark:#1557b0;
+  --md-green:#188038;--md-green-light:#e6f4ea;--md-green-border:#ceead6;
+  --md-orange:#e37400;--md-orange-light:#fef7e0;--md-orange-border:#fce8b2;
+  --md-red:#d93025;--md-red-light:#fce8e6;--md-red-border:#f5c6c3;
+  --md-blue:#1a73e8;--md-blue-light:#e8f0fe;
+  --md-teal:#007b83;--md-teal-light:#e0f7fa;
+  --md-purple:#7b1fa2;--md-purple-light:#f3e5f5;
+  --md-personal-bg:#e6f4ea;--md-personal-border:#ceead6;
   --shadow-1:0 1px 2px rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);
   --shadow-2:0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);
   --shadow-3:0 4px 8px 3px rgba(60,64,67,.15),0 1px 3px rgba(60,64,67,.3);
@@ -44,36 +25,17 @@
   --font:'Google Sans',Roboto,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 }
 @media(prefers-color-scheme:dark){:root{
-  --md-bg:#1c1b1f;
-  --md-surface:#2b2930;
-  --md-surface2:#36343b;
-  --md-surface3:#48464e;
-  --md-on-surface:#e6e1e5;
-  --md-on-surface2:#cac4d0;
-  --md-on-surface3:#938f99;
-  --md-on-surface4:#49454f;
-  --md-border:#49454f;
-  --md-border-light:#36343b;
-  --md-accent:#a8c7fa;
-  --md-accent-light:#1e3354;
-  --md-accent-dark:#d3e3fd;
-  --md-green:#81c995;
-  --md-green-light:#1e3a24;
-  --md-green-border:#2d5a34;
-  --md-orange:#ffb74d;
-  --md-orange-light:#3d2800;
-  --md-orange-border:#5c3a00;
-  --md-red:#f28b82;
-  --md-red-light:#3d0f0a;
-  --md-red-border:#5c1a14;
-  --md-blue:#a8c7fa;
-  --md-blue-light:#1e3354;
-  --md-teal:#80deea;
-  --md-teal-light:#00363a;
-  --md-purple:#ce93d8;
-  --md-purple-light:#3e1045;
-  --md-personal-bg:#1e3a24;
-  --md-personal-border:#2d5a34;
+  --md-bg:#1c1b1f;--md-surface:#2b2930;--md-surface2:#36343b;--md-surface3:#48464e;
+  --md-on-surface:#e6e1e5;--md-on-surface2:#cac4d0;--md-on-surface3:#938f99;--md-on-surface4:#49454f;
+  --md-border:#49454f;--md-border-light:#36343b;
+  --md-accent:#a8c7fa;--md-accent-light:#1e3354;--md-accent-dark:#d3e3fd;
+  --md-green:#81c995;--md-green-light:#1e3a24;--md-green-border:#2d5a34;
+  --md-orange:#ffb74d;--md-orange-light:#3d2800;--md-orange-border:#5c3a00;
+  --md-red:#f28b82;--md-red-light:#3d0f0a;--md-red-border:#5c1a14;
+  --md-blue:#a8c7fa;--md-blue-light:#1e3354;
+  --md-teal:#80deea;--md-teal-light:#00363a;
+  --md-purple:#ce93d8;--md-purple-light:#3e1045;
+  --md-personal-bg:#1e3a24;--md-personal-border:#2d5a34;
   --shadow-1:0 1px 2px rgba(0,0,0,.5),0 1px 3px 1px rgba(0,0,0,.3);
   --shadow-2:0 1px 2px rgba(0,0,0,.5),0 2px 6px 2px rgba(0,0,0,.3);
   --shadow-3:0 4px 8px 3px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.5);
@@ -81,44 +43,43 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--font);background:var(--md-bg);color:var(--md-on-surface);min-height:100vh;-webkit-font-smoothing:antialiased;font-size:14px}
 
-/* ── Spinner overlay ── */
-#boot-overlay{position:fixed;inset:0;background:var(--md-bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.3s}
-#boot-overlay.hidden{opacity:0;pointer-events:none}
+/* ─── Boot overlay ─── */
+#boot-overlay{position:fixed;inset:0;background:var(--md-bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+#boot-overlay.hidden{display:none}
 .md-spinner{width:36px;height:36px;border:3px solid var(--md-border);border-top-color:var(--md-accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .boot-label{font-size:14px;color:var(--md-on-surface2);font-weight:500}
-.boot-error{text-align:center;padding:0 24px}
-.boot-error-title{font-size:16px;font-weight:500;color:var(--md-on-surface);margin-bottom:8px}
-.boot-error-sub{font-size:13px;color:var(--md-on-surface2);margin-bottom:20px;line-height:1.5}
-.boot-error-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#boot-error{display:none;text-align:center;padding:0 24px}
+.boot-err-title{font-size:16px;font-weight:500;color:var(--md-on-surface);margin-bottom:8px}
+.boot-err-sub{font-size:13px;color:var(--md-on-surface2);margin-bottom:20px;line-height:1.5}
+.boot-err-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
-/* ── Session banner ── */
+/* ─── Action lock overlay ─── */
+#lock-overlay{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.04);pointer-events:none}
+#lock-overlay.show{display:block}
+#lock-badge{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--md-on-surface);color:var(--md-surface);padding:8px 18px;border-radius:var(--r-pill);font-size:13px;font-weight:500;z-index:51;display:none;pointer-events:none;font-family:var(--font)}
+#lock-badge.show{display:block}
+
+/* ─── Session banner ─── */
 #session-banner{display:none;position:sticky;top:0;z-index:200;background:var(--md-red-light);border-bottom:1px solid var(--md-red-border);padding:10px 16px}
 #session-banner.show{display:block}
 .banner-inner{max-width:600px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .banner-text{font-size:13px;color:var(--md-red);font-weight:500}
-.banner-actions{display:flex;gap:8px}
+.banner-btns{display:flex;gap:8px}
 
-/* ── Material buttons ── */
-.btn{border:none;cursor:pointer;font-family:var(--font);font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:background .15s,opacity .15s;border-radius:var(--r-pill)}
-.btn-filled{background:var(--md-accent);color:#fff;padding:8px 18px;font-size:13px}
-.btn-filled:hover{opacity:.9}
-.btn-filled.green{background:var(--md-green)}
-.btn-filled.red{background:var(--md-red)}
-.btn-tonal{background:var(--md-accent-light);color:var(--md-accent);padding:8px 16px;font-size:13px}
-.btn-tonal:hover{opacity:.85}
-.btn-outlined{background:transparent;color:var(--md-accent);border:1px solid var(--md-border);padding:7px 15px;font-size:13px}
-.btn-outlined:hover{background:var(--md-accent-light)}
-.btn-text{background:transparent;color:var(--md-accent);padding:6px 12px;font-size:13px}
-.btn-text:hover{background:var(--md-accent-light)}
-.btn-text.danger{color:var(--md-red)}
-.btn-text.danger:hover{background:var(--md-red-light)}
-.btn-text.muted{color:var(--md-on-surface2)}
-.btn-text.muted:hover{background:var(--md-surface2)}
+/* ─── Material buttons ─── */
+.btn{border:none;cursor:pointer;font-family:var(--font);font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;border-radius:var(--r-pill)}
+.btn-filled{background:var(--md-accent);color:#fff;padding:8px 18px;font-size:13px}.btn-filled:hover{opacity:.9}
+.btn-filled.green{background:var(--md-green)}.btn-filled.red{background:var(--md-red)}
+.btn-tonal{background:var(--md-accent-light);color:var(--md-accent);padding:8px 16px;font-size:13px}.btn-tonal:hover{opacity:.85}
+.btn-outlined{background:transparent;color:var(--md-accent);border:1px solid var(--md-border);padding:7px 15px;font-size:13px}.btn-outlined:hover{background:var(--md-accent-light)}
+.btn-text{background:transparent;color:var(--md-accent);padding:6px 12px;font-size:13px}.btn-text:hover{background:var(--md-accent-light)}
+.btn-text.danger{color:var(--md-red)}.btn-text.danger:hover{background:var(--md-red-light)}
+.btn-text.muted{color:var(--md-on-surface2)}.btn-text.muted:hover{background:var(--md-surface2)}
 .btn-sm{padding:5px 12px;font-size:12px}
 .btn:disabled{opacity:.38;cursor:not-allowed}
 
-/* ── Auth ── */
+/* ─── Auth ─── */
 #auth-screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;background:var(--md-bg)}
 #auth-screen.show{display:flex}
 .auth-card{background:var(--md-surface);border-radius:12px;padding:40px 32px;max-width:380px;width:100%;box-shadow:var(--shadow-2)}
@@ -127,52 +88,48 @@ body{font-family:var(--font);background:var(--md-bg);color:var(--md-on-surface);
 .auth-label{display:block;font-size:12px;font-weight:500;color:var(--md-on-surface2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
 .auth-input{width:100%;background:var(--md-surface2);border:1px solid var(--md-border);border-radius:var(--r-sm);padding:11px 13px;font-size:14px;color:var(--md-on-surface);font-family:var(--font);outline:none;transition:border-color .15s;margin-bottom:12px}
 .auth-input:focus{border-color:var(--md-accent);background:var(--md-surface)}
-.auth-divider{text-align:center;font-size:12px;color:var(--md-on-surface3);margin:10px 0;position:relative}
+.auth-divider{text-align:center;font-size:12px;color:var(--md-on-surface3);margin:10px 0}
 .auth-msg{font-size:13px;text-align:center;margin-top:12px;min-height:18px}
 .auth-msg.ok{color:var(--md-green)}.auth-msg.err{color:var(--md-red)}
 
-/* ── App ── */
+/* ─── App ─── */
 #app-screen{display:none}
 #app-screen.show{display:block;padding-bottom:90px}
 
-/* ── Top bar ── */
+/* ─── Top bar ─── */
 .topbar{position:sticky;top:0;z-index:100;background:var(--md-surface);border-bottom:1px solid var(--md-border-light);padding:0 16px}
 .topbar-inner{max-width:600px;margin:0 auto;height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .topbar-brand{flex:1;min-width:0}
 .topbar-title{font-size:18px;font-weight:500;color:var(--md-accent);letter-spacing:-.3px}
 .topbar-sub{font-size:11px;color:var(--md-on-surface3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .topbar-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
-
-/* ── Energy selector ── */
 .energy-group{display:flex;background:var(--md-surface2);border:1px solid var(--md-border);border-radius:var(--r-pill);overflow:hidden}
 .energy-opt{border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:500;color:var(--md-on-surface2);padding:5px 12px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .energy-opt.active{background:var(--md-accent);color:#fff}
-
-/* ── Sync chip ── */
 .sync-chip{font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--r-pill);border:1px solid var(--md-border);background:var(--md-surface2);color:var(--md-on-surface2);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:var(--font)}
 .sync-chip:hover{border-color:var(--md-accent);color:var(--md-accent)}
 .sync-chip.saving{background:var(--md-orange-light);border-color:var(--md-orange-border);color:var(--md-orange)}
 .sync-chip.error{background:var(--md-red-light);border-color:var(--md-red-border);color:var(--md-red)}
-.sync-chip.reconnecting{background:var(--md-blue-light);border-color:var(--md-blue-light);color:var(--md-blue)}
+.sync-chip.reconnecting{background:var(--md-blue-light);border-color:var(--md-border);color:var(--md-blue)}
 
-/* ── Filter chips ── */
+/* ─── Filter ─── */
 .filter-row{max-width:600px;margin:0 auto;padding:10px 16px 4px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 .filter-row::-webkit-scrollbar{display:none}
 .md-chip{border:1px solid var(--md-border);background:var(--md-surface);color:var(--md-on-surface2);font-size:13px;font-weight:500;padding:5px 14px;border-radius:var(--r-pill);cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font)}
 .md-chip.active{background:var(--md-accent-light);color:var(--md-accent);border-color:var(--md-accent)}
 
-/* ── Main layout ── */
+/* ─── Content ─── */
 .content{max-width:600px;margin:0 auto;padding:12px 16px 0}
 
-/* ── Guidance ── */
+/* ─── Guidance ─── */
 .gc{border-radius:var(--r);padding:16px;margin-bottom:10px;background:var(--md-surface);box-shadow:var(--shadow-1);transition:box-shadow .2s}
 .gc:hover{box-shadow:var(--shadow-2)}
 .gc.next-action{background:var(--md-accent-light);border-left:3px solid var(--md-accent)}
 .gc.personal-must{background:var(--md-personal-bg);border-left:3px solid var(--md-green)}
 .gc.nudge{background:var(--md-surface2);box-shadow:none;border:1px solid var(--md-border-light)}
 .gc.stop{background:var(--md-green-light);border-left:3px solid var(--md-green);text-align:center}
-.gc.pulse{animation:pulse .9s ease}
-@keyframes pulse{0%{box-shadow:var(--shadow-1)}50%{box-shadow:0 0 0 4px rgba(26,115,232,.15)}100%{box-shadow:var(--shadow-1)}}
+.gc.pulse{animation:gpulse .9s ease}
+@keyframes gpulse{0%{box-shadow:var(--shadow-1)}50%{box-shadow:0 0 0 4px rgba(26,115,232,.18)}100%{box-shadow:var(--shadow-1)}}
 .gc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--md-on-surface3);margin-bottom:8px}
 .gc-label.accent{color:var(--md-accent)}.gc-label.green{color:var(--md-green)}
 .gc-row{display:flex;align-items:center;gap:12px}
@@ -183,7 +140,7 @@ body{font-family:var(--font);background:var(--md-bg);color:var(--md-on-surface);
 .stop-title{font-size:15px;font-weight:500;color:var(--md-green);margin-bottom:4px}
 .stop-sub{font-size:13px;color:var(--md-green);opacity:.85}
 
-/* ── Today focus ── */
+/* ─── Focus row ─── */
 .focus-card{background:var(--md-surface);border-radius:var(--r);box-shadow:var(--shadow-1);margin-bottom:10px;overflow:hidden}
 .focus-header{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--md-on-surface3);padding:12px 16px 8px}
 .focus-list{display:flex;flex-direction:column}
@@ -191,54 +148,46 @@ body{font-family:var(--font);background:var(--md-bg);color:var(--md-on-surface);
 .focus-item:first-child{border-top:none}
 .focus-item:hover{background:var(--md-surface2)}
 .focus-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--md-border)}
-.focus-dot.green{background:var(--md-green)}
-.focus-dot.blue{background:var(--md-accent)}
-.focus-dot.red{background:var(--md-red)}
+.focus-dot.green{background:var(--md-green)}.focus-dot.blue{background:var(--md-accent)}.focus-dot.red{background:var(--md-red)}
 .focus-label{font-size:13px;color:var(--md-on-surface);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .focus-tag{font-size:11px;color:var(--md-on-surface3)}
 .focus-remove{border:none;background:none;color:var(--md-on-surface3);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px}
 .focus-remove:hover{color:var(--md-red);background:var(--md-red-light)}
-.focus-empty-row{padding:9px 16px;font-size:13px;color:var(--md-on-surface3);font-style:italic}
 
-/* ── Stream ── */
+/* ─── Stream ─── */
 .stream{display:flex;flex-direction:column;gap:8px}
 .sec-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--md-on-surface3);padding:8px 0 4px;display:flex;align-items:center;gap:10px}
 .sec-label::after{content:'';flex:1;height:1px;background:var(--md-border-light)}
 .empty-state{text-align:center;padding:48px 20px;color:var(--md-on-surface2)}
 .empty-icon{font-size:40px;margin-bottom:10px}
 .empty-text{font-size:14px;line-height:1.5}
+.stream-error{display:flex;flex-direction:column;align-items:center;gap:12px;padding:48px 20px}
+.stream-error p{font-size:14px;color:var(--md-on-surface2);text-align:center;line-height:1.5}
 
-/* ── Cards ── */
-.card{background:var(--md-surface);border-radius:var(--r);box-shadow:var(--shadow-1);overflow:hidden;transition:box-shadow .2s}
+/* ─── Cards ─── */
+.card{background:var(--md-surface);border-radius:var(--r);box-shadow:var(--shadow-1);overflow:hidden;transition:box-shadow .2s,opacity .2s}
 .card:hover{box-shadow:var(--shadow-2)}
 .card.done{opacity:.45}
+.card.locked{opacity:.6;pointer-events:none}
 .card-stripe{height:4px}
-.card-stripe.task{background:var(--md-accent)}
-.card-stripe.idea{background:var(--md-orange)}
-.card-stripe.reflection{background:var(--md-purple)}
-.card-stripe.obligation{background:var(--md-orange)}
-.card-stripe.routine{background:var(--md-teal)}
-.card-stripe.communication{background:var(--md-blue)}
+.card-stripe.task{background:var(--md-accent)}.card-stripe.idea{background:var(--md-orange)}
+.card-stripe.reflection{background:var(--md-purple)}.card-stripe.obligation{background:var(--md-orange)}
+.card-stripe.routine{background:var(--md-teal)}.card-stripe.communication{background:var(--md-blue)}
 .card-inner{padding:14px 16px 12px}
 .card.personal .card-inner{background:var(--md-personal-bg)}
 .card.type-reflection .card-inner{background:var(--md-purple-light)}
 .card.type-routine .card-inner{background:var(--md-teal-light)}
 .card.type-obligation .card-inner{background:var(--md-orange-light)}
 .card.urgent .card-inner{background:var(--md-red-light)}
-.card.chain-next{animation:pulse .9s ease}
+.card.chain-next{animation:gpulse .9s ease}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
 .card-chips{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
 .mc{font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--r-pill)}
-.mc-task{background:var(--md-blue-light);color:var(--md-blue)}
-.mc-idea{background:var(--md-orange-light);color:var(--md-orange)}
-.mc-reflection{background:var(--md-purple-light);color:var(--md-purple)}
-.mc-obligation{background:var(--md-orange-light);color:var(--md-orange);border:1px solid var(--md-orange-border)}
-.mc-routine{background:var(--md-teal-light);color:var(--md-teal);border:1px solid rgba(0,123,131,.2)}
-.mc-communication{background:var(--md-blue-light);color:var(--md-blue)}
-.mc-high{background:var(--md-red-light);color:var(--md-red)}
-.mc-overdue{background:var(--md-red);color:#fff}
-.mc-imp{background:var(--md-orange-light);color:var(--md-orange)}
-.mc-ctx{background:var(--md-surface3);color:var(--md-on-surface2);cursor:pointer;border:none;font-family:var(--font);font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--r-pill)}
+.mc-task{background:var(--md-blue-light);color:var(--md-blue)}.mc-idea{background:var(--md-orange-light);color:var(--md-orange)}
+.mc-reflection{background:var(--md-purple-light);color:var(--md-purple)}.mc-obligation{background:var(--md-orange-light);color:var(--md-orange);border:1px solid var(--md-orange-border)}
+.mc-routine{background:var(--md-teal-light);color:var(--md-teal)}.mc-communication{background:var(--md-blue-light);color:var(--md-blue)}
+.mc-high{background:var(--md-red-light);color:var(--md-red)}.mc-overdue{background:var(--md-red);color:#fff}
+.mc-imp{background:var(--md-orange-light);color:var(--md-orange)}.mc-ctx{background:var(--md-surface3);color:var(--md-on-surface2);cursor:pointer;border:none;font-family:var(--font);font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--r-pill)}
 .mc-ctx:hover{background:var(--md-accent-light);color:var(--md-accent)}
 .card-time{font-size:11px;color:var(--md-on-surface3);white-space:nowrap;flex-shrink:0}
 .card-title{font-size:15px;font-weight:400;color:var(--md-on-surface);line-height:1.4;margin-bottom:4px}
@@ -246,27 +195,20 @@ body{font-family:var(--font);background:var(--md-bg);color:var(--md-on-surface);
 .card-due.ov{color:var(--md-red);font-weight:500}
 .card-body{font-size:14px;color:var(--md-on-surface);line-height:1.55;margin-bottom:10px;word-break:break-word}
 .card-body.reflect{font-style:italic;color:var(--md-on-surface2);font-size:14px;line-height:1.65}
-.inline-edit{width:100%;background:var(--md-surface2);border:1px solid var(--md-accent);border-radius:var(--r-sm);padding:8px 10px;font-size:14px;font-weight:400;color:var(--md-on-surface);font-family:var(--font);outline:none;margin-bottom:8px}
+.inline-edit{width:100%;background:var(--md-surface2);border:1px solid var(--md-accent);border-radius:var(--r-sm);padding:8px 10px;font-size:14px;color:var(--md-on-surface);font-family:var(--font);outline:none;margin-bottom:8px}
 .card-actions{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-top:4px}
-.ca{border:none;cursor:pointer;font-family:var(--font);font-weight:500;font-size:12px;padding:6px 12px;border-radius:var(--r-pill);transition:background .12s,opacity .12s;display:inline-flex;align-items:center;gap:4px}
-.ca-done{background:var(--md-green);color:#fff}
-.ca-done:hover{opacity:.9}
-.ca-primary{background:var(--md-accent);color:#fff}
-.ca-primary:hover{opacity:.9}
-.ca-tonal{background:var(--md-accent-light);color:var(--md-accent)}
-.ca-tonal:hover{opacity:.85}
-.ca-muted{background:var(--md-surface2);color:var(--md-on-surface2)}
-.ca-muted:hover{background:var(--md-surface3)}
-.ca-danger{background:transparent;color:var(--md-red);padding:6px 8px}
-.ca-danger:hover{background:var(--md-red-light)}
-.ca-imp.on{background:var(--md-orange-light);color:var(--md-orange)}
-.ca-imp{background:var(--md-surface2);color:var(--md-on-surface2)}
-.ca-pin.on{background:var(--md-accent-light);color:var(--md-accent)}
-.ca-pin{background:var(--md-surface2);color:var(--md-on-surface2)}
+.ca{border:none;cursor:pointer;font-family:var(--font);font-weight:500;font-size:12px;padding:6px 12px;border-radius:var(--r-pill);transition:all .12s}
+.ca-done{background:var(--md-green);color:#fff}.ca-done:hover{opacity:.9}
+.ca-primary{background:var(--md-accent);color:#fff}.ca-primary:hover{opacity:.9}
+.ca-tonal{background:var(--md-accent-light);color:var(--md-accent)}.ca-tonal:hover{opacity:.85}
+.ca-muted{background:var(--md-surface2);color:var(--md-on-surface2)}.ca-muted:hover{background:var(--md-surface3)}
+.ca-danger{background:transparent;color:var(--md-red);padding:6px 8px}.ca-danger:hover{background:var(--md-red-light)}
+.ca-imp.on{background:var(--md-orange-light);color:var(--md-orange)}.ca-imp{background:var(--md-surface2);color:var(--md-on-surface2)}
+.ca-pin.on{background:var(--md-accent-light);color:var(--md-accent)}.ca-pin{background:var(--md-surface2);color:var(--md-on-surface2)}
 .ca:disabled{opacity:.35;cursor:not-allowed}
 .routine-sub{font-size:12px;color:var(--md-teal);font-weight:500;margin-bottom:8px}
 
-/* ── Reply ── */
+/* ─── Reply ─── */
 .reply-wrap{background:var(--md-surface2);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px}
 .reply-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--md-on-surface3);margin-bottom:6px}
 .reply-body{font-size:13px;color:var(--md-on-surface2);line-height:1.6;white-space:pre-wrap}
@@ -278,23 +220,23 @@ body{font-family:var(--font);background:var(--md-bg);color:var(--md-on-surface);
 .review-row{display:flex;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--md-border-light);align-items:center}
 .review-lbl{font-size:11px;color:var(--md-on-surface3);font-weight:500;margin-right:2px}
 
-/* ── Low mode ── */
+/* ─── Low mode ─── */
 body.low .low-hide{display:none!important}
 
-/* ── Bottom ── */
+/* ─── Bottom ─── */
 .bottom{max-width:600px;margin:0 auto;padding:8px 16px;display:flex;flex-direction:column;gap:6px}
 .coll-btn{width:100%;background:none;border:1px solid var(--md-border-light);border-radius:var(--r-sm);padding:10px 14px;font-size:13px;font-weight:500;color:var(--md-on-surface2);cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:space-between;transition:all .15s}
 .coll-btn:hover{border-color:var(--md-accent);color:var(--md-accent)}
 .coll-body{display:none;flex-direction:column;gap:7px;margin-top:6px}
 .coll-body.open{display:flex}
 
-/* ── FAB ── */
+/* ─── FAB ─── */
 .fab{position:fixed;bottom:24px;right:50%;transform:translateX(calc(50% + 316px));background:var(--md-accent);color:#fff;border:none;border-radius:var(--r-pill);padding:0 22px;height:52px;font-size:14px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-3);display:flex;align-items:center;gap:8px;z-index:200;font-family:var(--font);transition:opacity .15s}
 .fab:hover{opacity:.92}
-.fab:disabled{opacity:.4;cursor:not-allowed}
+.fab:disabled{opacity:.35;cursor:not-allowed}
 @media(max-width:760px){.fab{right:16px;transform:none}}
 
-/* ── Sheet ── */
+/* ─── Sheet ─── */
 .sheet-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:flex-end;justify-content:center}
 .sheet-bg.open{display:flex}
 @media(min-width:600px){.sheet-bg{align-items:center;padding:20px}}
@@ -320,15 +262,12 @@ body.low .low-hide{display:none!important}
 .field-input,.field-select{width:100%;background:var(--md-surface2);border:1px solid var(--md-border);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;color:var(--md-on-surface);font-family:var(--font);outline:none;transition:border-color .15s}
 .field-input:focus,.field-select:focus{border-color:var(--md-accent)}
 
-/* ── Toasts ── */
+/* ─── Toasts ─── */
 .undo-bar{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--md-on-surface);color:var(--md-surface);padding:10px 16px;border-radius:var(--r-pill);font-size:13px;font-weight:500;z-index:999;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-3);opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--font)}
 .undo-bar.show{opacity:1;pointer-events:all}
 .undo-action{background:var(--md-accent);color:#fff;border:none;border-radius:var(--r-pill);padding:4px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)}
 .toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--md-on-surface);color:var(--md-surface);padding:10px 20px;border-radius:var(--r-pill);font-size:13px;font-weight:500;z-index:998;opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--font);white-space:nowrap}
 .toast.show{opacity:1}
-.loading-msg{text-align:center;padding:48px 20px;color:var(--md-on-surface2);font-size:14px}
-.loading-retry{display:flex;flex-direction:column;align-items:center;gap:12px;padding:48px 20px;color:var(--md-on-surface2)}
-.loading-retry p{font-size:14px;text-align:center;line-height:1.5}
 </style>
 </head>
 <body>
@@ -337,21 +276,25 @@ body.low .low-hide{display:none!important}
 <div id="boot-overlay">
   <div id="boot-spinner" class="md-spinner"></div>
   <div id="boot-label" class="boot-label">Starting up…</div>
-  <div id="boot-error" class="boot-error" style="display:none">
-    <div class="boot-error-title">Couldn't load your stream</div>
-    <div class="boot-error-sub" id="boot-error-sub">Something went wrong connecting to the server.</div>
-    <div class="boot-error-actions">
+  <div id="boot-error">
+    <div class="boot-err-title">Couldn't load StreamOS</div>
+    <div class="boot-err-sub" id="boot-err-sub">Something went wrong. Check your connection.</div>
+    <div class="boot-err-actions">
       <button class="btn btn-filled" onclick="retryBoot()">Try again</button>
       <button class="btn btn-outlined" onclick="signOut()">Sign out</button>
     </div>
   </div>
 </div>
 
+<!-- Action lock overlay -->
+<div id="lock-overlay"></div>
+<div id="lock-badge">Paused — session lost</div>
+
 <!-- Session banner -->
 <div id="session-banner">
   <div class="banner-inner">
-    <span class="banner-text" id="banner-msg">Session expired — your changes are paused.</span>
-    <div class="banner-actions">
+    <span class="banner-text" id="banner-msg">Session expired. Your changes are paused.</span>
+    <div class="banner-btns">
       <button class="btn btn-outlined btn-sm" onclick="handleReconnect()">Reconnect</button>
       <button class="btn btn-filled btn-sm red" onclick="signOut()">Sign out</button>
     </div>
@@ -367,7 +310,7 @@ body.low .low-hide{display:none!important}
       <label class="auth-label">Email</label>
       <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" autocomplete="email">
       <button class="btn btn-filled" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="sendMagicLink()">Send magic link</button>
-      <div class="auth-divider" style="margin:12px 0">or</div>
+      <div class="auth-divider">or</div>
       <button class="btn btn-outlined" style="width:100%;justify-content:center;padding:10px;font-size:13px" onclick="showPwForm()">Sign in with password</button>
     </div>
     <div id="auth-pw" style="display:none">
@@ -376,9 +319,7 @@ body.low .low-hide{display:none!important}
       <label class="auth-label">Password</label>
       <input class="auth-input" id="pw-pass" type="password" placeholder="••••••••" autocomplete="current-password">
       <button class="btn btn-filled" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="signInPw()">Sign in</button>
-      <div style="margin-top:8px">
-        <button class="btn btn-text muted" style="font-size:13px" onclick="showMagicForm()">Use magic link instead</button>
-      </div>
+      <div style="margin-top:8px"><button class="btn btn-text muted" style="font-size:13px" onclick="showMagicForm()">Use magic link instead</button></div>
     </div>
     <div class="auth-msg" id="auth-msg"></div>
   </div>
@@ -416,24 +357,17 @@ body.low .low-hide{display:none!important}
     <div id="guidance-area"></div>
     <div id="focus-area" class="low-hide"></div>
   </div>
-
   <div class="content" style="padding-top:0">
-    <div class="stream" id="stream">
-      <div class="loading-msg">Loading your stream…</div>
-    </div>
+    <div class="stream" id="stream"></div>
   </div>
-
-  <div class="content low-hide" style="padding-top:4px" id="low-later-wrap">
+  <div class="content low-hide" style="padding-top:4px">
     <button class="coll-btn" onclick="toggleColl('low-later-body',this)"><span>Later</span><span>▸</span></button>
     <div class="coll-body" id="low-later-body"></div>
   </div>
-
   <div class="bottom" id="bottom"></div>
 </div>
 
-<button class="fab" id="fab" onclick="openSheet()">
-  <span style="font-size:20px;line-height:1">+</span> Capture
-</button>
+<button class="fab" id="fab" onclick="openSheet()"><span style="font-size:20px;line-height:1">+</span> Capture</button>
 
 <!-- Capture sheet -->
 <div class="sheet-bg" id="sheet-bg" onclick="sheetBgClick(event)">
@@ -469,8 +403,7 @@ body.low .low-hide{display:none!important}
             <option value="yearly">Yearly</option>
           </select>
         </div>
-        <div>
-          <label class="field-lbl">Priority</label>
+        <div><label class="field-lbl">Priority</label>
           <select class="field-select" id="cap-priority">
             <option value="medium" selected>Medium</option>
             <option value="high">High</option>
@@ -492,7 +425,7 @@ body.low .low-hide{display:none!important}
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Supabase ──────────────────────────────────────────────────────────────
+// ── Supabase ───────────────────────────────────────────────────────────────
 const{createClient}=supabase;
 const SB=createClient(
   'https://ityciofmpvqsqhonhxvd.supabase.co',
@@ -500,11 +433,10 @@ const SB=createClient(
   {auth:{storage:window.localStorage,storageKey:'sos-auth-v2',autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}}
 );
 
-// ── State ─────────────────────────────────────────────────────────────────
-// States: booting | ready | saving | reconnecting | session_expired | error
+// ── App state: booting | ready | saving | reconnecting | session_expired | error
 let STATE='booting';
 let USER=null,items=[],energy='medium',override=null,captureCtx='work';
-let undoStack=null,undoTimer=null,activeFilter='all';
+let undoStack=null,undoTimer=null,activeFilter='all',lastLoadedAt=0;
 let todayFocus=[];try{todayFocus=JSON.parse(localStorage.getItem('tf')||'[]')}catch(e){}
 let bMem={completedLow:0,completedMed:0,completedHigh:0,avoidedHigh:0};
 let actionsLocked=false;
@@ -515,47 +447,65 @@ const todayStr=NOW.toISOString().slice(0,10);
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// ── Timeout helper ────────────────────────────────────────────────────────
+// ── Real timeout helper ────────────────────────────────────────────────────
 function withTimeout(promise,ms,label){
-  return Promise.race([
-    promise,
-    new Promise((_,rej)=>setTimeout(()=>rej(new Error(`Timeout: ${label}`)),ms))
-  ]);
+  let tid;
+  const timer=new Promise((_,rej)=>{tid=setTimeout(()=>rej(new Error(`Timeout after ${ms}ms: ${label}`)),ms)});
+  return Promise.race([promise,timer]).finally(()=>clearTimeout(tid));
 }
 
-// ── State machine ─────────────────────────────────────────────────────────
+// ── State machine ──────────────────────────────────────────────────────────
 function applyState(s,msg){
   STATE=s;
   const chip=document.getElementById('sync-chip');
   const banner=document.getElementById('session-banner');
   const fab=document.getElementById('fab');
   const saveBtn=document.getElementById('save-btn');
-  const bootSpinner=document.getElementById('boot-spinner');
-  const bootLabel=document.getElementById('boot-label');
+  const lockOverlay=document.getElementById('lock-overlay');
+  const lockBadge=document.getElementById('lock-badge');
 
-  chip.textContent={ready:'Ready',saving:'Saving…',reconnecting:'Reconnecting…',session_expired:'Session expired',error:'Error'}[s]||s;
-  chip.className='sync-chip'+({saving:' saving',session_expired:' error',error:' error',reconnecting:' reconnecting'}[s]||'');
+  const labels={ready:'Ready',saving:'Saving…',reconnecting:'Reconnecting…',session_expired:'Session expired',error:'Error'};
+  const cls={saving:' saving',session_expired:' error',error:' error',reconnecting:' reconnecting'};
+  chip.textContent=labels[s]||s;
+  chip.className='sync-chip'+(cls[s]||'');
+
+  const locked=s==='session_expired'||s==='error'||s==='reconnecting';
+  actionsLocked=locked;
+  if(fab){fab.disabled=locked;fab.style.opacity=locked?'.35':''}
+  if(saveBtn)saveBtn.disabled=locked;
+
+  if(locked){
+    lockOverlay.classList.add('show');
+    lockBadge.classList.add('show');
+    lockBadge.textContent=s==='reconnecting'?'Reconnecting…':'Session paused — actions disabled';
+    // dim all cards
+    document.querySelectorAll('.card:not(.done)').forEach(c=>c.classList.add('locked'));
+  }else{
+    lockOverlay.classList.remove('show');
+    lockBadge.classList.remove('show');
+    document.querySelectorAll('.card.locked').forEach(c=>c.classList.remove('locked'));
+  }
 
   if(s==='session_expired'||s==='error'){
     banner.classList.add('show');
-    document.getElementById('banner-msg').textContent=msg||(s==='session_expired'?'Session expired — please sign in again.':'Something went wrong. Your changes are paused.');
+    document.getElementById('banner-msg').textContent=msg||(s==='session_expired'?'Session expired. Please sign in again.':'Something went wrong. Your changes are paused.');
   }else{
     banner.classList.remove('show');
   }
 
-  actionsLocked=s==='session_expired'||s==='error'||s==='reconnecting';
-  if(fab)fab.disabled=actionsLocked;
-  if(saveBtn)saveBtn.disabled=actionsLocked;
-
-  if(s==='saving')setTimeout(()=>{if(STATE==='saving')applyState('ready')},3000);
+  if(s==='saving')setTimeout(()=>{if(STATE==='saving')applyState('ready')},4000);
 }
 
 function requireSession(){
-  if(!USER||actionsLocked){applyState('session_expired','Session lost. Please sign in again.');return false}
+  if(!USER||actionsLocked){
+    applyState('session_expired','Session lost. Please sign in again.');
+    return false;
+  }
   return true;
 }
 
-function showBootOverlay(label){
+// ── Boot overlay helpers ───────────────────────────────────────────────────
+function showBootSpinner(label){
   const o=document.getElementById('boot-overlay');
   o.classList.remove('hidden');
   document.getElementById('boot-spinner').style.display='block';
@@ -567,28 +517,35 @@ function showBootError(msg){
   document.getElementById('boot-spinner').style.display='none';
   document.getElementById('boot-label').style.display='none';
   document.getElementById('boot-error').style.display='block';
-  document.getElementById('boot-error-sub').textContent=msg||'Something went wrong.';
+  document.getElementById('boot-err-sub').textContent=msg||'Something went wrong.';
 }
 function hideBootOverlay(){
   document.getElementById('boot-overlay').classList.add('hidden');
 }
 async function retryBoot(){
-  showBootOverlay('Retrying…');
+  showBootSpinner('Retrying…');
   await bootstrap();
 }
 
-// ── Bootstrap — explicit startup, no reliance on onAuthStateChange alone ──
+// ── Bootstrap — explicit, never relies on onAuthStateChange alone ──────────
 async function bootstrap(){
-  showBootOverlay('Starting up…');
+  applyState('booting');
+  showBootSpinner('Starting up…');
   try{
     const{data:{session},error}=await withTimeout(SB.auth.getSession(),8000,'getSession');
     if(error)throw error;
     if(session?.user){
       USER=session.user;
       showApp();
-      showBootOverlay('Loading your stream…');
-      await loadBMem();
-      await loadItems();
+      showBootSpinner('Loading your stream…');
+      // Load memory and stream in parallel; bmem failure must not block readiness
+      const[,itemsOk]=await Promise.allSettled([
+        loadBMem().catch(e=>console.warn('bMem load failed (non-fatal):',e)),
+        loadItems()
+      ]);
+      if(itemsOk.status==='rejected'){
+        // loadItems already shows error UI; keep boot overlay hidden
+      }
       hideBootOverlay();
       applyState('ready');
     }else{
@@ -596,21 +553,28 @@ async function bootstrap(){
       showAuth();
     }
   }catch(e){
-    showBootError(e.message.includes('Timeout')?'Connection timed out. Check your network.':e.message||'Could not connect.');
-    applyState('error',e.message);
+    const msg=e.message.includes('Timeout')?'Connection timed out. Check your network and try again.':
+      e.message||'Could not connect to the server.';
+    showBootError(msg);
+    applyState('error',msg);
   }
 }
 
-// onAuthStateChange handles post-bootstrap events (sign in, token refresh, sign out)
+// ── onAuthStateChange — handles post-boot events only ─────────────────────
+let authHandlerReady=false;
 SB.auth.onAuthStateChange(async(event,session)=>{
+  // Skip the INITIAL_SESSION — bootstrap handles that
+  if(event==='INITIAL_SESSION')return;
+
   if(event==='SIGNED_IN'&&session?.user){
     if(!USER){
-      // Fresh sign-in after being on auth screen
       USER=session.user;
       showApp();
-      showBootOverlay('Loading your stream…');
-      await loadBMem();
-      await loadItems();
+      showBootSpinner('Loading your stream…');
+      await Promise.allSettled([
+        loadBMem().catch(e=>console.warn('bMem:',e)),
+        loadItems()
+      ]);
       hideBootOverlay();
       applyState('ready');
     }
@@ -619,25 +583,21 @@ SB.auth.onAuthStateChange(async(event,session)=>{
     if(STATE==='session_expired')applyState('ready');
   }else if(event==='SIGNED_OUT'){
     USER=null;items=[];
-    hideBootOverlay();
-    showAuth();
-    applyState('ready');
+    hideBootOverlay();showAuth();applyState('ready');
   }
 });
 
 function showApp(){
   document.getElementById('auth-screen').classList.remove('show');
   document.getElementById('app-screen').classList.add('show');
-  if(USER){
-    document.getElementById('topbar-sub').textContent=`${DAYS[NOW.getDay()]}, ${NOW.getDate()} ${MONTHS[NOW.getMonth()]} · ${USER.email.split('@')[0]}`;
-  }
+  if(USER)document.getElementById('topbar-sub').textContent=`${DAYS[NOW.getDay()]}, ${NOW.getDate()} ${MONTHS[NOW.getMonth()]} · ${USER.email.split('@')[0]}`;
 }
 function showAuth(){
   document.getElementById('app-screen').classList.remove('show');
   document.getElementById('auth-screen').classList.add('show');
 }
 
-// ── Auth UI ───────────────────────────────────────────────────────────────
+// ── Auth UI ────────────────────────────────────────────────────────────────
 function showPwForm(){document.getElementById('auth-magic').style.display='none';document.getElementById('auth-pw').style.display='block';setAuthMsg('')}
 function showMagicForm(){document.getElementById('auth-pw').style.display='none';document.getElementById('auth-magic').style.display='block';setAuthMsg('')}
 async function sendMagicLink(){
@@ -658,15 +618,21 @@ async function signOut(){
   try{await SB.auth.signOut()}catch(e){}
   USER=null;items=[];
   localStorage.removeItem('sos-auth-v2');localStorage.removeItem('tf');
-  hideBootOverlay();showAuth();
+  hideBootOverlay();showAuth();applyState('ready');
   document.getElementById('auth-msg').textContent='';
-  applyState('ready');
 }
 async function handleReconnect(){
   applyState('reconnecting','Reconnecting…');
-  const{data,error}=await SB.auth.refreshSession();
-  if(error||!data.session){signOut()}
-  else{USER=data.session.user;applyState('ready')}
+  try{
+    const{data,error}=await withTimeout(SB.auth.refreshSession(),8000,'refreshSession');
+    if(error||!data.session)throw new Error('Refresh failed');
+    USER=data.session.user;
+    applyState('ready');
+    // Silently reload if data is stale
+    if(Date.now()-lastLoadedAt>60000)loadItems().catch(()=>{});
+  }catch(e){
+    applyState('session_expired','Could not reconnect. Please sign in again.');
+  }
 }
 function syncChipClick(){
   if(STATE==='session_expired'||STATE==='error')handleReconnect();
@@ -678,72 +644,146 @@ function setAuthMsg(msg,cls=''){
 
 // ── DB ─────────────────────────────────────────────────────────────────────
 async function dbSave(item){
-  if(!requireSession())throw new Error('no_session');
+  if(!USER){applyState('session_expired','Session lost. Please sign in again.');throw new Error('no_session')}
+  if(actionsLocked)throw new Error('actions_locked');
   applyState('saving');
-  const{data,error}=await withTimeout(
-    SB.from('stream_items').insert({...item,user_id:USER.id}).select().single(),
-    10000,'dbSave'
-  );
-  if(error){applyState('error','Save failed: '+error.message);throw error}
-  applyState('ready');return data;
+  try{
+    const{data,error}=await withTimeout(
+      SB.from('stream_items').insert({...item,user_id:USER.id}).select().single(),
+      10000,'dbSave'
+    );
+    if(error)throw error;
+    applyState('ready');
+    return data;
+  }catch(e){
+    const msg=e.message.includes('Timeout')?'Save timed out. Check your connection.':
+      e.message.includes('JWT')||e.message.includes('auth')?'Session expired during save.':
+      'Save failed: '+e.message;
+    if(e.message.includes('JWT')||e.message.includes('auth'))applyState('session_expired',msg);
+    else applyState('error',msg);
+    throw e;
+  }
 }
 async function dbUpdate(id,patch){
-  if(!requireSession())throw new Error('no_session');
+  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
+  if(actionsLocked)throw new Error('actions_locked');
   applyState('saving');
-  const{error}=await withTimeout(
-    SB.from('stream_items').update(patch).eq('id',id).eq('user_id',USER.id),
-    10000,'dbUpdate'
-  );
-  if(error){applyState('error','Update failed: '+error.message);throw error}
-  applyState('ready');
+  try{
+    const{error}=await withTimeout(
+      SB.from('stream_items').update(patch).eq('id',id).eq('user_id',USER.id),
+      10000,'dbUpdate'
+    );
+    if(error)throw error;
+    applyState('ready');
+  }catch(e){
+    const msg=e.message.includes('Timeout')?'Update timed out.':
+      e.message.includes('JWT')||e.message.includes('auth')?'Session expired.':
+      'Update failed: '+e.message;
+    if(e.message.includes('JWT')||e.message.includes('auth'))applyState('session_expired',msg);
+    else applyState('error',msg);
+    throw e;
+  }
 }
 async function dbDelete(id){
-  if(!requireSession())throw new Error('no_session');
+  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
+  if(actionsLocked)throw new Error('actions_locked');
   applyState('saving');
-  const{error}=await withTimeout(
-    SB.from('stream_items').delete().eq('id',id).eq('user_id',USER.id),
-    10000,'dbDelete'
-  );
-  if(error){applyState('error','Delete failed: '+error.message);throw error}
-  applyState('ready');
+  try{
+    const{error}=await withTimeout(
+      SB.from('stream_items').delete().eq('id',id).eq('user_id',USER.id),
+      10000,'dbDelete'
+    );
+    if(error)throw error;
+    applyState('ready');
+  }catch(e){
+    const msg=e.message.includes('JWT')||e.message.includes('auth')?'Session expired.':'Delete failed: '+e.message;
+    if(e.message.includes('JWT')||e.message.includes('auth'))applyState('session_expired',msg);
+    else applyState('error',msg);
+    throw e;
+  }
 }
+
 async function loadItems(){
   if(!USER)return;
-  document.getElementById('stream').innerHTML='<div class="loading-msg">Loading your stream…</div>';
+  showStreamLoading();
   try{
     const{data,error}=await withTimeout(
       SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),
-      10000,'loadItems'
+      8000,'loadItems'
     );
-    if(error)throw error;
+    if(error){
+      if(error.message.includes('JWT')||error.message.includes('auth')){
+        applyState('session_expired','Session expired. Please sign in again.');
+      }else{
+        applyState('error','Could not load stream: '+error.message);
+      }
+      showStreamError(error.message);
+      return;
+    }
     items=(data||[]).map(enrichItem);
+    lastLoadedAt=Date.now();
     render();
   }catch(e){
-    document.getElementById('stream').innerHTML=`<div class="loading-retry">
-      <p>Could not load your stream.<br><small style="color:var(--md-on-surface3)">${e.message.includes('Timeout')?'Connection timed out.':e.message}</small></p>
-      <button class="btn btn-filled" onclick="loadItems()">Retry</button>
-      <button class="btn btn-text muted" onclick="signOut()">Sign out</button>
-    </div>`;
-    applyState('error','Could not load stream.');
+    const msg=e.message.includes('Timeout')?'Loading timed out. Check your connection.':e.message;
+    applyState('error',msg);
+    showStreamError(msg);
   }
 }
+function showStreamLoading(){
+  document.getElementById('stream').innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--md-on-surface2);font-size:14px">Loading your stream…</div>`;
+}
+function showStreamError(msg){
+  document.getElementById('stream').innerHTML=`<div class="stream-error">
+    <p>Could not load your stream.<br><small style="color:var(--md-on-surface3)">${msg.includes('Timeout')?'Connection timed out.':msg}</small></p>
+    <button class="btn btn-filled" onclick="loadItems()">Retry</button>
+    <button class="btn btn-text muted" onclick="signOut()">Sign out</button>
+  </div>`;
+}
+
 async function loadBMem(){
   if(!USER)return;
-  try{
-    const{data}=await withTimeout(
-      SB.from('user_memory').select('*').eq('user_id',USER.id).maybeSingle(),
-      8000,'loadBMem'
-    );
-    if(data)bMem={completedLow:data.completed_low||0,completedMed:data.completed_medium||0,completedHigh:data.completed_high||0,avoidedHigh:data.avoided_high||0};
-    else await SB.from('user_memory').insert({user_id:USER.id,completed_low:0,completed_medium:0,completed_high:0,avoided_high:0});
-  }catch(e){}
+  const{data}=await withTimeout(
+    SB.from('user_memory').select('*').eq('user_id',USER.id).maybeSingle(),
+    5000,'loadBMem'
+  );
+  if(data)bMem={completedLow:data.completed_low||0,completedMed:data.completed_medium||0,completedHigh:data.completed_high||0,avoidedHigh:data.avoided_high||0};
+  else{
+    try{await SB.from('user_memory').insert({user_id:USER.id,completed_low:0,completed_medium:0,completed_high:0,avoided_high:0})}catch(e){}
+  }
 }
 async function saveBMem(){
   if(!USER)return;
   try{await SB.from('user_memory').upsert({user_id:USER.id,completed_low:bMem.completedLow,completed_medium:bMem.completedMed,completed_high:bMem.completedHigh,avoided_high:bMem.avoidedHigh},{onConflict:'user_id'})}catch(e){}
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────
+// ── Visibility & network recovery ──────────────────────────────────────────
+document.addEventListener('visibilitychange',async()=>{
+  if(document.hidden||!USER)return;
+  // Re-check session when tab becomes visible
+  try{
+    const{data:{session}}=await withTimeout(SB.auth.getSession(),5000,'visibilityCheck');
+    if(!session){
+      applyState('session_expired','Session expired while away. Please sign in again.');
+    }else{
+      if(STATE==='session_expired'||STATE==='error')applyState('ready');
+      // Reload if data is stale (>2 min)
+      if(Date.now()-lastLoadedAt>120000)loadItems().catch(()=>{});
+    }
+  }catch(e){
+    // Network may be down — set reconnecting and retry
+    if(STATE==='ready')applyState('reconnecting','Reconnecting…');
+    setTimeout(()=>{if(STATE==='reconnecting')handleReconnect()},3000);
+  }
+});
+
+window.addEventListener('online',()=>{
+  if(STATE==='error'||STATE==='reconnecting')handleReconnect();
+});
+window.addEventListener('offline',()=>{
+  if(STATE==='ready')applyState('reconnecting','No internet connection');
+});
+
+// ── Helpers ────────────────────────────────────────────────────────────────
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const trunc=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n)+'…':s};
 const fmt=ts=>{const d=new Date(ts),df=Date.now()-d;if(df<60000)return'now';if(df<3600000)return Math.floor(df/60000)+'m';if(df<86400000)return Math.floor(df/3600000)+'h';return Math.floor(df/86400000)+'d'};
@@ -781,7 +821,7 @@ function enrichItem(i){
   return i;
 }
 
-// ── Email ─────────────────────────────────────────────────────────────────
+// ── Email / reply ──────────────────────────────────────────────────────────
 function classifyEmail(t){
   const s=t.toLowerCase();let sc=0,cat='General';
   if(/neuter|mandul|spay|castrat|potong/.test(s)){cat='Neutering';sc=/subsidis/.test(s)?3:2}
@@ -801,14 +841,14 @@ function generateReply(cat,tone,raw){
   const g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n';
   const sign='\n\nWarm regards,\nSPCA Selangor';
   const T={
-    soft:{Neutering:`${g}Thank you for reaching out about neutering. Our subsidised programme, Potong Royong, is available for community cats and dogs. Slots fill quickly — please register at [INSERT POTONG ROYONG LINK] or WhatsApp us with your pet's details and preferred date.${sign}`,Surrender:`${g}We understand this isn't easy. Our intake is on a waiting list. Could you share a photo, species, breed, and age?${sign}`,Volunteering:`${g}Thank you! All new volunteers complete our Pet Care Programme (PCP) orientation first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Your support means everything. Please donate at [INSERT DONATION LINK]. Tax-exempt receipts issued above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days. For urgent matters, WhatsApp us.${sign}`},
-    normal:{Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available for community cats and dogs. Register at [INSERT POTONG ROYONG LINK] or WhatsApp us.${sign}`,Surrender:`${g}Thank you. Our intake is on a waiting list. Please share species, breed, age, and a photo to be added.${sign}`,Volunteering:`${g}Thank you. All first-time volunteers complete our Pet Care Programme (PCP) orientation at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK]. Receipts issued above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},
-    firm:{Neutering:`${g}Our subsidised neutering programme, Potong Royong, is slot-based. Walk-ins not accepted. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Intake is on a strict waiting list. Provide: species, breed, age, reason, and photo. We'll contact you when space is available.${sign}`,Volunteering:`${g}All volunteers complete PCP orientation before joining shifts. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Donate via [INSERT DONATION LINK] only. Receipts above RM50.${sign}`,General:`${g}Thank you. We respond within 2–3 working days.${sign}`}
+    soft:{Neutering:`${g}Thank you for reaching out about neutering. Our subsidised programme, Potong Royong, is available for community cats and dogs. Slots fill quickly — please register at [INSERT POTONG ROYONG LINK] or WhatsApp us.${sign}`,Surrender:`${g}We understand this isn't easy. Our intake is on a waiting list. Please share a photo, species, breed, and age.${sign}`,Volunteering:`${g}Thank you! All new volunteers complete our Pet Care Programme (PCP) orientation first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Your support means everything. Please donate at [INSERT DONATION LINK]. Tax-exempt receipts issued above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days. For urgent matters, WhatsApp us.${sign}`},
+    normal:{Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available for community cats and dogs. Register at [INSERT POTONG ROYONG LINK] or WhatsApp us.${sign}`,Surrender:`${g}Thank you. Our intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}Thank you. All first-time volunteers complete our Pet Care Programme (PCP) orientation at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK]. Receipts issued above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},
+    firm:{Neutering:`${g}Our subsidised neutering programme, Potong Royong, is slot-based. Walk-ins not accepted. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Intake is on a strict waiting list. Provide: species, breed, age, reason, photo.${sign}`,Volunteering:`${g}All volunteers complete PCP orientation before joining shifts. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Donate via [INSERT DONATION LINK] only. Receipts above RM50.${sign}`,General:`${g}Thank you. We respond within 2–3 working days.${sign}`}
   };
   return(T[tone]||T.normal)[cat]||(T[tone]||T.normal).General;
 }
 
-// ── Guidance ──────────────────────────────────────────────────────────────
+// ── Guidance ───────────────────────────────────────────────────────────────
 function allowedEffort(){
   if(energy==='low')return new Set(['low']);
   if(energy==='high')return new Set(['low','medium','high']);
@@ -849,7 +889,7 @@ function pickNudge(){
   const op=a.filter(i=>i.type==='task'&&i.context==='personal'&&isOverdue(i.content?.due));
   const wc=a.filter(i=>i.context!=='personal'&&i.type!=='routine').length;
   const pc=a.filter(i=>i.context==='personal').length;
-  if(oob.length)return`${oob.length} overdue obligation${oob.length>1?'s':''} — worth attending to soon.`;
+  if(oob.length)return`${oob.length} overdue obligation${oob.length>1?'s':''} — worth attending to.`;
   if(dr.length)return`${dr[0].content?.title||'A routine'} is due. Small habits compound.`;
   if(op.length)return`${op.length} overdue personal task${op.length>1?'s':''} — no rush, just worth a look.`;
   if(isEvening&&!dtP.length&&pc>0)return'Nothing personal done today. Even one small thing counts.';
@@ -860,10 +900,12 @@ function pickNudge(){
 }
 function checkStop(){
   const a=items.filter(i=>i.status==='active');
-  return!a.some(i=>isOverdue(i.content?.due)&&i.type!=='reflection')&&!a.some(i=>i.context!=='personal'&&i.priority==='high'&&i.type!=='reflection')&&items.some(i=>i.status==='done'&&i.context==='personal'&&isToday(i.completed_at||i.created_at));
+  return!a.some(i=>isOverdue(i.content?.due)&&i.type!=='reflection')&&
+    !a.some(i=>i.context!=='personal'&&i.priority==='high'&&i.type!=='reflection')&&
+    items.some(i=>i.status==='done'&&i.context==='personal'&&isToday(i.completed_at||i.created_at));
 }
 
-// ── Today focus ───────────────────────────────────────────────────────────
+// ── Today focus ────────────────────────────────────────────────────────────
 function saveTF(){localStorage.setItem('tf',JSON.stringify(todayFocus))}
 function pinItem(id){
   if(todayFocus.includes(id)){todayFocus=todayFocus.filter(x=>x!==id);saveTF();render();return}
@@ -885,17 +927,19 @@ function buildFocus(){
   return[...pinned.map(id=>({id,auto:false})),...sug].slice(0,3);
 }
 
-// ── Render ────────────────────────────────────────────────────────────────
+// ── Render ─────────────────────────────────────────────────────────────────
 function render(){
   document.body.classList.toggle('low',energy==='low');
   renderGuidance();renderFocus();renderStream();renderBottom();
+  // Reapply lock visuals if needed
+  if(actionsLocked)document.querySelectorAll('.card:not(.done)').forEach(c=>c.classList.add('locked'));
 }
 
 function renderGuidance(){
   const el=document.getElementById('guidance-area');
   const na=pickNA(),pm=pickPM(),nudge=pickNudge(),stop=checkStop();
   let h='';
-  if(stop)h+=`<div class="gc stop"><div class="gc-label green">You're done for now</div><div class="stop-title">Good stopping point ✓</div><div class="stop-sub">No overdue items. No urgent work. You've done something for yourself today.</div></div>`;
+  if(stop)h+=`<div class="gc stop"><div class="gc-label green">You're done for now</div><div class="stop-title">Good stopping point ✓</div><div class="stop-sub">No overdue items. No urgent work. You've done something personal today.</div></div>`;
   if(na){
     const meta=isOverdue(na.content?.due)?'Overdue':isToday(na.content?.due)?'Due today':routineDue(na)?'Due now':na.type==='communication'?(na.content?.category||''):'';
     const act=na.type==='task'||na.type==='obligation'?`markDone('${na.id}')`:na.type==='communication'?`copyReply('${na.id}')`:na.type==='routine'?`completeRoutine('${na.id}')`:` convertToTask('${na.id}')`;
@@ -907,7 +951,7 @@ function renderGuidance(){
           <div class="gc-title">${esc(itemTitle(na))}${na.important_personal?' 🌟':''}</div>
           <div class="gc-meta">${na.context==='personal'?'Personal':'Work'}${na.effort==='high'?' · High effort':''}${meta?' · '+meta:''}</div>
         </div>
-        <button class="btn btn-filled btn-sm" onclick="${act}">${actLabel}</button>
+        <button class="btn btn-filled btn-sm" onclick="${act}" ${actionsLocked?'disabled':''}>${actLabel}</button>
       </div>
     </div>`;
   }
@@ -921,7 +965,7 @@ function renderGuidance(){
           <div class="gc-title">${esc(itemTitle(pm))}${pm.important_personal?' 🌟':''}</div>
           <div class="gc-meta">${pmMeta||'Personal'}</div>
         </div>
-        ${pmAct?`<button class="btn btn-filled btn-sm green" onclick="${pmAct}">${pm.type==='routine'?'Done for today':'Mark done'}</button>`:`<button class="btn btn-tonal btn-sm" onclick="scrollToCard('${pm.id}')">View</button>`}
+        ${pmAct?`<button class="btn btn-filled btn-sm green" onclick="${pmAct}" ${actionsLocked?'disabled':''}>${pm.type==='routine'?'Done for today':'Mark done'}</button>`:`<button class="btn btn-tonal btn-sm" onclick="scrollToCard('${pm.id}')">View</button>`}
       </div>
     </div>`;
   }
@@ -977,8 +1021,7 @@ function renderStream(){
     const sec=i.important_personal?'important':i.type==='routine'?'routine':i.type==='obligation'?'obligation':i.type==='reflection'?'reflection':i.context==='personal'?'personal':isUrgent(i)?'urgent':i.type==='communication'?'inbox':i.type==='task'?'tasks':'ideas';
     if(sec!==lastSec){
       const lbl={important:'Important',routine:'Routines',obligation:'Obligations',reflection:'Reflections',personal:'Personal',urgent:'Urgent',inbox:'Inbox',tasks:'Tasks',ideas:'Ideas'};
-      html+=`<div class="sec-label">${lbl[sec]}</div>`;
-      lastSec=sec;
+      html+=`<div class="sec-label">${lbl[sec]}</div>`;lastSec=sec;
     }
     html+=renderCard(i);
   });
@@ -1010,21 +1053,17 @@ function renderCard(item){
   const effort=item.effort||'medium';
   const lk=actionsLocked||done;
 
-  const typeChip={task:'mc-task',idea:'mc-idea',reflection:'mc-reflection',obligation:'mc-obligation',routine:'mc-routine',communication:'mc-communication'};
-  const typeLabel={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};
-  const ctxBtn=`<button class="mc mc-ctx" onclick="toggleCtx('${item.id}')" title="Toggle context">${ctx==='personal'?'Personal':'Work'}</button>`;
-
-  const ca=(label,fn,cls,disabled)=>`<button class="ca ${cls}" onclick="${fn}" ${disabled||lk&&cls!=='ca-danger'?'disabled':''}>${label}</button>`;
+  const ctxBtn=`<button class="mc mc-ctx" onclick="toggleCtx('${item.id}')" title="Toggle context" ${lk?'disabled':''}>${ctx==='personal'?'Personal':'Work'}</button>`;
+  const ca=(label,fn,cls,forceEnable)=>`<button class="ca ${cls}" onclick="${fn}" ${(lk&&!forceEnable)?'disabled':''}>${label}</button>`;
 
   let inner='';
   if(item.type==='communication'){
     const tone=c.tone||'normal';
     inner=`<div class="card-top"><div class="card-chips">
-      <span class="mc ${typeChip.communication}">${typeLabel.communication}</span>
-      <span class="mc mc-${item.priority==='high'?'high':'task'}">${c.category||'General'}</span>
+      <span class="mc mc-communication">Email</span>
+      <span class="mc mc-task">${c.category||'General'}</span>
       ${urgent?'<span class="mc mc-overdue">Overdue</span>':''}
-      ${imp?'<span class="mc mc-imp">Important</span>':''}
-      ${ctxBtn}
+      ${imp?'<span class="mc mc-imp">Important</span>':''}${ctxBtn}
     </div><span class="card-time">${fmt(item.created_at)}</span></div>
     <div class="card-body">${esc(trunc(c.preview||'',180))}</div>
     <div class="tone-row"><span class="tone-lbl">Tone</span>
@@ -1037,10 +1076,10 @@ function renderCard(item){
       <textarea class="reply-edit" id="re-${item.id}" style="display:none">${esc(c.reply||'')}</textarea>
     </div>
     <div class="card-actions">
-      ${ca('Copy reply',`copyReply('${item.id}')`,`ca-primary`)}
+      ${ca('Copy reply',`copyReply('${item.id}')`,`ca-primary`,true)}
       ${ca('Edit reply',`toggleEdit('${item.id}')`,`ca-tonal`)}
       ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin to today',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,false)}
+      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else if(item.type==='reflection'){
     inner=`<div class="card-top"><div class="card-chips">
@@ -1050,7 +1089,7 @@ function renderCard(item){
     <div class="card-body reflect">${esc(c.text||'')}</div>
     <div class="card-actions">
       ${!done?ca('Keep',`keepItem('${item.id}')`,`ca-muted`)+ca('Convert to task',`convertToTask('${item.id}')`,`ca-tonal`)+ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,false)}
+      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else if(item.type==='routine'){
     const nd=routineNextDue(item);
@@ -1061,23 +1100,22 @@ function renderCard(item){
     <div class="card-title">${esc(c.title||c.text||'Routine')}</div>
     <div class="routine-sub">${c.last_completed?`Last done: ${c.last_completed}`:'Not started yet'}${nd?' · Next: '+nd:''}</div>
     <div class="card-actions">
-      ${!done?ca('Done for today',`completeRoutine('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,false)}
+      ${!done?ca('Done for today',`completeRoutine('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin to today',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
+      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else if(item.type==='obligation'){
     const ov=isOverdue(c.due),tod=isToday(c.due);
     inner=`<div class="card-top"><div class="card-chips">
       <span class="mc mc-obligation">Obligation</span>
       ${ov?'<span class="mc mc-overdue">Overdue</span>':tod?'<span class="mc mc-high">Due today</span>':''}
-      ${imp?'<span class="mc mc-imp">Important</span>':''}
-      ${ctxBtn}
+      ${imp?'<span class="mc mc-imp">Important</span>':''}${ctxBtn}
     </div><span class="card-time">${fmt(item.created_at)}</span></div>
     ${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||c.text||'')}" onkeydown="if(event.key==='Enter')saveInlineEdit('${item.id}');if(event.key==='Escape')cancelEdit('${item.id}')">`:`<div class="card-title">${esc(c.title||c.text||'Obligation')}</div>`}
     ${c.due?`<div class="card-due${ov?' ov':''}">${ov?'Overdue · ':tod?'Due today · ':'Due '}${c.due}</div>`:''}
     ${c.frequency?`<div class="routine-sub">Repeats: ${c.frequency}</div>`:''}
     <div class="card-actions">
       ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+(item._editing?ca('Save',`saveInlineEdit('${item.id}')`,`ca-primary`)+ca('Cancel',`cancelEdit('${item.id}')`,`ca-muted`):ca('Edit',`startEdit('${item.id}')`,`ca-muted`))+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,false)}
+      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else if(item.type==='task'){
     const ov=isOverdue(c.due),tod=isToday(c.due);
@@ -1092,19 +1130,18 @@ function renderCard(item){
     ${c.due?`<div class="card-due${ov?' ov':''}">${ov?'Overdue · ':tod?'Due today · ':'Due '}${c.due}</div>`:''}
     <div class="card-actions">
       ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+(item._editing?ca('Save',`saveInlineEdit('${item.id}')`,`ca-primary`)+ca('Cancel',`cancelEdit('${item.id}')`,`ca-muted`):ca('Edit',`startEdit('${item.id}')`,`ca-muted`))+ca(pinned?'Pinned':'Pin to today',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,false)}
+      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else{
     const ageBadge=age>=7?`<span class="mc mc-obligation" style="font-size:10px">${age}d old</span>`:age>=3?`<span class="mc" style="background:var(--md-surface3);color:var(--md-on-surface2)">${age}d</span>`:'';
     const showReview=age>=7&&!done;
     inner=`<div class="card-top"><div class="card-chips">
-      <span class="mc mc-idea">Idea</span>
-      ${ageBadge}${ctxBtn}
+      <span class="mc mc-idea">Idea</span>${ageBadge}${ctxBtn}
     </div><span class="card-time">${fmt(item.created_at)}</span></div>
     <div class="card-body">${esc(c.text||'')}</div>
     <div class="card-actions">
       ${!done?ca('Convert to task',`convertToTask('${item.id}')`,`ca-tonal`)+ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)+ca(pinned?'Pinned':'Pin to today',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,false)}
+      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>
     ${showReview&&!done?`<div class="review-row"><span class="review-lbl">Review</span>${ca('Convert to task',`convertToTask('${item.id}')`,`ca-tonal`)}${ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)}${ca('Keep',`keepItem('${item.id}')`,`ca-muted`)}</div>`:''}`;
   }
@@ -1113,7 +1150,7 @@ function renderCard(item){
   return`<div class="${cardCls}" id="card-${item.id}"><div class="card-stripe ${item.type}"></div><div class="card-inner">${inner}</div></div>`;
 }
 
-// ── Card actions ──────────────────────────────────────────────────────────
+// ── Card actions ───────────────────────────────────────────────────────────
 function startEdit(id){const i=items.find(x=>x.id===id);if(!i)return;i._editing=true;render();setTimeout(()=>{const e=document.getElementById('ie-'+id);if(e){e.focus();e.select()}},50)}
 function cancelEdit(id){const i=items.find(x=>x.id===id);if(i){i._editing=false;render()}}
 async function saveInlineEdit(id){
@@ -1121,7 +1158,8 @@ async function saveInlineEdit(id){
   const el=document.getElementById('ie-'+id);if(!el)return;
   i.content.title=el.value;i._editing=false;
   i.effort=detectEffort(el.value,i.type);
-  try{await dbUpdate(id,{content:i.content,effort:i.effort});render();showToast('Saved')}catch(e){}
+  try{await dbUpdate(id,{content:i.content,effort:i.effort});render();showToast('Saved')}
+  catch(e){render()}
 }
 async function toggleCtx(id){
   if(!requireSession())return;
@@ -1236,7 +1274,7 @@ function scrollToCard(id){
   if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--md-accent)';setTimeout(()=>el.style.outline='none',1400)}
 }
 
-// ── Capture ───────────────────────────────────────────────────────────────
+// ── Capture sheet ──────────────────────────────────────────────────────────
 function onCapInput(){
   if(override)return;
   const val=document.getElementById('cap-input').value;
@@ -1316,14 +1354,10 @@ async function submitCapture(){
 }
 
 function setFilter(f,btn){
-  activeFilter=f;
-  document.querySelectorAll('.md-chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');renderStream();
+  activeFilter=f;document.querySelectorAll('.md-chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');renderStream();
 }
 function setEnergy(level,btn){
-  energy=level;
-  document.querySelectorAll('.energy-opt').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');render();
+  energy=level;document.querySelectorAll('.energy-opt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();
 }
 
 let toastT;
@@ -1337,7 +1371,7 @@ document.addEventListener('keydown',e=>{
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSheet()}
 });
 
-// ── Boot ──────────────────────────────────────────────────────────────────
+// ── Start ──────────────────────────────────────────────────────────────────
 bootstrap();
 </script>
 </body>
