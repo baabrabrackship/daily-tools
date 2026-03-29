@@ -6,374 +6,212 @@
 <title>StreamOS</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-/* ── Design tokens ─────────────────────────────────────────────────────── */
 :root{
-  --bg:#f8f9fa;--surface:#fff;--surface2:#f1f3f4;--surface3:#e8eaed;
-  --on-s:#202124;--on-s2:#5f6368;--on-s3:#80868b;--on-s4:#bdc1c6;
-  --border:#dadce0;--border-l:#e8eaed;
-  --accent:#1a73e8;--accent-l:#e8f0fe;--accent-d:#1557b0;
-  --green:#188038;--green-l:#e6f4ea;--green-b:#ceead6;
-  --orange:#e37400;--orange-l:#fef7e0;--orange-b:#fce8b2;
-  --red:#d93025;--red-l:#fce8e6;--red-b:#f5c6c3;
-  --teal:#007b83;--teal-l:#e0f7fa;
-  --purple:#7b1fa2;--purple-l:#f3e5f5;
-  --personal-bg:#e6f4ea;--personal-b:#ceead6;
-  --s1:0 1px 2px rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);
-  --s2:0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);
-  --s3:0 4px 8px 3px rgba(60,64,67,.15),0 1px 3px rgba(60,64,67,.3);
-  --r:8px;--rsm:6px;--rpill:24px;
-  --f:'Google Sans',Roboto,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  /* layout */
-  --content-max:600px;
-  --sidebar-w:280px;
-  --rail-w:240px;
-  --gap:16px;
+  --bg:#f4f4f4;--surface:#fff;--surface2:#f0f0f0;--surface3:#e6e6e6;
+  --on-s:#111;--on-s2:#555;--on-s3:#999;--on-s4:#ccc;
+  --border:#e0e0e0;--border-l:#ebebeb;
+  --accent:#1a73e8;--accent-l:#e8f0fe;
+  --green:#1a7340;--green-l:#e6f4ea;--green-b:#9dd4b0;
+  --orange:#b55a00;--orange-l:#fff3e0;
+  --red:#c5221f;--red-l:#fce8e6;--red-b:#f1b8b5;
+  --teal:#00757a;--teal-l:#e0f7fa;
+  --purple:#6a0dad;--purple-l:#f3e5f5;
+  --personal-bg:#edf7f0;--personal-b:#9dd4b0;
+  --s1:0 1px 3px rgba(0,0,0,.08);
+  --s2:0 2px 10px rgba(0,0,0,.12);
+  --s3:0 8px 28px rgba(0,0,0,.16);
+  --r:12px;--rsm:8px;--rpill:100px;
+  --f:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',system-ui,sans-serif;
+  --na-size:18px;
 }
 @media(prefers-color-scheme:dark){:root{
-  --bg:#1c1b1f;--surface:#2b2930;--surface2:#36343b;--surface3:#48464e;
-  --on-s:#e6e1e5;--on-s2:#cac4d0;--on-s3:#938f99;--on-s4:#49454f;
-  --border:#49454f;--border-l:#36343b;
-  --accent:#a8c7fa;--accent-l:#1e3354;--accent-d:#d3e3fd;
-  --green:#81c995;--green-l:#1e3a24;--green-b:#2d5a34;
-  --orange:#ffb74d;--orange-l:#3d2800;--orange-b:#5c3a00;
-  --red:#f28b82;--red-l:#3d0f0a;--red-b:#5c1a14;
-  --teal:#80deea;--teal-l:#00363a;
-  --purple:#ce93d8;--purple-l:#3e1045;
-  --personal-bg:#1e3a24;--personal-b:#2d5a34;
-  --s1:0 1px 2px rgba(0,0,0,.5),0 1px 3px 1px rgba(0,0,0,.3);
-  --s2:0 1px 2px rgba(0,0,0,.5),0 2px 6px 2px rgba(0,0,0,.3);
-  --s3:0 4px 8px 3px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.5);
+  --bg:#0d0d0d;--surface:#1a1a1a;--surface2:#222;--surface3:#2c2c2c;
+  --on-s:#f0f0f0;--on-s2:#999;--on-s3:#555;--on-s4:#333;
+  --border:#2a2a2a;--border-l:#222;
+  --accent:#5ca7f8;--accent-l:#132038;
+  --green:#4caf76;--green-l:#0a1f12;--green-b:#1d5c30;
+  --orange:#ffb347;--orange-l:#1f1000;
+  --red:#f28080;--red-l:#200808;--red-b:#4a1010;
+  --teal:#5dc7d0;--teal-l:#001518;
+  --purple:#c084f5;--purple-l:#1a0028;
+  --personal-bg:#0a1f12;--personal-b:#1d5c30;
+  --s1:0 1px 3px rgba(0,0,0,.4);
+  --s2:0 2px 10px rgba(0,0,0,.5);
+  --s3:0 8px 28px rgba(0,0,0,.7);
 }}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100vh;-webkit-font-smoothing:antialiased;font-size:14px;overflow-x:hidden}
-
-/* ── Boot overlay ──────────────────────────────────────────────────────── */
-#boot{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+html{font-size:15px}
+body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+#boot{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 #boot.off{display:none}
-.spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+.spinner{width:28px;height:28px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.boot-lbl{font-size:14px;color:var(--on-s2);font-weight:500}
-#boot-err{display:none;text-align:center;padding:0 28px}
-.boot-err-h{font-size:16px;font-weight:500;color:var(--on-s);margin-bottom:8px}
-.boot-err-p{font-size:13px;color:var(--on-s2);margin-bottom:20px;line-height:1.5}
-.boot-err-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-
-/* ── Lock badge ────────────────────────────────────────────────────────── */
-#lock-badge{position:fixed;top:68px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:7px 16px;border-radius:var(--rpill);font-size:12px;font-weight:600;z-index:300;display:none;pointer-events:none;font-family:var(--f);white-space:nowrap;box-shadow:var(--s2)}
-#lock-badge.show{display:block}
-
-/* ── Session banner ────────────────────────────────────────────────────── */
-#banner{display:none;position:sticky;top:0;z-index:200;background:var(--red-l);border-bottom:1px solid var(--red-b);padding:10px 16px}
+.boot-lbl{font-size:13px;color:var(--on-s3);font-weight:500}
+#boot-err{display:none;text-align:center;padding:0 32px;max-width:320px}
+.boot-err-h{font-size:16px;font-weight:600;color:var(--on-s);margin-bottom:6px}
+.boot-err-p{font-size:13px;color:var(--on-s2);margin-bottom:18px;line-height:1.5}
+.boot-err-btns{display:flex;gap:10px;justify-content:center}
+#banner{display:none;position:sticky;top:0;z-index:300;background:var(--red-l);border-bottom:1px solid var(--red-b);padding:10px 20px}
 #banner.show{display:block}
-.banner-in{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.banner-in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .banner-txt{font-size:13px;color:var(--red);font-weight:500}
 .banner-btns{display:flex;gap:8px}
-
-/* ── Buttons ───────────────────────────────────────────────────────────── */
-.btn{border:none;cursor:pointer;font-family:var(--f);font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;border-radius:var(--rpill)}
-.filled{background:var(--accent);color:#fff;padding:8px 18px;font-size:13px}.filled:hover{opacity:.9}
-.filled.g{background:var(--green)}.filled.r{background:var(--red)}
-.tonal{background:var(--accent-l);color:var(--accent);padding:8px 16px;font-size:13px}.tonal:hover{opacity:.85}
-.outlined{background:transparent;color:var(--accent);border:1px solid var(--border);padding:7px 15px;font-size:13px}.outlined:hover{background:var(--accent-l)}
-.ghost{background:transparent;color:var(--on-s2);padding:6px 12px;font-size:13px}.ghost:hover{background:var(--surface2)}
-.ghost.r{color:var(--red)}.ghost.r:hover{background:var(--red-l)}
-.sm{padding:5px 12px;font-size:12px}
-.btn:disabled{opacity:.38;cursor:not-allowed}
-
-/* ── Auth ──────────────────────────────────────────────────────────────── */
-#auth{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+.btn{border:none;cursor:pointer;font-family:var(--f);font-weight:500;display:inline-flex;align-items:center;gap:5px;transition:opacity .15s;border-radius:var(--rpill);font-size:13px}
+.btn:hover{opacity:.85}.btn:disabled{opacity:.35;cursor:not-allowed}
+.b-fill{background:var(--accent);color:#fff;padding:8px 18px}
+.b-fill.g{background:var(--green)}.b-fill.r{background:var(--red)}
+.b-out{background:transparent;border:1px solid var(--border);color:var(--on-s2);padding:7px 15px}
+.b-ghost{background:transparent;color:var(--on-s2);padding:6px 10px}
+.b-sm{padding:5px 12px;font-size:12px}
+#auth{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px}
 #auth.show{display:flex}
-.auth-card{background:var(--surface);border-radius:12px;padding:40px 32px;max-width:380px;width:100%;box-shadow:var(--s2)}
-.auth-logo{font-size:24px;font-weight:500;color:var(--accent);margin-bottom:4px;letter-spacing:-.5px}
-.auth-tag{font-size:13px;color:var(--on-s2);margin-bottom:32px}
-.flbl{display:block;font-size:12px;font-weight:500;color:var(--on-s2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
-.finput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:11px 13px;font-size:14px;color:var(--on-s);font-family:var(--f);outline:none;transition:border-color .15s;margin-bottom:12px}
+.auth-card{background:var(--surface);border-radius:16px;padding:40px 32px;max-width:360px;width:100%;box-shadow:var(--s2)}
+.auth-logo{font-size:22px;font-weight:700;color:var(--accent);margin-bottom:4px;letter-spacing:-.5px}
+.auth-tag{font-size:13px;color:var(--on-s3);margin-bottom:28px}
+.flbl{display:block;font-size:11px;font-weight:600;color:var(--on-s2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.finput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:10px 12px;font-size:14px;color:var(--on-s);font-family:var(--f);outline:none;transition:border-color .15s;margin-bottom:10px}
 .finput:focus{border-color:var(--accent);background:var(--surface)}
-.auth-div{text-align:center;font-size:12px;color:var(--on-s3);margin:10px 0}
-.auth-msg{font-size:13px;text-align:center;margin-top:12px;min-height:18px}
+.auth-div{text-align:center;font-size:11px;color:var(--on-s3);margin:8px 0}
+.auth-msg{font-size:13px;text-align:center;margin-top:10px;min-height:18px}
 .auth-msg.ok{color:var(--green)}.auth-msg.err{color:var(--red)}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   APP SHELL — LAYOUT SYSTEM
-   compact  (<720px):  single column, mobile-native
-   medium   (720-1099px): wider single column, more breathing room
-   expanded (≥1100px): three-region desktop layout
-═══════════════════════════════════════════════════════════════════════ */
 #app{display:none}
-#app.show{display:block}
-
-/* ── Topbar ────────────────────────────────────────────────────────────── */
-.topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border-l);padding:0 var(--gap)}
-.topbar-in{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1280px;margin:0 auto}
-.brand{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
-.brand-title{font-size:18px;font-weight:500;color:var(--accent);letter-spacing:-.3px}
-.brand-sub{font-size:11px;color:var(--on-s3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.focus-lbl{font-size:11px;font-weight:600;color:var(--on-s3);text-transform:uppercase;letter-spacing:.5px;display:none}
-.energy-grp{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rpill);overflow:hidden}
-.eopt{border:none;background:transparent;font-family:var(--f);font-size:12px;font-weight:500;color:var(--on-s2);padding:5px 11px;cursor:pointer;transition:all .15s;white-space:nowrap}
-.eopt.on{background:var(--accent);color:#fff}
-.sync-chip{font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--rpill);border:1px solid var(--border);background:var(--surface2);color:var(--on-s2);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:var(--f)}
-.sync-chip:hover{border-color:var(--accent);color:var(--accent)}
-.sync-chip.saving{background:var(--orange-l);border-color:var(--orange-b);color:var(--orange)}
-.sync-chip.err{background:var(--red-l);border-color:var(--red-b);color:var(--red)}
-.sync-chip.reconn{background:var(--accent-l);border-color:var(--border);color:var(--accent)}
-
-/* ── COMPACT layout (default / mobile) ────────────────────────────────── */
-.app-body{max-width:var(--content-max);margin:0 auto;padding:0}
-
-/* Filters */
-.filters{padding:10px 16px 4px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-.filters::-webkit-scrollbar{display:none}
-.chip{border:1px solid var(--border);background:var(--surface);color:var(--on-s2);font-size:13px;font-weight:500;padding:5px 14px;border-radius:var(--rpill);cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--f)}
-.chip.on{background:var(--accent-l);color:var(--accent);border-color:var(--accent)}
-
-/* Main regions */
-.region-guidance{padding:12px 16px 0}
-.region-focus{padding:0 16px}
-.region-stream{padding:4px 16px}
-.region-later{padding:4px 16px}
-.region-bottom{padding:8px 16px}
-
-/* ── MEDIUM layout (720px+) ────────────────────────────────────────────── */
-@media(min-width:720px){
-  :root{--content-max:680px;--gap:20px}
-  .app-body{max-width:780px;padding:0}
-  .topbar-in{gap:16px}
-  .focus-lbl{display:block}
-  .region-guidance{padding:16px 20px 0}
-  .region-focus{padding:0 20px}
-  .region-stream{padding:4px 20px}
-  .region-later{padding:4px 20px}
-  .region-bottom{padding:10px 20px}
-  .filters{padding:12px 20px 4px;flex-wrap:wrap;overflow:visible}
-  .card-in{padding:16px 18px 14px}
-}
-
-/* ── EXPANDED layout (1100px+) ─────────────────────────────────────────── */
-@media(min-width:1100px){
-  :root{--gap:24px}
-
-  /* Three-region grid: left-rail | main | right-rail */
-  .app-body{
-    max-width:1280px;
-    padding:0 var(--gap);
-    display:grid;
-    grid-template-columns:var(--rail-w) 1fr var(--sidebar-w);
-    grid-template-rows:auto;
-    gap:0 20px;
-    align-items:start;
-  }
-
-  /* Left rail: guidance + focus — sticky */
-  .left-rail{
-    grid-column:1;
-    grid-row:1/10;
-    position:sticky;
-    top:72px;
-    max-height:calc(100vh - 88px);
-    overflow-y:auto;
-    overflow-x:hidden;
-    scrollbar-width:thin;
-    padding:16px 0 20px;
-  }
-  .left-rail::-webkit-scrollbar{width:4px}
-  .left-rail::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-
-  /* Main column: filters + stream */
-  .main-col{
-    grid-column:2;
-    grid-row:1/10;
-    padding:16px 0 100px;
-    min-width:0;
-  }
-
-  /* Right rail: later / done / archived */
-  .right-rail{
-    grid-column:3;
-    grid-row:1/10;
-    position:sticky;
-    top:72px;
-    max-height:calc(100vh - 88px);
-    overflow-y:auto;
-    overflow-x:hidden;
-    scrollbar-width:thin;
-    padding:16px 0 20px;
-  }
-  .right-rail::-webkit-scrollbar{width:4px}
-  .right-rail::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-
-  /* Move guidance + focus into left rail */
-  .region-guidance,.region-focus{padding:0 0 10px}
-  .region-stream{padding:0}
-  .region-later,.region-bottom{padding:0 0 8px}
-
-  /* Filters inside main col */
-  .filters{padding:0 0 12px;flex-wrap:wrap;overflow:visible;gap:6px}
-
-  /* Expanded cards get more room */
-  .card-in{padding:16px 20px 14px}
-
-  /* FAB moves to bottom-right of viewport, slightly inward */
-  .fab{right:calc(var(--sidebar-w) + var(--gap) + 20px) !important;transform:none !important;bottom:28px}
-
-  /* Section labels bigger */
-  .slbl{font-size:11px;padding:10px 0 5px}
-
-  /* Right rail section labels */
-  .rail-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--on-s3);padding:4px 0 8px;display:flex;align-items:center;gap:8px}
-  .rail-lbl::after{content:'';flex:1;height:1px;background:var(--border-l)}
-}
-
-/* Guidance */
-.gc{border-radius:var(--r);padding:14px 16px;margin-bottom:10px;background:var(--surface);box-shadow:var(--s1)}
-.gc:hover{box-shadow:var(--s2)}
-.gc.na{background:var(--accent-l);border-left:3px solid var(--accent)}
-.gc.pm{background:var(--personal-bg);border-left:3px solid var(--green)}
-.gc.nudge{background:var(--surface2);box-shadow:none;border:1px solid var(--border-l)}
-.gc.stop{background:var(--green-l);border-left:3px solid var(--green);text-align:center}
-.gc.pulse{animation:gp .9s ease}
-@keyframes gp{0%{box-shadow:var(--s1)}50%{box-shadow:0 0 0 4px rgba(26,115,232,.15)}100%{box-shadow:var(--s1)}}
-.gc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--on-s3);margin-bottom:7px}
-.gc-lbl.a{color:var(--accent)}.gc-lbl.g{color:var(--green)}
-.gc-row{display:flex;align-items:center;gap:10px}
-.gc-txt{flex:1;min-width:0;cursor:pointer}
-.gc-title{font-size:14px;font-weight:500;color:var(--on-s);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gc-meta{font-size:12px;color:var(--on-s2);margin-top:2px}
-.nudge-txt{font-size:13px;color:var(--on-s2);line-height:1.5;font-style:italic}
-.stop-h{font-size:14px;font-weight:500;color:var(--green);margin-bottom:4px}
-.stop-s{font-size:12px;color:var(--green);opacity:.85}
-
-/* Focus card */
-.focus-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--s1);margin-bottom:10px;overflow:hidden}
-.focus-hd{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--on-s3);padding:10px 14px 7px}
-.focus-list{display:flex;flex-direction:column}
-.focus-row{display:flex;align-items:center;gap:10px;padding:8px 14px;border-top:1px solid var(--border-l);cursor:pointer;transition:background .12s}
-.focus-row:first-child{border-top:none}
-.focus-row:hover{background:var(--surface2)}
-.fdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--border)}
-.fdot.g{background:var(--green)}.fdot.b{background:var(--accent)}.fdot.r{background:var(--red)}
-.flabel{font-size:13px;color:var(--on-s);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ftag{font-size:11px;color:var(--on-s3)}
-.fremove{border:none;background:none;color:var(--on-s3);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px}
-.fremove:hover{color:var(--red);background:var(--red-l)}
-
-/* Stream */
-.stream{display:flex;flex-direction:column;gap:8px}
-.slbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--on-s3);padding:8px 0 4px;display:flex;align-items:center;gap:10px}
+#app.show{display:block;padding-bottom:100px}
+.topbar{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border-l);padding:0 20px}
+.topbar-in{max-width:640px;margin:0 auto;height:50px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-size:16px;font-weight:700;color:var(--on-s);letter-spacing:-.4px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.mode-grp{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rpill);padding:2px;gap:1px}
+.mode-opt{border:none;background:transparent;font-family:var(--f);font-size:11px;font-weight:600;color:var(--on-s3);padding:4px 11px;cursor:pointer;transition:all .15s;border-radius:var(--rpill)}
+.mode-opt.on{background:var(--surface);color:var(--on-s);box-shadow:var(--s1)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;transition:background .3s}
+.sync-dot.saving{background:var(--orange)}.sync-dot.err{background:var(--red)}.sync-dot.reconn{background:var(--accent)}
+.profile-btn{border:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rpill);padding:4px 11px;font-size:12px;font-weight:500;color:var(--on-s2);cursor:pointer;font-family:var(--f);display:flex;align-items:center;gap:6px}
+.profile-btn:hover{border-color:var(--on-s3)}
+.profile-menu{position:absolute;top:50px;right:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--s2);min-width:160px;z-index:400;display:none;overflow:hidden}
+.profile-menu.open{display:block}
+.pm-item{display:block;width:100%;text-align:left;border:none;background:none;font-family:var(--f);font-size:13px;padding:11px 16px;cursor:pointer;color:var(--on-s2);transition:background .12s}
+.pm-item:hover{background:var(--surface2)}.pm-item.danger{color:var(--red)}
+.pm-divider{height:1px;background:var(--border-l)}
+.page{max-width:640px;margin:0 auto;padding:0 20px}
+.anchor-zone{padding:16px 0 4px}
+.personal-anchor{background:var(--personal-bg);border:1.5px solid var(--personal-b);border-radius:var(--r);padding:16px 18px;cursor:pointer;transition:box-shadow .15s;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.personal-anchor:hover{box-shadow:var(--s1)}
+.personal-anchor.no-item{opacity:.5;cursor:default;pointer-events:none}
+.pa-left{flex:1;min-width:0}
+.pa-eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:5px}
+.pa-title{font-size:16px;font-weight:600;color:var(--on-s);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.pa-meta{font-size:12px;color:var(--on-s3);margin-top:3px}
+.pa-action{flex-shrink:0;border:none;background:var(--green);color:#fff;border-radius:var(--rsm);padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);transition:opacity .15s;white-space:nowrap}
+.pa-action:hover{opacity:.9}.pa-action:disabled{opacity:.35;cursor:not-allowed}
+.na-zone{padding:8px 0 4px}
+.na-card{background:var(--accent-l);border:1.5px solid var(--accent);border-radius:var(--r);padding:18px 18px 16px;transition:box-shadow .15s}
+.na-card.urgent{background:var(--red-l);border-color:var(--red-b)}
+.na-eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--accent);margin-bottom:8px}
+.na-card.urgent .na-eyebrow{color:var(--red)}
+.na-title{font-size:var(--na-size);font-weight:600;color:var(--on-s);line-height:1.3;margin-bottom:4px;cursor:pointer}
+.na-meta{font-size:12px;color:var(--on-s3);margin-bottom:14px}
+.na-btn{width:100%;border:none;background:var(--accent);color:#fff;border-radius:var(--rsm);padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--f);transition:opacity .15s;letter-spacing:-.1px}
+.na-btn:hover{opacity:.9}.na-btn:disabled{opacity:.35;cursor:not-allowed}
+.na-btn.g{background:var(--green)}.na-btn.r{background:var(--red)}
+body.stopped .stream-items{pointer-events:none;opacity:.3}
+body.stopped .na-zone{pointer-events:none;opacity:.5}
+.stop-zone{display:none;padding:8px 0}
+body.stopped .stop-zone{display:block}
+.stop-card{background:var(--green-l);border:1.5px solid var(--green-b);border-radius:var(--r);padding:20px 20px 16px;text-align:center}
+.stop-title{font-size:17px;font-weight:700;color:var(--green);margin-bottom:6px}
+.stop-sub{font-size:13px;color:var(--green);opacity:.85;line-height:1.5;margin-bottom:14px}
+.stop-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.stop-act{border:1px solid var(--green-b);background:var(--surface);color:var(--green);border-radius:var(--rpill);padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);transition:all .15s}
+.stop-act:hover{background:var(--green-l)}.stop-act.primary{background:var(--green);color:#fff;border-color:var(--green)}
+.slbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--on-s4);padding:16px 0 6px;display:flex;align-items:center;gap:8px}
 .slbl::after{content:'';flex:1;height:1px;background:var(--border-l)}
-.empty{text-align:center;padding:48px 20px;color:var(--on-s2)}
-.empty-ic{font-size:40px;margin-bottom:10px}
-.stream-err{display:flex;flex-direction:column;align-items:center;gap:12px;padding:48px 20px}
-.stream-err p{font-size:14px;color:var(--on-s2);text-align:center;line-height:1.55}
-
-/* Cards */
-.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--s1);overflow:hidden;transition:box-shadow .2s,opacity .2s}
-.card:hover{box-shadow:var(--s2)}
-.card.done{opacity:.42}
-.card.chain{animation:gp .9s ease}
-.stripe{height:4px}
-.stripe.task{background:var(--accent)}.stripe.idea{background:var(--orange)}
-.stripe.reflection{background:var(--purple)}.stripe.obligation{background:var(--orange)}
-.stripe.routine{background:var(--teal)}.stripe.communication{background:#1a73e8}
-.card-in{padding:13px 15px 11px}
-.card.personal .card-in{background:var(--personal-bg)}
-.card.type-reflection .card-in{background:var(--purple-l)}
-.card.type-routine .card-in{background:var(--teal-l)}
-.card.type-obligation .card-in{background:var(--orange-l)}
-.card.urgent .card-in{background:var(--red-l)}
-.card.locked .card-in{opacity:.65}
-.card.locked .ca:not(.ca-safe){pointer-events:none;opacity:.35}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
-.card-chips{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
-.mc{font-size:11px;font-weight:500;padding:2px 7px;border-radius:var(--rpill)}
-.mc-overdue{background:var(--red);color:#fff}
-.mc-due{background:var(--red-l);color:var(--red)}
-.mc-imp{background:var(--orange-l);color:var(--orange)}
-.mc-ctx{background:var(--surface3);color:var(--on-s2);cursor:pointer;border:none;font-family:var(--f);font-size:11px;font-weight:500;padding:2px 7px;border-radius:var(--rpill)}
-.mc-ctx:hover{background:var(--accent-l);color:var(--accent)}
-.mc-cat{background:var(--accent-l);color:var(--accent)}
-.card-time{font-size:11px;color:var(--on-s3);white-space:nowrap;flex-shrink:0}
-.card-title{font-size:15px;font-weight:400;color:var(--on-s);line-height:1.4;margin-bottom:4px}
-.card-due{font-size:12px;color:var(--on-s2);margin-bottom:7px}
-.card-due.ov{color:var(--red);font-weight:500}
-.card-body{font-size:14px;color:var(--on-s);line-height:1.55;margin-bottom:9px;word-break:break-word}
-.card-body.rfl{font-style:italic;color:var(--on-s2);line-height:1.65}
-.inline-edit{width:100%;background:var(--surface2);border:1px solid var(--accent);border-radius:var(--rsm);padding:8px 10px;font-size:14px;color:var(--on-s);font-family:var(--f);outline:none;margin-bottom:8px}
-.routine-sub{font-size:12px;color:var(--teal);font-weight:500;margin-bottom:8px}
-.card-actions{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-top:4px}
-.ca{border:none;cursor:pointer;font-family:var(--f);font-weight:500;font-size:12px;padding:6px 12px;border-radius:var(--rpill);transition:all .12s}
-.ca-done{background:var(--green);color:#fff}.ca-done:hover{opacity:.9}
-.ca-primary{background:var(--accent);color:#fff}.ca-primary:hover{opacity:.9}
-.ca-tonal{background:var(--accent-l);color:var(--accent)}.ca-tonal:hover{opacity:.85}
+.stream-items{display:flex;flex-direction:column;gap:1px}
+.card{background:var(--surface);border-radius:0;border-bottom:1px solid var(--border-l);transition:background .12s,opacity .2s;overflow:hidden}
+.card:first-child{border-radius:var(--r) var(--r) 0 0}
+.card:last-child{border-radius:0 0 var(--r) var(--r);border-bottom:none}
+.card:only-child{border-radius:var(--r)}
+.card.done{opacity:.32;pointer-events:none}
+.card.locked .ca-lock{pointer-events:none;opacity:.35}
+.card.w-urgent{border-left:3px solid var(--red)}
+.card.w-high{border-left:3px solid var(--orange)}
+.card.w-personal{border-left:3px solid var(--green)}
+.card.w-normal{border-left:3px solid transparent}
+.card.type-reflection{background:var(--purple-l)}
+.card.type-routine{background:var(--teal-l)}
+.card.type-obligation.w-urgent{background:var(--red-l)}
+.card.in-progress-card{box-shadow:inset 3px 0 0 var(--accent)}
+.card-in{padding:12px 14px 11px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.card-in:hover{background:rgba(0,0,0,.02)}
+.card-left{flex:1;min-width:0}
+.card-title{font-size:14px;font-weight:500;color:var(--on-s);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.card-sub{font-size:12px;color:var(--on-s3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-sub.urgent{color:var(--red);font-weight:500}
+.ip-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);margin-left:5px;vertical-align:middle;opacity:.7}
+.card-act{flex-shrink:0;border:none;border-radius:var(--rsm);padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f);transition:opacity .15s;white-space:nowrap}
+.card-act:hover{opacity:.85}.card-act:disabled{opacity:.35;cursor:not-allowed}
+.card-act.done{background:var(--green);color:#fff}
+.card-act.copy{background:var(--accent-l);color:var(--accent)}
+.card-act.routine{background:var(--teal-l);color:var(--teal)}
+.card-detail{display:none;padding:0 14px 12px 16px;border-top:1px solid var(--border-l)}
+.card-detail.open{display:block}
+.card-detail-actions{display:flex;gap:5px;flex-wrap:wrap;padding-top:10px}
+.ca{border:none;cursor:pointer;font-family:var(--f);font-weight:500;font-size:12px;padding:5px 11px;border-radius:var(--rpill);transition:all .12s}
 .ca-muted{background:var(--surface2);color:var(--on-s2)}.ca-muted:hover{background:var(--surface3)}
-.ca-danger{background:transparent;color:var(--red);padding:6px 8px}.ca-danger:hover{background:var(--red-l)}
-.ca-imp.on{background:var(--orange-l);color:var(--orange)}.ca-imp{background:var(--surface2);color:var(--on-s2)}
-.ca-pin.on{background:var(--accent-l);color:var(--accent)}.ca-pin{background:var(--surface2);color:var(--on-s2)}
+.ca-accent{background:var(--accent-l);color:var(--accent)}
+.ca-danger{background:transparent;color:var(--red)}.ca-danger:hover{background:var(--red-l)}
+.ca-imp.on{background:var(--orange-l);color:var(--orange)}
 .ca:disabled{opacity:.35;cursor:not-allowed}
-.review-row{display:flex;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border-l);align-items:center}
-.rlbl{font-size:11px;color:var(--on-s3);font-weight:500;margin-right:2px}
-
-/* Reply */
-.reply-wrap{background:var(--surface2);border-radius:var(--rsm);padding:11px 13px;margin-bottom:10px}
-.reply-ey{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--on-s3);margin-bottom:5px}
-.reply-body{font-size:13px;color:var(--on-s2);line-height:1.6;white-space:pre-wrap}
-.reply-edit{width:100%;background:var(--surface);border:1px solid var(--accent);border-radius:var(--rsm);padding:9px 11px;font-size:13px;color:var(--on-s);line-height:1.6;resize:vertical;min-height:80px;font-family:var(--f);outline:none}
-.tone-row{display:flex;gap:5px;margin-bottom:8px;align-items:center}
-.tlbl{font-size:11px;color:var(--on-s3);font-weight:500;margin-right:2px}
-.tbtn{border:1px solid var(--border);background:none;font-size:11px;font-weight:500;padding:3px 9px;border-radius:var(--rpill);cursor:pointer;color:var(--on-s2);font-family:var(--f);transition:all .12s}
+.inline-edit{width:100%;background:var(--surface2);border:1px solid var(--accent);border-radius:var(--rsm);padding:7px 10px;font-size:14px;color:var(--on-s);font-family:var(--f);outline:none;margin:8px 0}
+.reply-wrap{background:var(--surface2);border-radius:var(--rsm);padding:10px 12px;margin-bottom:8px}
+.reply-ey{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--on-s3);margin-bottom:5px}
+.reply-body{font-size:12px;color:var(--on-s2);line-height:1.6;white-space:pre-wrap}
+.reply-edit{width:100%;background:var(--surface);border:1px solid var(--accent);border-radius:var(--rsm);padding:8px 10px;font-size:12px;color:var(--on-s);line-height:1.6;resize:vertical;min-height:70px;font-family:var(--f);outline:none}
+.tone-row{display:flex;gap:4px;margin-bottom:8px;align-items:center}
+.tlbl{font-size:11px;color:var(--on-s3);margin-right:2px}
+.tbtn{border:1px solid var(--border);background:none;font-size:11px;padding:3px 9px;border-radius:var(--rpill);cursor:pointer;color:var(--on-s2);font-family:var(--f)}
 .tbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-
-/* Collapse sections */
-.coll-section{margin-bottom:8px}
-.coll-btn{width:100%;background:none;border:1px solid var(--border-l);border-radius:var(--rsm);padding:9px 13px;font-size:13px;font-weight:500;color:var(--on-s2);cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:space-between;transition:all .15s}
-.coll-btn:hover{border-color:var(--accent);color:var(--accent)}
-.coll-body{display:none;flex-direction:column;gap:7px;margin-top:6px}
-.coll-body.open{display:flex}
-
-/* Low mode */
-body.low .low-hide{display:none!important}
-
-/* FAB */
-.fab{position:fixed;bottom:24px;right:20px;background:var(--accent);color:#fff;border:none;border-radius:var(--rpill);padding:0 22px;height:52px;font-size:14px;font-weight:500;cursor:pointer;box-shadow:var(--s3);display:flex;align-items:center;gap:8px;z-index:200;font-family:var(--f);transition:opacity .15s,right .3s}
+.rfl-body{font-size:13px;color:var(--on-s2);font-style:italic;line-height:1.6;padding:8px 0 4px}
+.routine-next{font-size:12px;color:var(--teal);margin-bottom:6px}
+.stream-group{background:var(--surface);border-radius:var(--r);overflow:hidden;box-shadow:var(--s1);margin-bottom:4px}
+.empty{text-align:center;padding:40px 20px;color:var(--on-s3);font-size:14px}
+.nudge-strip{padding:12px 0 4px}
+.nudge-txt{font-size:12px;color:var(--on-s3);line-height:1.5;font-style:italic;text-align:center}
+.fab{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;border-radius:var(--rpill);padding:0 24px;height:52px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:var(--s3);display:flex;align-items:center;gap:8px;z-index:200;font-family:var(--f);transition:opacity .15s}
 .fab:hover{opacity:.92}.fab:disabled{opacity:.35;cursor:not-allowed}
-@media(min-width:720px){.fab{right:24px}}
-
-/* ── SHEET / MODAL ─────────────────────────────────────────────────────── */
-.sheet-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:flex-end;justify-content:center}
+.sheet-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;align-items:flex-end;justify-content:center}
 .sheet-bg.open{display:flex}
-.sheet{background:var(--surface);border-radius:16px 16px 0 0;width:100%;max-width:600px;padding:0 0 36px;box-shadow:var(--s3);max-height:90vh;overflow-y:auto}
-.sheet-drag{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 16px}
-/* On medium+, become centered modal */
-@media(min-width:720px){
-  .sheet-bg{align-items:center;padding:20px}
-  .sheet{border-radius:16px;max-height:78vh}
-  .sheet-drag{display:none}
-}
-.sheet-body{padding:0 20px}
-.detect-hint{font-size:12px;color:var(--on-s3);margin-bottom:8px;min-height:18px;font-weight:500}
-.detect-hint span{color:var(--accent)}
-.cap-ta{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:13px;font-size:15px;color:var(--on-s);font-family:var(--f);outline:none;resize:none;min-height:80px;line-height:1.5;transition:border-color .15s}
+@media(min-width:640px){.sheet-bg{align-items:center;padding:20px}}
+.sheet{background:var(--surface);border-radius:16px 16px 0 0;width:100%;max-width:560px;padding:0 0 32px;box-shadow:var(--s3);max-height:88vh;overflow-y:auto}
+@media(min-width:640px){.sheet{border-radius:14px;max-height:76vh}}
+.sheet-drag{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 14px}
+@media(min-width:640px){.sheet-drag{display:none}}
+.sheet-body{padding:0 18px}
+.sheet-detect{font-size:11px;color:var(--on-s3);margin-bottom:7px;min-height:16px;font-weight:500}
+.sheet-detect span{color:var(--accent)}
+.cap-ta{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:13px;font-size:16px;color:var(--on-s);font-family:var(--f);outline:none;resize:none;min-height:80px;line-height:1.5;transition:border-color .15s}
 .cap-ta:focus{border-color:var(--accent);background:var(--surface)}
-.srow{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap}
-.srow-lbl{font-size:12px;font-weight:600;color:var(--on-s2);white-space:nowrap}
-.sc{border:1px solid var(--border);background:none;font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--rpill);cursor:pointer;color:var(--on-s2);font-family:var(--f);transition:all .12s;white-space:nowrap}
+.sheet-advanced{display:none;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border-l)}
+.sheet-advanced.open{display:flex}
+.adv-toggle{border:none;background:none;font-size:12px;color:var(--on-s3);cursor:pointer;font-family:var(--f);margin-top:10px;padding:0;font-weight:500}
+.adv-toggle:hover{color:var(--accent)}
+.srow{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.srow-lbl{font-size:11px;font-weight:600;color:var(--on-s3);white-space:nowrap}
+.sc{border:1px solid var(--border);background:none;font-size:12px;font-weight:500;padding:4px 11px;border-radius:var(--rpill);cursor:pointer;color:var(--on-s3);font-family:var(--f);transition:all .12s}
 .sc.on{background:var(--accent-l);color:var(--accent);border-color:var(--accent)}
-.sc.ctx-p.on{background:var(--personal-bg);color:var(--green);border-color:var(--green)}
-.ref-toggle{border:none;background:none;font-size:12px;color:var(--on-s2);cursor:pointer;font-family:var(--f);margin-top:12px;font-weight:500;padding:2px 0}
-.ref-toggle:hover{color:var(--accent)}
-.ref-body{display:none;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border-l)}
-.ref-body.open{display:flex}
-.flbl2{display:block;font-size:12px;font-weight:600;color:var(--on-s2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
-.fi,.fsel{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:9px 12px;font-size:13px;color:var(--on-s);font-family:var(--f);outline:none;transition:border-color .15s}
+.sc.ctx-p.on{background:var(--personal-bg);color:var(--green);border-color:var(--personal-b)}
+.flbl2{display:block;font-size:11px;font-weight:600;color:var(--on-s3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.fi,.fsel{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:8px 11px;font-size:13px;color:var(--on-s);font-family:var(--f);outline:none}
 .fi:focus,.fsel:focus{border-color:var(--accent)}
-
-/* Undo / toast */
-.undo-bar{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:10px 16px;border-radius:var(--rpill);font-size:13px;font-weight:500;z-index:999;display:flex;align-items:center;gap:12px;box-shadow:var(--s3);opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--f)}
+.cap-save-row{margin-top:14px}
+.cap-save{width:100%;background:var(--accent);color:#fff;border:none;border-radius:var(--rsm);padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--f);transition:opacity .15s}
+.cap-save:hover{opacity:.9}.cap-save:disabled{opacity:.35;cursor:not-allowed}
+.undo-bar{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:9px 14px;border-radius:var(--rpill);font-size:13px;font-weight:500;z-index:999;display:flex;align-items:center;gap:11px;box-shadow:var(--s3);opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--f)}
 .undo-bar.show{opacity:1;pointer-events:all}
 .undo-act{background:var(--accent);color:#fff;border:none;border-radius:var(--rpill);padding:4px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f)}
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:10px 20px;border-radius:var(--rpill);font-size:13px;font-weight:500;z-index:998;opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--f);white-space:nowrap}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:9px 18px;border-radius:var(--rpill);font-size:13px;font-weight:500;z-index:998;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
+.stream-err{display:flex;flex-direction:column;align-items:center;gap:10px;padding:40px 20px;text-align:center}
+.stream-err p{font-size:14px;color:var(--on-s2);line-height:1.5}
 </style>
 </head>
 <body>
@@ -382,23 +220,21 @@ body.low .low-hide{display:none!important}
   <div id="boot-spin" class="spinner"></div>
   <div id="boot-lbl" class="boot-lbl">Starting up…</div>
   <div id="boot-err">
-    <div class="boot-err-h">Couldn't start StreamOS</div>
-    <div class="boot-err-p" id="boot-err-p">Check your connection and try again.</div>
+    <div class="boot-err-h">Couldn't start</div>
+    <div class="boot-err-p" id="boot-err-p">Check your connection.</div>
     <div class="boot-err-btns">
-      <button class="btn filled sm" onclick="retryBoot()">Try again</button>
-      <button class="btn outlined sm" onclick="signOut()">Sign out</button>
+      <button class="btn b-fill b-sm" onclick="retryBoot()">Try again</button>
+      <button class="btn b-out b-sm" onclick="signOut()">Sign out</button>
     </div>
   </div>
 </div>
-
-<div id="lock-badge"></div>
 
 <div id="banner">
   <div class="banner-in">
     <span class="banner-txt" id="banner-msg">Session expired.</span>
     <div class="banner-btns">
-      <button class="btn outlined sm" onclick="handleReconnect()">Reconnect</button>
-      <button class="btn filled sm r" onclick="signOut()">Sign out</button>
+      <button class="btn b-out b-sm" onclick="handleReconnect()">Reconnect</button>
+      <button class="btn b-fill b-sm r" onclick="signOut()">Sign out</button>
     </div>
   </div>
 </div>
@@ -406,21 +242,21 @@ body.low .low-hide{display:none!important}
 <div id="auth">
   <div class="auth-card">
     <div class="auth-logo">StreamOS</div>
-    <div class="auth-tag">Your personal operating system</div>
+    <div class="auth-tag">Your daily operating layer</div>
     <div id="auth-magic">
       <label class="flbl">Email</label>
       <input class="finput" id="auth-email" type="email" placeholder="you@example.com" autocomplete="email">
-      <button class="btn filled" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="sendMagicLink()">Send magic link</button>
+      <button class="btn b-fill" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="sendMagicLink()">Send magic link</button>
       <div class="auth-div">or</div>
-      <button class="btn outlined" style="width:100%;justify-content:center;padding:10px;font-size:13px" onclick="showPwForm()">Sign in with password</button>
+      <button class="btn b-out" style="width:100%;justify-content:center;padding:9px" onclick="showPwForm()">Sign in with password</button>
     </div>
     <div id="auth-pw" style="display:none">
       <label class="flbl">Email</label>
       <input class="finput" id="pw-email" type="email" placeholder="you@example.com" autocomplete="email">
       <label class="flbl">Password</label>
       <input class="finput" id="pw-pass" type="password" placeholder="••••••••" autocomplete="current-password">
-      <button class="btn filled" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="signInPw()">Sign in</button>
-      <div style="margin-top:8px"><button class="btn ghost sm" onclick="showMagicForm()">Use magic link instead</button></div>
+      <button class="btn b-fill" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="signInPw()">Sign in</button>
+      <div style="margin-top:8px"><button class="btn b-ghost b-sm" onclick="showMagicForm()">Use magic link instead</button></div>
     </div>
     <div class="auth-msg" id="auth-msg"></div>
   </div>
@@ -429,88 +265,60 @@ body.low .low-hide{display:none!important}
 <div id="app">
   <div class="topbar">
     <div class="topbar-in">
-      <div class="brand">
-        <div class="brand-title">StreamOS</div>
-        <div class="brand-sub" id="topbar-sub">—</div>
-      </div>
+      <span class="brand">StreamOS</span>
       <div class="topbar-right">
-        <span class="focus-lbl">Focus</span>
-        <div class="energy-grp">
-          <button class="eopt" onclick="setEnergy('low',this)">Light</button>
-          <button class="eopt on" onclick="setEnergy('medium',this)">Standard</button>
-          <button class="eopt" onclick="setEnergy('high',this)">Deep</button>
+        <div class="mode-grp">
+          <button class="mode-opt" onclick="setMode('overwhelmed')">Overwhelmed</button>
+          <button class="mode-opt on" onclick="setMode('focus')">Focus</button>
+          <button class="mode-opt" onclick="setMode('manage')">Manage</button>
         </div>
-        <button class="sync-chip" id="sync-chip" onclick="syncClick()" title="Tap to reconnect or sign out">Synced</button>
+        <span class="sync-dot" id="sync-dot" title="Sync status"></span>
+        <button class="profile-btn" id="profile-btn" onclick="toggleProfileMenu()">
+          <span id="profile-name">—</span> ▾
+        </button>
+        <div class="profile-menu" id="profile-menu">
+          <div style="padding:10px 16px 8px"><span style="font-size:11px;color:var(--on-s3)" id="profile-email-label">—</span></div>
+          <div class="pm-divider"></div>
+          <button class="pm-item" onclick="handleReconnect();closeProfileMenu()">Reconnect</button>
+          <button class="pm-item danger" onclick="signOut()">Sign out</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Responsive app body — JS adds layout class -->
-  <div class="app-body" id="app-body">
+  <div class="page">
+    <div class="anchor-zone"><div id="personal-anchor"></div></div>
+    <div class="stop-zone" id="stop-zone"></div>
+    <div class="na-zone"><div id="na-area"></div></div>
+    <div id="nudge-area"></div>
+    <div id="stream-area"></div>
+  </div>
+</div>
 
-    <!-- LEFT RAIL (desktop) / inline (mobile+tablet) -->
-    <div class="left-rail" id="left-rail">
-      <div class="region-guidance" id="region-guidance">
-        <div id="guidance"></div>
-      </div>
-      <div class="region-focus low-hide" id="region-focus">
-        <div id="focus-area"></div>
-      </div>
-    </div>
-
-    <!-- MAIN COLUMN -->
-    <div class="main-col" id="main-col">
-      <div class="filters low-hide" id="filters">
-        <button class="chip on" onclick="setFilter('all',this)">All</button>
-        <button class="chip" onclick="setFilter('personal',this)">Personal</button>
-        <button class="chip" onclick="setFilter('work',this)">Work</button>
-        <button class="chip" onclick="setFilter('obligation',this)">Obligations</button>
-        <button class="chip" onclick="setFilter('routine',this)">Routines</button>
-        <button class="chip" onclick="setFilter('reflection',this)">Reflections</button>
-      </div>
-      <div class="region-stream">
-        <div class="stream" id="stream"></div>
-      </div>
-    </div>
-
-    <!-- RIGHT RAIL (desktop) / bottom (mobile+tablet) -->
-    <div class="right-rail" id="right-rail">
-      <div class="region-later low-hide" id="region-later">
-        <div class="coll-section">
-          <button class="coll-btn" onclick="toggleColl('low-later',this)"><span>Later</span><span>▸</span></button>
-          <div class="coll-body" id="low-later"></div>
-        </div>
-      </div>
-      <div class="region-bottom" id="region-bottom"></div>
-    </div>
-
-  </div><!-- end app-body -->
-</div><!-- end app -->
-
-<button class="fab" id="fab" onclick="openSheet()"><span style="font-size:20px;line-height:1">+</span> Capture</button>
+<button class="fab" id="fab" onclick="openSheet()"><span style="font-size:19px;line-height:1">+</span> Capture</button>
 
 <div class="sheet-bg" id="sheet-bg" onclick="bgClick(event)">
   <div class="sheet">
     <div class="sheet-drag"></div>
     <div class="sheet-body">
-      <div class="detect-hint" id="detect-hint">What's on your mind?</div>
-      <textarea class="cap-ta" id="cap-in" placeholder="Task, thought, email, reflection…" oninput="onCapIn()" rows="3"></textarea>
-      <div class="srow">
-        <span class="srow-lbl">Type</span>
-        <button class="sc" onclick="setOvr('task',this)">Task</button>
-        <button class="sc" onclick="setOvr('idea',this)">Idea</button>
-        <button class="sc" onclick="setOvr('reflection',this)">Reflection</button>
-        <button class="sc" onclick="setOvr('obligation',this)">Obligation</button>
-        <button class="sc" onclick="setOvr('routine',this)">Routine</button>
-        <button class="sc" onclick="setOvr('communication',this)">Email</button>
-      </div>
-      <div class="srow">
-        <span class="srow-lbl">Context</span>
-        <button class="sc on" id="ctx-work" onclick="setCtx('work')">Work</button>
-        <button class="sc ctx-p" id="ctx-personal" onclick="setCtx('personal')">Personal</button>
-      </div>
-      <button class="ref-toggle" id="ref-btn" onclick="toggleRef()">▸ More options</button>
-      <div class="ref-body" id="ref-body">
+      <div class="sheet-detect" id="detect-hint">What needs to happen?</div>
+      <textarea class="cap-ta" id="cap-in" placeholder="Type anything and save — the system figures out the rest." oninput="onCapIn()" rows="3"></textarea>
+      <button class="adv-toggle" id="adv-btn" onclick="toggleAdv()">▸ Options</button>
+      <div class="sheet-advanced" id="sheet-adv">
+        <div class="srow">
+          <span class="srow-lbl">Type</span>
+          <button class="sc" onclick="setOvr('task',this)">Task</button>
+          <button class="sc" onclick="setOvr('idea',this)">Idea</button>
+          <button class="sc" onclick="setOvr('reflection',this)">Reflection</button>
+          <button class="sc" onclick="setOvr('obligation',this)">Obligation</button>
+          <button class="sc" onclick="setOvr('routine',this)">Routine</button>
+          <button class="sc" onclick="setOvr('communication',this)">Email</button>
+        </div>
+        <div class="srow">
+          <span class="srow-lbl">Context</span>
+          <button class="sc on" id="ctx-work" onclick="setCtx('work')">Work</button>
+          <button class="sc ctx-p" id="ctx-personal" onclick="setCtx('personal')">Personal</button>
+        </div>
         <div><label class="flbl2">Due date</label><input type="date" class="fi" id="cap-due"></div>
         <div id="freq-w" style="display:none"><label class="flbl2">Frequency</label>
           <select class="fsel" id="cap-freq">
@@ -524,8 +332,8 @@ body.low .low-hide{display:none!important}
           </select>
         </div>
       </div>
-      <div style="margin-top:16px">
-        <button class="btn filled" id="save-btn" style="width:100%;justify-content:center;padding:12px;font-size:14px" onclick="submitCap()">Save</button>
+      <div class="cap-save-row">
+        <button class="cap-save" id="save-btn" onclick="submitCap()">Save</button>
       </div>
     </div>
   </div>
@@ -537,19 +345,6 @@ body.low .low-hide{display:none!important}
 <div class="toast" id="toast"></div>
 
 <script>
-// ── Layout detection ───────────────────────────────────────────────────────
-function updateLayout(){
-  const w=window.innerWidth;
-  const b=document.body;
-  b.classList.remove('layout-compact','layout-medium','layout-expanded');
-  if(w>=1100){b.classList.add('layout-expanded')}
-  else if(w>=720){b.classList.add('layout-medium')}
-  else{b.classList.add('layout-compact')}
-}
-updateLayout();
-window.addEventListener('resize',updateLayout);
-
-// ── Supabase ───────────────────────────────────────────────────────────────
 const{createClient}=supabase;
 const SB=createClient(
   'https://ityciofmpvqsqhonhxvd.supabase.co',
@@ -558,37 +353,74 @@ const SB=createClient(
 );
 
 // ── State ──────────────────────────────────────────────────────────────────
-let STATE='booting',USER=null,items=[],energy='medium',ovr=null,capCtx='work';
-let undoStack=null,undoTimer=null,activeFilter='all',loadedAt=0;
-let todayFocus=[];try{todayFocus=JSON.parse(localStorage.getItem('tf')||'[]')}catch(e){}
+let STATE='booting',USER=null,items=[],mode='focus',ovr=null,capCtx='work';
+let undoStack=null,undoTimer=null,loadedAt=0;
 let bMem={low:0,med:0,high:0,avoided:0};
-let actionsLocked=false;
+let actionsLocked=false,expandedCards=new Set();
+let stopOverride=false,continueQuota=0;
+let dayClosed=false;
 
-const NOW=new Date(),H=NOW.getHours();
-const isMorning=H<12,isEvening=H>=18;
-const todayStr=NOW.toISOString().slice(0,10);
-const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+// ── Part C: Work loop control ──────────────────────────────────────────────
+let consecutiveCompletions=0;
+let lastActionTime=Date.now();
+let idleTimer=null;
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-function withTimeout(p,ms,lbl){
-  let t;return Promise.race([p,new Promise((_,rej)=>{t=setTimeout(()=>rej(new Error(`Timeout:${lbl}`)),ms)})]).finally(()=>clearTimeout(t));
+function resetIdleTimer(){
+  clearTimeout(idleTimer);
+  lastActionTime=Date.now();
+  idleTimer=setTimeout(()=>{consecutiveCompletions=0},15*60*1000);
 }
-function isAuthError(err){
-  if(!err)return false;
-  const m=(err.message||'').toLowerCase()+(err.code||'').toLowerCase();
-  return/jwt|auth|expired|token|refresh|session|invalid.*claim|not authenticated/.test(m);
+
+// ── Part E: In-progress state ──────────────────────────────────────────────
+// Tracks {id, timer} for current expand-timer
+let expandTimer=null;
+
+// ── Part A: Dynamic time variables ────────────────────────────────────────
+let NOW,H,todayStr,isMorning,isEvening,isNight;
+
+function recomputeTime(){
+  const prev=todayStr;
+  NOW=new Date();
+  H=NOW.getHours();
+  todayStr=NOW.toISOString().slice(0,10);
+  isMorning=H<12;
+  isEvening=H>=18;
+  isNight=H>=21;
+  // If day rolled over, reset day-state
+  if(prev&&prev!==todayStr){
+    dayClosed=false;
+    consecutiveCompletions=0;
+  }
 }
+recomputeTime();
+
+// Interval refresh every 60s
+setInterval(()=>{
+  recomputeTime();
+  if(USER&&STATE==='ready')render();
+},60000);
+
+// Midnight boundary check
+function scheduleNextMidnight(){
+  const n=new Date(),midnight=new Date(n);
+  midnight.setHours(24,0,0,500);
+  setTimeout(()=>{recomputeTime();if(USER&&STATE==='ready')render();scheduleNextMidnight()},midnight-n);
+}
+scheduleNextMidnight();
+
+// ── Utils ──────────────────────────────────────────────────────────────────
+function withTimeout(p,ms,l){let t;return Promise.race([p,new Promise((_,rej)=>{t=setTimeout(()=>rej(new Error(`Timeout:${l}`)),ms)})]).finally(()=>clearTimeout(t))}
+function isAuthErr(e){if(!e)return false;const m=(e.message||'').toLowerCase()+(e.code||'').toLowerCase();return/jwt|auth|expired|token|refresh|session|invalid.*claim|not authenticated/.test(m)}
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const trunc=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n)+'…':s};
-const fmt=ts=>{const d=new Date(ts),df=Date.now()-d;if(df<60000)return'now';if(df<3600000)return Math.floor(df/60000)+'m';if(df<86400000)return Math.floor(df/3600000)+'h';return Math.floor(df/86400000)+'d'};
+const fmt=ts=>{const d=new Date(ts),df=Date.now()-d;if(df<60000)return'just now';if(df<3600000)return Math.floor(df/60000)+'m';if(df<86400000)return Math.floor(df/3600000)+'h';return Math.floor(df/86400000)+'d'};
 const ageDays=ts=>Math.floor((Date.now()-new Date(ts))/86400000);
 const isToday=ts=>ts&&String(ts).slice(0,10)===todayStr;
 const isOverdue=ts=>ts&&String(ts)<todayStr;
 const isUrgent=i=>i.status==='active'&&(i.priority==='high'||(i.type==='task'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))||((i.type==='obligation')&&(isOverdue(i.content?.due)||isToday(i.content?.due))));
 const routineND=i=>{const f=i.content?.frequency,l=i.content?.last_completed;if(!f||!l)return null;const d=new Date(l);if(f==='daily')d.setDate(d.getDate()+1);else if(f==='weekly')d.setDate(d.getDate()+7);else if(f==='monthly')d.setMonth(d.getMonth()+1);else if(f==='yearly')d.setFullYear(d.getFullYear()+1);return d.toISOString().slice(0,10)};
 const routineDue=i=>i.type==='routine'&&i.status==='active'&&(()=>{const nd=routineND(i);return!nd||nd<=todayStr})();
-const iTitle=i=>{if(i.type==='task')return i.content?.title;if(i.type==='communication')return(i.content?.category||'Email')+' email';if(i.type==='routine')return i.content?.title||i.content?.text;if(i.type==='obligation')return i.content?.title||i.content?.text;return trunc(i.content?.text,48)};
+const iTitle=i=>{if(i.type==='task')return i.content?.title;if(i.type==='communication')return(i.content?.category||'Email')+' email';if(i.type==='routine')return i.content?.title||i.content?.text;if(i.type==='obligation')return i.content?.title||i.content?.text;return trunc(i.content?.text,52)};
 function dCtx(txt){return/\b(buy|gym|dinner|family|rest|holiday|kids?|home|cook|sleep|relax|mum|dad|wife|husband|partner|friends?|weekend|grocery|groceries|birthday|health|doctor|dentist|exercise|run|walk|movie|date night|lunch|breakfast|clean|laundry|bank|renew|garden|pet|school|journal|meditate)\b/i.test(String(txt||''))?'personal':'work'}
 function dType(txt){
   if(!txt||txt.trim().length<2)return null;
@@ -600,47 +432,36 @@ function dType(txt){
   if(/^(call|follow up|followup|send|email|write|ping|remind|buy|book|schedule|prepare|review|check|fix|update|submit|complete|talk|meet|order|pay|register|sign|fill|collect|research|draft)\b/i.test(t))return'task';
   return'idea';
 }
-function dEffort(txt,type){
-  if(!txt)return'medium';const t=String(txt).toLowerCase();
-  if(type==='idea'||type==='reflection'||type==='routine')return'low';
-  if(/\b(call|meeting|plan|review|report|discuss|present|proposal|analyse|analyze|design|strategy|interview|prepare)\b/.test(t))return'high';
-  if(t.length<40&&/\b(send|reply|buy|pay|book|ping|check|read|confirm|update)\b/.test(t))return'low';
-  if(t.length<40)return'low';return'medium';
-}
+function dEffort(txt,type){if(!txt)return'medium';const t=String(txt).toLowerCase();if(type==='idea'||type==='reflection'||type==='routine')return'low';if(/\b(call|meeting|plan|review|report|discuss|present|proposal|analyse|analyze|design|strategy|interview|prepare)\b/.test(t))return'high';if(t.length<40&&/\b(send|reply|buy|pay|book|ping|check|read|confirm|update)\b/.test(t))return'low';if(t.length<40)return'low';return'medium'}
 function dImp(txt){return/\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt||''))}
-function enrich(i){
-  if(!i.effort){const t=i.content?.text||i.content?.title||i.content?.preview||'';i.effort=dEffort(t,i.type)}
-  if(i.important_personal==null){const t=i.content?.text||i.content?.title||'';i.important_personal=i.context==='personal'&&dImp(t)}
-  return i;
+function enrich(i){if(!i.effort){const t=i.content?.text||i.content?.title||i.content?.preview||'';i.effort=dEffort(t,i.type)}if(i.important_personal==null){const t=i.content?.text||i.content?.title||'';i.important_personal=i.context==='personal'&&dImp(t)}return i}
+
+// ── Part A: Energy decay (D) ────────────────────────────────────────────────
+function energyDecayedEffort(base){
+  const idle=(Date.now()-lastActionTime)/60000; // minutes
+  if(idle>40)return new Set(['low']);
+  if(idle>20){const s=new Set(base);s.delete('high');return s}
+  return base;
 }
 
 // ── State machine ──────────────────────────────────────────────────────────
 function applyState(s,msg){
   STATE=s;
-  const chip=document.getElementById('sync-chip');
-  const banner=document.getElementById('banner');
-  const fab=document.getElementById('fab');
-  const saveBtn=document.getElementById('save-btn');
-  const badge=document.getElementById('lock-badge');
-  const map={ready:'Synced',saving:'Saving…',reconnecting:'Reconnecting…',session_expired:'Session expired',error:'Error'};
-  const cls={saving:'saving',session_expired:'err',error:'err',reconnecting:'reconn'};
-  chip.textContent=map[s]||s;chip.className='sync-chip'+(cls[s]?' '+cls[s]:'');
+  const dot=document.getElementById('sync-dot'),fab=document.getElementById('fab'),saveBtn=document.getElementById('save-btn'),banner=document.getElementById('banner');
+  dot.className='sync-dot'+({saving:' saving',session_expired:' err',error:' err',reconnecting:' reconn'}[s]||'');
+  dot.title={ready:'Synced',saving:'Saving…',reconnecting:'Reconnecting…',session_expired:'Session expired',error:'Error'}[s]||s;
   actionsLocked=s==='session_expired'||s==='error'||s==='reconnecting';
   if(fab)fab.disabled=actionsLocked;if(saveBtn)saveBtn.disabled=actionsLocked;
-  const badgeTxt={reconnecting:'Reconnecting…',session_expired:'Session paused',error:'Error — actions paused'}[s];
-  if(badgeTxt){badge.textContent=badgeTxt;badge.classList.add('show')}else badge.classList.remove('show');
-  if(s==='session_expired'||s==='error'){banner.classList.add('show');document.getElementById('banner-msg').textContent=msg||(s==='session_expired'?'Session expired. Sign in again to continue.':'Something went wrong. Actions are paused.')}
+  if(s==='session_expired'||s==='error'){banner.classList.add('show');document.getElementById('banner-msg').textContent=msg||(s==='session_expired'?'Session expired.':'Something went wrong.')}
   else banner.classList.remove('show');
   document.querySelectorAll('.card:not(.done)').forEach(c=>c.classList.toggle('locked',actionsLocked));
   if(s==='saving')setTimeout(()=>{if(STATE==='saving')applyState('ready')},4000);
 }
-function requireSession(){
-  if(!USER||actionsLocked){applyState('session_expired','Session lost. Please sign in again.');return false}return true;
-}
+function requireSession(){if(!USER||actionsLocked){applyState('session_expired','Session lost.');return false}return true}
 
 // ── Boot ───────────────────────────────────────────────────────────────────
-function bootSpinner(lbl){const b=document.getElementById('boot');b.classList.remove('off');document.getElementById('boot-spin').style.display='block';document.getElementById('boot-lbl').style.display='block';document.getElementById('boot-err').style.display='none';document.getElementById('boot-lbl').textContent=lbl||'Loading…'}
-function bootError(msg){document.getElementById('boot-spin').style.display='none';document.getElementById('boot-lbl').style.display='none';document.getElementById('boot-err').style.display='block';document.getElementById('boot-err-p').textContent=msg||'Something went wrong.'}
+function bootSpinner(l){const b=document.getElementById('boot');b.classList.remove('off');document.getElementById('boot-spin').style.display='block';document.getElementById('boot-lbl').style.display='block';document.getElementById('boot-err').style.display='none';document.getElementById('boot-lbl').textContent=l||'Loading…'}
+function bootError(m){document.getElementById('boot-spin').style.display='none';document.getElementById('boot-lbl').style.display='none';document.getElementById('boot-err').style.display='block';document.getElementById('boot-err-p').textContent=m||'Something went wrong.'}
 function hideBoot(){document.getElementById('boot').classList.add('off')}
 async function retryBoot(){bootSpinner('Retrying…');await bootstrap()}
 
@@ -649,459 +470,571 @@ async function bootstrap(){
   try{
     const{data:{session},error}=await withTimeout(SB.auth.getSession(),8000,'getSession');
     if(error)throw error;
-    if(session?.user){
-      USER=session.user;showApp();bootSpinner('Loading your stream…');
-      const results=await Promise.allSettled([loadBMem().catch(e=>{console.warn('bMem:',e)}),loadItems()]);
-      hideBoot();
-      if(results[1].status==='rejected')applyState('error','Could not load stream.');
-      else applyState('ready');
-    }else{hideBoot();showAuth()}
-  }catch(e){
-    const msg=e.message.includes('Timeout')?'Connection timed out. Check your network.':e.message||'Could not connect.';
-    bootError(msg);applyState('error',msg);
-  }
+    if(session?.user){USER=session.user;showApp();bootSpinner('Loading…');const res=await Promise.allSettled([loadBMem().catch(e=>console.warn(e)),loadItems()]);hideBoot();if(res[1].status==='rejected')applyState('error','Could not load.');else applyState('ready')}
+    else{hideBoot();showAuth()}
+  }catch(e){bootError(e.message.includes('Timeout')?'Connection timed out.':e.message||'Could not connect.');applyState('error',e.message)}
 }
-
 SB.auth.onAuthStateChange(async(event,session)=>{
   if(event==='INITIAL_SESSION')return;
-  if(event==='SIGNED_IN'&&session?.user&&!USER){
-    USER=session.user;showApp();bootSpinner('Loading…');
-    await Promise.allSettled([loadBMem().catch(()=>{}),loadItems()]);
-    hideBoot();applyState('ready');
-  }else if(event==='TOKEN_REFRESHED'&&session?.user){
-    USER=session.user;if(STATE==='session_expired'||STATE==='reconnecting')applyState('ready');
-  }else if(event==='SIGNED_OUT'){USER=null;items=[];hideBoot();showAuth();applyState('ready')}
+  if(event==='SIGNED_IN'&&session?.user&&!USER){USER=session.user;showApp();bootSpinner('Loading…');await Promise.allSettled([loadBMem().catch(()=>{}),loadItems()]);hideBoot();applyState('ready')}
+  else if(event==='TOKEN_REFRESHED'&&session?.user){USER=session.user;if(STATE==='session_expired'||STATE==='reconnecting')applyState('ready')}
+  else if(event==='SIGNED_OUT'){USER=null;items=[];hideBoot();showAuth();applyState('ready')}
 });
-
 function showApp(){
   document.getElementById('auth').classList.remove('show');
   document.getElementById('app').classList.add('show');
-  if(USER)document.getElementById('topbar-sub').textContent=`${DAYS[NOW.getDay()]}, ${NOW.getDate()} ${MONTHS[NOW.getMonth()]} · ${USER.email.split('@')[0]}`;
+  if(USER){document.getElementById('profile-name').textContent=USER.email.split('@')[0];document.getElementById('profile-email-label').textContent=USER.email}
 }
 function showAuth(){document.getElementById('app').classList.remove('show');document.getElementById('auth').classList.add('show')}
-
-// ── Auth ───────────────────────────────────────────────────────────────────
 function showPwForm(){document.getElementById('auth-magic').style.display='none';document.getElementById('auth-pw').style.display='block';setAuthMsg('')}
 function showMagicForm(){document.getElementById('auth-pw').style.display='none';document.getElementById('auth-magic').style.display='block';setAuthMsg('')}
-async function sendMagicLink(){
-  const email=document.getElementById('auth-email').value.trim();
-  if(!email){setAuthMsg('Enter your email address.','err');return}
-  const{error}=await SB.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});
-  if(error)setAuthMsg(error.message,'err');else setAuthMsg('Magic link sent — check your inbox.','ok');
-}
-async function signInPw(){
-  const email=document.getElementById('pw-email').value.trim(),pw=document.getElementById('pw-pass').value;
-  if(!email||!pw){setAuthMsg('Enter email and password.','err');return}
-  const{error}=await SB.auth.signInWithPassword({email,password:pw});
-  if(error)setAuthMsg(error.message,'err');
-}
-async function signOut(){
-  try{await SB.auth.signOut()}catch(e){}
-  USER=null;items=[];localStorage.removeItem('sos-v3');localStorage.removeItem('tf');
-  hideBoot();showAuth();applyState('ready');document.getElementById('auth-msg').textContent='';
-}
-async function handleReconnect(){
-  applyState('reconnecting','Reconnecting…');
-  try{
-    const{data,error}=await withTimeout(SB.auth.refreshSession(),8000,'refresh');
-    if(error||!data.session)throw new Error('Failed');
-    USER=data.session.user;applyState('ready');
-    if(Date.now()-loadedAt>60000)loadItems().catch(()=>{});
-  }catch(e){USER=null;applyState('session_expired','Could not reconnect. Please sign in again.')}
-}
-function syncClick(){
-  if(STATE==='session_expired'||STATE==='error'||STATE==='reconnecting')handleReconnect();
-  else if(USER)signOut();
-}
+async function sendMagicLink(){const email=document.getElementById('auth-email').value.trim();if(!email){setAuthMsg('Enter your email.','err');return}const{error}=await SB.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});if(error)setAuthMsg(error.message,'err');else setAuthMsg('Magic link sent — check your inbox.','ok')}
+async function signInPw(){const email=document.getElementById('pw-email').value.trim(),pw=document.getElementById('pw-pass').value;if(!email||!pw){setAuthMsg('Enter email and password.','err');return}const{error}=await SB.auth.signInWithPassword({email,password:pw});if(error)setAuthMsg(error.message,'err')}
+async function signOut(){try{await SB.auth.signOut()}catch(e){}USER=null;items=[];localStorage.removeItem('sos-v3');hideBoot();showAuth();applyState('ready');document.getElementById('auth-msg').textContent='';closeProfileMenu()}
+async function handleReconnect(){applyState('reconnecting','Reconnecting…');try{const{data,error}=await withTimeout(SB.auth.refreshSession(),8000,'refresh');if(error||!data.session)throw new Error('Failed');USER=data.session.user;applyState('ready');if(Date.now()-loadedAt>60000)loadItems().catch(()=>{})}catch(e){USER=null;applyState('session_expired','Could not reconnect.')}}
 function setAuthMsg(msg,cls=''){const e=document.getElementById('auth-msg');e.textContent=msg;e.className='auth-msg'+(cls?' '+cls:'')}
+function toggleProfileMenu(){document.getElementById('profile-menu').classList.toggle('open')}
+function closeProfileMenu(){document.getElementById('profile-menu').classList.remove('open')}
+document.addEventListener('click',e=>{if(!e.target.closest('#profile-btn')&&!e.target.closest('#profile-menu'))closeProfileMenu()});
+
+// ── Part A: Visibility change — recompute time, refresh if stale ───────────
+document.addEventListener('visibilitychange',async()=>{
+  if(document.hidden||!USER)return;
+  recomputeTime();
+  try{
+    const{data:{session}}=await withTimeout(SB.auth.getSession(),5000,'vis');
+    if(!session){USER=null;applyState('session_expired','Session expired.')}
+    else{
+      if(STATE==='session_expired'||STATE==='error')applyState('ready');
+      if(Date.now()-loadedAt>120000)loadItems().catch(()=>{});
+      else render(); // Rerender with updated time even if data is fresh
+    }
+  }catch(e){if(STATE==='ready')applyState('reconnecting','No connection')}
+});
+window.addEventListener('online',()=>{if(STATE==='error'||STATE==='reconnecting')handleReconnect()});
+window.addEventListener('offline',()=>{if(STATE==='ready')applyState('reconnecting','No internet')});
 
 // ── DB ─────────────────────────────────────────────────────────────────────
 async function dbSave(item){
   if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
   if(actionsLocked)throw new Error('locked');
   applyState('saving');
-  try{
-    const{data,error}=await withTimeout(SB.from('stream_items').insert({...item,user_id:USER.id}).select().single(),10000,'save');
-    if(error)throw error;applyState('ready');return data;
-  }catch(e){
-    if(isAuthError(e)){USER=null;applyState('session_expired','Session expired.')}
-    else applyState('error','Save failed: '+e.message);throw e;
-  }
+  try{const{data,error}=await withTimeout(SB.from('stream_items').insert({...item,user_id:USER.id}).select().single(),10000,'save');if(error)throw error;applyState('ready');return data}
+  catch(e){if(isAuthErr(e)){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Save failed.');throw e}
 }
 async function dbUpdate(id,patch){
   if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
   if(actionsLocked)throw new Error('locked');
   applyState('saving');
-  try{
-    const{error}=await withTimeout(SB.from('stream_items').update(patch).eq('id',id).eq('user_id',USER.id),10000,'update');
-    if(error)throw error;applyState('ready');
-  }catch(e){
-    if(isAuthError(e)){USER=null;applyState('session_expired','Session expired.')}
-    else applyState('error','Update failed: '+e.message);throw e;
-  }
+  try{const{error}=await withTimeout(SB.from('stream_items').update(patch).eq('id',id).eq('user_id',USER.id),10000,'update');if(error)throw error;applyState('ready')}
+  catch(e){if(isAuthErr(e)){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Update failed.');throw e}
 }
 async function dbDelete(id){
   if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
   if(actionsLocked)throw new Error('locked');
   applyState('saving');
-  try{
-    const{error}=await withTimeout(SB.from('stream_items').delete().eq('id',id).eq('user_id',USER.id),10000,'delete');
-    if(error)throw error;applyState('ready');
-  }catch(e){
-    if(isAuthError(e)){USER=null;applyState('session_expired','Session expired.')}
-    else applyState('error','Delete failed: '+e.message);throw e;
-  }
+  try{const{error}=await withTimeout(SB.from('stream_items').delete().eq('id',id).eq('user_id',USER.id),10000,'delete');if(error)throw error;applyState('ready')}
+  catch(e){if(isAuthErr(e)){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Delete failed.');throw e}
 }
 async function loadItems(){
   if(!USER)return;
-  showStreamLoading();
-  try{
-    const{data,error}=await withTimeout(SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),8000,'loadItems');
-    if(error)throw error;
-    items=(data||[]).map(enrich);loadedAt=Date.now();render();
-  }catch(e){
-    const isAuth=isAuthError(e);
-    if(isAuth){USER=null;applyState('session_expired','Session expired.')}
-    else applyState('error',e.message.includes('Timeout')?'Loading timed out.':'Could not load stream.');
-    showStreamErr(e.message,isAuth);throw e;
-  }
+  document.getElementById('stream-area').innerHTML=`<div style="text-align:center;padding:40px 20px;color:var(--on-s3);font-size:13px">Loading…</div>`;
+  try{const{data,error}=await withTimeout(SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),8000,'load');if(error)throw error;items=(data||[]).map(enrich);loadedAt=Date.now();await autoConvertStaleIdeas();render()}
+  catch(e){const isAuth=isAuthErr(e);if(isAuth){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Could not load.');document.getElementById('stream-area').innerHTML=`<div class="stream-err"><p>${isAuth?'Session expired.':'Could not load your stream.'}</p>${isAuth?`<button class="btn b-fill b-sm" onclick="signOut()">Sign in again</button>`:`<button class="btn b-fill b-sm" onclick="loadItems()">Retry</button>`}</div>`;throw e}
 }
-function showStreamLoading(){document.getElementById('stream').innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--on-s2);font-size:14px">Loading your stream…</div>`}
-function showStreamErr(msg,isAuth){
-  document.getElementById('stream').innerHTML=`<div class="stream-err">
-    <p>${isAuth?'Your session expired. Sign in again to see your stream.':'Could not load your stream.'}<br><small style="color:var(--on-s3)">${msg.includes('Timeout')?'Connection timed out.':isAuth?'':'Try refreshing or check your connection.'}</small></p>
-    ${isAuth?`<button class="btn filled sm" onclick="signOut()">Sign in again</button>`:`<button class="btn filled sm" onclick="loadItems()">Retry</button><button class="btn ghost sm" onclick="signOut()">Sign out</button>`}
-  </div>`;
-}
-async function loadBMem(){
-  if(!USER)return;
-  const{data}=await withTimeout(SB.from('user_memory').select('*').eq('user_id',USER.id).maybeSingle(),5000,'bMem');
-  if(data)bMem={low:data.completed_low||0,med:data.completed_medium||0,high:data.completed_high||0,avoided:data.avoided_high||0};
-  else{try{await SB.from('user_memory').insert({user_id:USER.id,completed_low:0,completed_medium:0,completed_high:0,avoided_high:0})}catch(e){}}
-}
-async function saveBMem(){
-  if(!USER)return;
-  try{await SB.from('user_memory').upsert({user_id:USER.id,completed_low:bMem.low,completed_medium:bMem.med,completed_high:bMem.high,avoided_high:bMem.avoided},{onConflict:'user_id'})}catch(e){}
-}
+async function loadBMem(){if(!USER)return;const{data}=await withTimeout(SB.from('user_memory').select('*').eq('user_id',USER.id).maybeSingle(),5000,'bMem');if(data)bMem={low:data.completed_low||0,med:data.completed_medium||0,high:data.completed_high||0,avoided:data.avoided_high||0};else{try{await SB.from('user_memory').insert({user_id:USER.id,completed_low:0,completed_medium:0,completed_high:0,avoided_high:0})}catch(e){}}}
+async function saveBMem(){if(!USER)return;try{await SB.from('user_memory').upsert({user_id:USER.id,completed_low:bMem.low,completed_medium:bMem.med,completed_high:bMem.high,avoided_high:bMem.avoided},{onConflict:'user_id'})}catch(e){}}
 
-// ── Visibility/network ─────────────────────────────────────────────────────
-document.addEventListener('visibilitychange',async()=>{
-  if(document.hidden||!USER)return;
-  try{
-    const{data:{session}}=await withTimeout(SB.auth.getSession(),5000,'vis');
-    if(!session){USER=null;applyState('session_expired','Session expired while away.')}
-    else{if(STATE==='session_expired'||STATE==='error')applyState('ready');if(Date.now()-loadedAt>120000)loadItems().catch(()=>{})}
-  }catch(e){if(STATE==='ready')applyState('reconnecting','No connection')}
-});
-window.addEventListener('online',()=>{if(STATE==='error'||STATE==='reconnecting')handleReconnect()});
-window.addEventListener('offline',()=>{if(STATE==='ready')applyState('reconnecting','No internet')});
+// ── Auto-convert stale ideas ───────────────────────────────────────────────
+async function autoConvertStaleIdeas(){
+  const stale=items.filter(i=>i.type==='idea'&&i.status==='active'&&ageDays(i.created_at)>=7&&!i.reviewed_at);
+  if(!stale.length)return;
+  for(const i of stale){
+    const txt=i.content?.text||'Task from idea';
+    const snapshot={type:i.type,content:{...i.content},effort:i.effort,reviewed_at:i.reviewed_at};
+    const updated={type:'task',content:{title:txt,due:''},effort:dEffort(txt,'task'),reviewed_at:new Date().toISOString()};
+    Object.assign(i,updated);
+    try{await dbUpdate(i.id,updated)}
+    catch(e){Object.assign(i,snapshot);console.warn('Auto-convert failed for',i.id,e.message)}
+  }
+  render();
+}
 
 // ── Guidance ───────────────────────────────────────────────────────────────
 function allowedEffort(){
-  if(energy==='low')return new Set(['low']);
-  if(energy==='high')return new Set(['low','medium','high']);
-  if(isMorning)return new Set(['low','medium']);
-  if(isEvening)return new Set(['low']);
-  return new Set(['low','medium','high']);
+  let base;
+  if(mode==='overwhelmed')base=new Set(['low']);
+  else if(mode==='manage')base=new Set(['low','medium','high']);
+  else if(isMorning)base=new Set(['low','medium']); // Part B
+  else if(isEvening)base=new Set(['low']);           // Part F
+  else base=new Set(['low','medium','high']);
+  return energyDecayedEffort(base);                  // Part D overlay
 }
+
+// ── Part B/F: Personal Anchor priority score ───────────────────────────────
+function pmScore(i){
+  let s=0;
+  // Explicit priority order: obligation > health/critical > routine > personal task
+  if(i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))s+=80;
+  else if(i.type==='obligation')s+=40;
+  if(i.important_personal){
+    // Health/critical personal outranks generic important
+    const txt=(i.content?.text||i.content?.title||'').toLowerCase();
+    const isHealth=/\b(doctor|dentist|hospital|therapy|medication|health|medical|appointment)\b/.test(txt);
+    s+=isHealth?70:50;
+  }
+  if(routineDue(i)){
+    s+=30;
+    if(isMorning)s+=20; // Part B: morning routine boost
+  }
+  if(i.context==='personal'){
+    s+=15;
+    if(isMorning)s+=10; // Part B: morning personal boost
+    if(isEvening)s+=15; // Part F: evening personal boost (additional)
+  }
+  if(isOverdue(i.content?.due))s+=40;
+  if(isToday(i.content?.due))s+=25;
+  if(i.priority==='high')s+=15;
+  // Part F: reflections can surface as PA in evening when no urgent items
+  if(i.type==='reflection'){
+    if(isEvening){
+      const hasUrgent=items.some(x=>x.status==='active'&&isUrgent(x));
+      if(!hasUrgent)s+=20;
+      else s-=50;
+    }else{
+      s-=50;
+    }
+  }
+  // Part F: evening — multiply personal weight
+  if(isEvening&&(i.context==='personal'||i.type==='routine'))s=Math.floor(s*1.5);
+  return s;
+}
+
+// ── Part C: Strategic override detection ──────────────────────────────────
+function isStrategicItem(i){
+  const t=(i.content?.title||i.content?.text||'').toLowerCase();
+  return(i.effort==='high'||i.effort==='medium')||(
+    /\b(plan|review|strategy|proposal|discuss|prepare|analyse|analyze|design|report)\b/.test(t)
+  );
+}
+
 function naScore(i){
   if(i.type==='reflection'&&!i.important_personal)return-100;
-  let s=0;if(i.important_personal)s+=100;if(i.context==='personal')s+=20;
-  if(isOverdue(i.content?.due))s+=50;if(isToday(i.content?.due))s+=30;
+  let s=0;
+  if(i.important_personal)s+=100;
+  if(i.context==='personal')s+=20;
+  if(isOverdue(i.content?.due))s+=50;
+  if(isToday(i.content?.due))s+=30;
   if(i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))s+=60;
-  if(routineDue(i))s+=35;if(i.priority==='high')s+=15;if(i.type==='communication')s+=5;
-  const e=i.effort||'medium';if(allowedEffort().has(e))s+=10;else s-=20;
-  if(e==='low'&&bMem.low>bMem.high)s+=5;return s;
+  if(routineDue(i))s+=35;
+  if(i.priority==='high')s+=15;
+  if(i.type==='communication')s+=5;
+  const e=i.effort||'medium';
+  const ae=allowedEffort();
+  if(ae.has(e))s+=10;else s-=20;
+  if(e==='low'&&bMem.low>bMem.high)s+=5;
+  // Part E: in-progress boost
+  if(i.in_progress)s+=10;
+  // Part F: evening — non-personal items cannot override unless obligation overdue
+  if(isEvening&&i.context!=='personal'&&i.type!=='obligation'){
+    const overdue=isOverdue(i.content?.due)||isToday(i.content?.due);
+    if(!overdue)s-=60;
+  }
+  // Part B: morning — routines get priority unless obligation overdue
+  if(isMorning&&i.type==='routine'&&routineDue(i))s+=25;
+  return s;
 }
-function pickNA(){const a=items.filter(i=>i.status==='active');return a.length?a.slice().sort((a,b)=>naScore(b)-naScore(a))[0]:null}
-function pickPM(){
-  const a=items.filter(i=>i.status==='active'&&(i.context==='personal'||i.type==='routine'||i.type==='obligation'));
+
+function pickNA(){
+  const a=items.filter(i=>i.status==='active');
   if(!a.length)return null;
-  const sc=i=>{let s=0;if(i.important_personal)s+=50;if(i.type==='obligation'&&isOverdue(i.content?.due))s+=60;if(i.type==='obligation'&&isToday(i.content?.due))s+=45;if(isOverdue(i.content?.due))s+=40;if(isToday(i.content?.due))s+=25;if(routineDue(i))s+=30;if(i.priority==='high')s+=15;if(i.type==='reflection'&&!i.important_personal)s-=50;return s};
-  return a.slice().sort((a,b)=>sc(b)-sc(a))[0];
+  let candidates=a.slice().sort((a,b)=>naScore(b)-naScore(a));
+  // Part C: if on a reactive streak, force strategic item
+  if(consecutiveCompletions>=3){
+    const strategic=candidates.find(i=>isStrategicItem(i));
+    if(strategic)return strategic;
+  }
+  // Part B: morning — don't override due routine unless obligation is overdue
+  if(isMorning){
+    const dueRoutine=candidates.find(i=>i.type==='routine'&&routineDue(i));
+    const overdueObligation=candidates.find(i=>i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due)));
+    if(dueRoutine&&!overdueObligation)return dueRoutine;
+  }
+  return candidates[0]||null;
 }
+
+function pickPM(){
+  const base=items.filter(i=>i.status==='active'&&(
+    i.context==='personal'||i.type==='routine'||i.type==='obligation'||
+    (i.type==='reflection'&&isEvening)
+  ));
+  if(!base.length)return null;
+  return base.slice().sort((a,b)=>pmScore(b)-pmScore(a))[0];
+}
+
 function pickNudge(){
   const a=items.filter(i=>i.status==='active');
   const dt=items.filter(i=>i.status==='done'&&isToday(i.completed_at||i.created_at));
   const dtP=dt.filter(i=>i.context==='personal');
-  const oi=a.filter(i=>i.type==='idea'&&ageDays(i.created_at)>=3);
   const oob=a.filter(i=>i.type==='obligation'&&isOverdue(i.content?.due));
   const dr=a.filter(i=>routineDue(i));
+  const oi=a.filter(i=>i.type==='idea'&&ageDays(i.created_at)>=3);
   const op=a.filter(i=>i.type==='task'&&i.context==='personal'&&isOverdue(i.content?.due));
-  const wc=a.filter(i=>i.context!=='personal'&&i.type!=='routine').length;
-  const pc=a.filter(i=>i.context==='personal').length;
-  if(oob.length)return`${oob.length} overdue obligation${oob.length>1?'s':''} — worth attending to.`;
+  if(oob.length)return`${oob.length} overdue obligation${oob.length>1?'s':''}.`;
   if(dr.length)return`${dr[0].content?.title||'A routine'} is due.`;
-  if(op.length)return`${op.length} overdue personal task${op.length>1?'s':''} — worth a look.`;
-  if(isEvening&&!dtP.length&&pc>0)return'Nothing personal done today. Even one small thing counts.';
-  if(oi.length>=3)return`${oi.length} ideas getting dusty. Worth a quick pass?`;
-  if(wc>6&&pc<2)return'Work is stacking up. Your personal list is quiet.';
-  if(isMorning&&dt.length===0)return'Morning. One small thing done before noon makes the rest easier.';
-  return null;
-}
-function checkStop(){
-  const a=items.filter(i=>i.status==='active');
-  return!a.some(i=>isOverdue(i.content?.due)&&i.type!=='reflection')&&!a.some(i=>i.context!=='personal'&&i.priority==='high'&&i.type!=='reflection')&&items.some(i=>i.status==='done'&&i.context==='personal'&&isToday(i.completed_at||i.created_at));
+  if(op.length)return`${op.length} personal task${op.length>1?'s':''} overdue.`;
+  // Part F/B time-aware nudges
+  if(isNight)return'Capture anything left, then stop.';
+  if(isEvening&&!dtP.length&&a.some(i=>i.context==='personal'))return'Close what you can today.';
+  if(isEvening)return'Close what you can today.';
+  if(isMorning&&dt.length===0)return'Start with one small thing.';
+  if(oi.length>=3)return`${oi.length} ideas getting old.`;
+  return'Start with one small thing.';
 }
 
-// ── Today focus ────────────────────────────────────────────────────────────
-function saveTF(){localStorage.setItem('tf',JSON.stringify(todayFocus))}
-function pinItem(id){
-  if(todayFocus.includes(id)){todayFocus=todayFocus.filter(x=>x!==id);saveTF();render();return}
-  if(todayFocus.length>=3){showToast('Today Focus is full');return}
-  todayFocus.push(id);saveTF();render();showToast('Pinned');
-}
-function removeTodayPin(id){todayFocus=todayFocus.filter(x=>x!==id);saveTF();render()}
-function buildFocus(){
-  const pinned=todayFocus.filter(id=>items.find(i=>i.id===id&&i.status==='active'));
-  if(pinned.length>=3)return pinned.map(id=>({id,auto:false}));
-  const used=new Set(pinned),sug=[];
+// ── Part G: Stop state with continueQuota ─────────────────────────────────
+function checkStop(){
+  if(stopOverride)return false;
   const a=items.filter(i=>i.status==='active');
-  const p=a.filter(i=>(i.context==='personal'||i.type==='routine')&&!used.has(i.id));
-  if(p.length&&sug.length<3-pinned.length){sug.push({id:p[0].id,auto:true});used.add(p[0].id)}
-  const uw=a.filter(i=>i.context!=='personal'&&isUrgent(i)&&!used.has(i.id));
-  if(uw.length&&sug.length<3-pinned.length){sug.push({id:uw[0].id,auto:true});used.add(uw[0].id)}
-  const m=a.filter(i=>!used.has(i.id)&&i.priority!=='low'&&i.type!=='reflection');
-  if(m.length&&sug.length<3-pinned.length)sug.push({id:m[0].id,auto:true});
-  return[...pinned.map(id=>({id,auto:false})),...sug].slice(0,3);
+  return!a.some(i=>isOverdue(i.content?.due)&&i.type!=='reflection')
+    &&!a.some(i=>i.context!=='personal'&&i.priority==='high'&&i.type!=='reflection')
+    &&items.some(i=>i.status==='done'&&i.context==='personal'&&isToday(i.completed_at||i.created_at));
 }
 
 // ── Render ─────────────────────────────────────────────────────────────────
 function render(){
-  document.body.classList.toggle('low',energy==='low');
-  renderGuidance();renderFocus();renderStream();renderSidebar();
-  if(actionsLocked)document.querySelectorAll('.card:not(.done)').forEach(c=>c.classList.add('locked'));
-  else document.querySelectorAll('.card.locked').forEach(c=>c.classList.remove('locked'));
+  recomputeTime(); // Always fresh on render
+  const stop=checkStop()&&mode!=='manage';
+  document.body.classList.toggle('stopped',stop);
+  const na=pickNA(),pm=pickPM(),naIspm=na&&pm&&na.id===pm.id;
+  renderPersonalAnchor(pm,na);renderStop(stop);renderNA(na,naIspm);renderNudge();renderStream();
 }
 
-function renderGuidance(){
-  const el=document.getElementById('guidance');
-  const na=pickNA(),pm=pickPM(),nudge=pickNudge(),stop=checkStop();
-  let h='';
-  if(stop)h+=`<div class="gc stop"><div class="gc-lbl g">Done for now</div><div class="stop-h">Good stopping point ✓</div><div class="stop-s">No overdue. No urgent work. Personal done today.</div></div>`;
-  if(na){
-    const meta=isOverdue(na.content?.due)?'Overdue':isToday(na.content?.due)?'Due today':routineDue(na)?'Due now':na.type==='communication'?(na.content?.category||''):'';
-    const act=na.type==='task'||na.type==='obligation'?`markDone('${na.id}')`:na.type==='communication'?`copyReply('${na.id}')`:na.type==='routine'?`completeRoutine('${na.id}')`:` convertToTask('${na.id}')`;
-    const aLbl=na.type==='task'||na.type==='obligation'?'Mark done':na.type==='communication'?'Copy reply':na.type==='routine'?'Done for today':'Convert to task';
-    h+=`<div class="gc na" id="gc-na"><div class="gc-lbl a">Next action</div>
-      <div class="gc-row"><div class="gc-txt" onclick="scrollTo('${na.id}')">
-        <div class="gc-title">${esc(iTitle(na))}${na.important_personal?' 🌟':''}</div>
-        <div class="gc-meta">${na.context==='personal'?'Personal':'Work'}${meta?' · '+meta:''}</div>
-      </div><button class="btn filled sm" onclick="${act}" ${actionsLocked?'disabled':''}>${aLbl}</button></div></div>`;
-  }
-  if(pm&&(!na||pm.id!==na.id)){
-    const pmMeta=routineDue(pm)?'Due now':isOverdue(pm.content?.due)?'Overdue':isToday(pm.content?.due)?'Due today':'';
-    const pmAct=pm.type==='routine'?`completeRoutine('${pm.id}')`:pm.type==='task'||pm.type==='obligation'?`markDone('${pm.id}')`:null;
-    h+=`<div class="gc pm"><div class="gc-lbl g">Personal must do</div>
-      <div class="gc-row"><div class="gc-txt" onclick="scrollTo('${pm.id}')">
-        <div class="gc-title">${esc(iTitle(pm))}${pm.important_personal?' 🌟':''}</div>
-        <div class="gc-meta">${pmMeta||'Personal'}</div>
-      </div>${pmAct?`<button class="btn filled sm g" onclick="${pmAct}" ${actionsLocked?'disabled':''}>${pm.type==='routine'?'Done for today':'Mark done'}</button>`:`<button class="btn tonal sm" onclick="scrollTo('${pm.id}')">View</button>`}</div></div>`;
-  }
-  if(nudge&&energy!=='low')h+=`<div class="gc nudge"><div class="nudge-txt">${esc(nudge)}</div></div>`;
-  el.innerHTML=h;
+function renderPersonalAnchor(pm,na){
+  const el=document.getElementById('personal-anchor');
+  if(!pm){el.innerHTML=`<div class="personal-anchor no-item"><div class="pa-left"><div class="pa-eyebrow">🌿 Personal</div><div class="pa-title" style="font-style:italic;font-weight:400">Nothing personal active</div></div></div>`;return}
+  const pmMeta=routineDue(pm)?'Due now':isOverdue(pm.content?.due)?'Overdue':isToday(pm.content?.due)?'Due today':'Personal';
+  const pmAct=pm.type==='routine'?`completeRoutine('${pm.id}')`:pm.type==='task'||pm.type==='obligation'?`markDone('${pm.id}')`:null;
+  const actionBtn=pmAct?`<button class="pa-action ca-lock" onclick="${pmAct};event.stopPropagation()" ${actionsLocked?'disabled':''}>${pm.type==='routine'?'Done today':'Mark done'}</button>`:'';
+  el.innerHTML=`<div class="personal-anchor" onclick="focusCard('${pm.id}')">
+    <div class="pa-left">
+      <div class="pa-eyebrow">🌿 Personal${pm.important_personal?' · 🌟':''}${isEvening?' · Evening':''}${isMorning?' · Morning':''}</div>
+      <div class="pa-title">${esc(iTitle(pm))}</div>
+      <div class="pa-meta">${pmMeta}</div>
+    </div>${actionBtn}
+  </div>`;
 }
 
-function renderFocus(){
-  const el=document.getElementById('focus-area');
-  const slots=buildFocus();
-  if(!slots.some(s=>s&&items.find(i=>i.id===s.id))){el.innerHTML='';return}
-  let h=`<div class="focus-card"><div class="focus-hd">Today</div><div class="focus-list">`;
-  for(let i=0;i<3;i++){
-    const slot=slots[i];
-    if(slot){
-      const it=items.find(x=>x.id===slot.id);
-      if(it){
-        const dc=it.important_personal?'r':it.context==='personal'?'g':'b';
-        h+=`<div class="focus-row" onclick="scrollTo('${it.id}')"><div class="fdot ${dc}"></div><span class="flabel">${esc(iTitle(it))}</span><span class="ftag">${slot.auto?'suggested':''}</span>${!slot.auto?`<button class="fremove" onclick="event.stopPropagation();removeTodayPin('${it.id}')">✕</button>`:''}</div>`;
-      }
-    }else{
-      h+=`<div class="focus-row"><div class="fdot"></div><span class="flabel" style="color:var(--on-s3);font-style:italic">Slot ${i+1} — pin from stream</span></div>`;
-    }
-  }
-  el.innerHTML=h+'</div></div>';
+function renderStop(stop){
+  const el=document.getElementById('stop-zone');
+  if(!stop){el.innerHTML='';return}
+  const activeCount=items.filter(i=>i.status==='active').length;
+  // Part I: night shutdown nudge
+  const nightExtra=isNight&&activeCount>0
+    ?`<div style="font-size:12px;color:var(--green);opacity:.75;margin-bottom:10px">${activeCount} item${activeCount>1?'s':''} still active — capture anything urgent, then close.</div>`
+    :'';
+  el.innerHTML=`<div class="stop-card">
+    <div class="stop-title">Good place to stop ✓</div>
+    <div class="stop-sub">No overdue items. No urgent work. You've completed something personal today.</div>
+    ${nightExtra}
+    <div class="stop-actions">
+      <button class="stop-act primary" onclick="doContinue()">Continue anyway</button>
+      <button class="stop-act" onclick="setMode('overwhelmed')">Switch to Overwhelmed</button>
+    </div>
+  </div>`;
 }
 
+// Part G: controlled continuation
+function doContinue(){
+  continueQuota=1;
+  stopOverride=true;
+  document.body.classList.remove('stopped');
+  showToast('Continuing…');
+  render();
+}
+
+function renderNA(na,naIspm){
+  const el=document.getElementById('na-area');
+  // Part H: day closed — suppress Next Action
+  if(dayClosed&&!items.some(i=>i.status==='active'&&isUrgent(i))){
+    el.innerHTML='';return;
+  }
+  if(!na||naIspm){el.innerHTML='';return}
+  const isUrg=isUrgent(na);
+  const meta=isOverdue(na.content?.due)?'Overdue':isToday(na.content?.due)?'Due today':routineDue(na)?'Due now':na.type==='communication'?(na.content?.category||''):'';
+  const act=na.type==='task'||na.type==='obligation'?`markDone('${na.id}')`:na.type==='communication'?`copyReply('${na.id}')`:na.type==='routine'?`completeRoutine('${na.id}')`:` convertToTask('${na.id}')`;
+  const aLbl=na.type==='task'||na.type==='obligation'?'Mark done':na.type==='communication'?'Copy reply':na.type==='routine'?'Done for today':'Convert to task';
+  const btnCls=isUrg?'r':na.context==='personal'?'g':'';
+  const stratBadge=consecutiveCompletions>=3?`<span style="font-size:10px;color:var(--orange);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-left:6px">strategic pick</span>`:'';
+  el.innerHTML=`<div class="na-card${isUrg?' urgent':''}">
+    <div class="na-eyebrow">→ Next action${stratBadge}</div>
+    <div class="na-title" onclick="focusCard('${na.id}')">${esc(iTitle(na))}${na.important_personal?' 🌟':''}</div>
+    <div class="na-meta">${na.context==='personal'?'Personal':'Work'}${meta?' · '+meta:''}</div>
+    <button class="na-btn ${btnCls} ca-lock" onclick="${act}" ${actionsLocked?'disabled':''}>${aLbl}</button>
+  </div>`;
+}
+
+function renderNudge(){
+  const el=document.getElementById('nudge-area');
+  if(mode==='overwhelmed'){el.innerHTML='';return}
+  const nudge=pickNudge();
+  el.innerHTML=nudge?`<div class="nudge-strip"><div class="nudge-txt">${esc(nudge)}</div></div>`:'';
+}
+
+// ── getVisible ─────────────────────────────────────────────────────────────
 function getVisible(){
-  let a=items.filter(i=>i.status==='active');
-  if(energy==='low')a=a.filter(i=>i.context==='personal'||i.type==='routine'||i.type==='obligation'||isUrgent(i));
-  if(activeFilter==='personal')a=a.filter(i=>i.context==='personal'||i.type==='routine'||i.type==='reflection');
-  else if(activeFilter==='work')a=a.filter(i=>i.context==='work'&&!['routine','reflection','obligation'].includes(i.type));
-  else if(['obligation','routine','reflection'].includes(activeFilter))a=a.filter(i=>i.type===activeFilter);
-  return a;
-}
-function sortItems(arr){
-  const o=i=>{if(i.important_personal)return 0;if(i.type==='routine'&&routineDue(i))return 1;if(i.type==='obligation'&&isUrgent(i))return 1;if(i.context==='personal')return 2;if(isUrgent(i))return 3;if(i.type==='communication')return 4;if(i.type==='task')return 5;if(i.type==='reflection')return 8;return 6};
-  return[...arr].sort((a,b)=>o(a)-o(b)||new Date(b.created_at)-new Date(a.created_at));
-}
-function renderStream(){
-  const el=document.getElementById('stream');
-  const vis=getVisible();
-  if(!vis.length){el.innerHTML=`<div class="empty"><div class="empty-ic">🌊</div><div>Stream is clear.<br>Tap <strong>+ Capture</strong> to add something.</div></div>`;return}
-  const sorted=sortItems(vis);
-  let html='',lastSec='';
-  sorted.forEach(i=>{
-    const sec=i.important_personal?'important':i.type==='routine'?'routine':i.type==='obligation'?'obligation':i.type==='reflection'?'reflection':i.context==='personal'?'personal':isUrgent(i)?'urgent':i.type==='communication'?'inbox':i.type==='task'?'tasks':'ideas';
-    if(sec!==lastSec){const lbl={important:'Important',routine:'Routines',obligation:'Obligations',reflection:'Reflections',personal:'Personal',urgent:'Urgent',inbox:'Inbox',tasks:'Tasks',ideas:'Ideas'};html+=`<div class="slbl">${lbl[sec]}</div>`;lastSec=sec}
-    html+=renderCard(i);
-  });
-  el.innerHTML=html;
+  const a=items.filter(i=>i.status==='active');
+  if(mode==='overwhelmed'){
+    const slots=[],used=new Set();
+    // Slot 1: soonest overdue/due-today obligation
+    const ob=a.filter(i=>i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due))).sort((a,b)=>new Date(a.content?.due||0)-new Date(b.content?.due||0));
+    if(ob.length){slots.push(ob[0]);used.add(ob[0].id)}
+    // Slot 2: most urgent task
+    const urg=a.filter(i=>i.type==='task'&&isUrgent(i)&&!used.has(i.id)).sort((a,b)=>{const ao=isOverdue(a.content?.due)?0:1,bo=isOverdue(b.content?.due)?0:1;return ao-bo||new Date(a.content?.due||0)-new Date(b.content?.due||0)});
+    if(urg.length&&slots.length<4){slots.push(urg[0]);used.add(urg[0].id)}
+    // Slot 3: most important personal
+    const imp=a.filter(i=>i.important_personal&&!used.has(i.id)).sort((a,b)=>(b.priority==='high'?1:0)-(a.priority==='high'?1:0));
+    if(imp.length&&slots.length<4){slots.push(imp[0]);used.add(imp[0].id)}
+    // Slot 4: most overdue routine
+    const rtn=a.filter(i=>i.type==='routine'&&routineDue(i)&&!used.has(i.id)).sort((a,b)=>{const an=routineND(a)||'9999',bn=routineND(b)||'9999';return an<bn?-1:1});
+    if(rtn.length&&slots.length<4){slots.push(rtn[0]);used.add(rtn[0].id)}
+    // Part J fix: backfill to min 3 (or all available if <3) with highest naScore
+    if(slots.length<3){
+      const remaining=a.filter(i=>!used.has(i.id)&&i.type!=='reflection').sort((a,b)=>naScore(b)-naScore(a));
+      for(const r of remaining){
+        if(slots.length>=3)break;
+        slots.push(r);used.add(r.id);
+      }
+    }
+    return slots;
+  }
+  const base=a.filter(i=>i.type!=='reflection');
+  if(mode==='manage')return[...base,...items.filter(i=>i.status==='done'||i.status==='archived'),...a.filter(i=>i.type==='reflection')];
+  return base;
 }
 
-function renderSidebar(){
-  // Later section (low mode)
-  const lowerBody=document.getElementById('low-later');
-  if(energy==='low'){
-    const d=items.filter(i=>i.status==='active'&&i.context!=='personal'&&i.type!=='routine'&&i.type!=='obligation'&&!isUrgent(i));
-    lowerBody.innerHTML=d.length?d.slice(0,5).map(i=>renderCard(i)).join(''):`<div style="font-size:13px;color:var(--on-s3);padding:6px 0;font-style:italic">Nothing else waiting.</div>`;
-  }else{lowerBody.innerHTML=''}
-  // Bottom: completed + archived
-  const btm=document.getElementById('region-bottom');
-  const dt=items.filter(i=>i.status==='done'&&isToday(i.completed_at||i.created_at));
-  const ar=items.filter(i=>i.status==='archived');
-  let h='';
-  if(dt.length){
-    // On desktop, show compact version in right rail
-    const isExpanded=document.body.classList.contains('layout-expanded');
-    if(isExpanded){
-      h+=`<div class="rail-lbl">Completed today (${dt.length})</div><div style="display:flex;flex-direction:column;gap:6px">${dt.map(i=>renderCard(i)).join('')}</div>`;
-    }else{
-      h+=`<div class="coll-section"><button class="coll-btn" onclick="toggleColl('done-body',this)"><span>Completed today (${dt.length})</span><span>▸</span></button><div class="coll-body" id="done-body">${dt.map(i=>renderCard(i)).join('')}</div></div>`;
+function sortItems(arr){const o=i=>{if(i.status==='done'||i.status==='archived')return 10;if(i.important_personal)return 0;if(i.type==='routine'&&routineDue(i))return 1;if(i.type==='obligation'&&isUrgent(i))return 1;if(i.context==='personal')return 2;if(isUrgent(i))return 3;if(i.type==='communication')return 4;if(i.type==='task')return 5;if(i.type==='reflection')return 8;return 6};return[...arr].sort((a,b)=>o(a)-o(b)||new Date(b.created_at)-new Date(a.created_at))}
+
+function renderStream(){
+  const el=document.getElementById('stream-area');
+  const vis=getVisible();
+  if(!vis.length){el.innerHTML=`<div class="empty">🌊 Stream is clear.</div>`;return}
+  const sorted=sortItems(vis);
+  const sections=[];let curSec=null,curItems=[];
+  sorted.forEach(i=>{const sec=i.status==='done'?'done':i.status==='archived'?'archived':i.important_personal?'important':i.type==='routine'?'routine':i.type==='obligation'?'obligation':i.type==='reflection'?'reflection':i.context==='personal'?'personal':isUrgent(i)?'urgent':i.type==='communication'?'inbox':i.type==='task'?'tasks':'ideas';if(sec!==curSec){if(curItems.length)sections.push({sec:curSec,items:[...curItems]});curSec=sec;curItems=[]}curItems.push(i)});
+  if(curItems.length)sections.push({sec:curSec,items:curItems});
+  const lblMap={important:'Important',routine:'Routines',obligation:'Obligations',reflection:'Reflections',personal:'Personal',urgent:'Urgent',inbox:'Inbox',tasks:'Tasks',ideas:'Ideas',done:'Completed today',archived:'Archived'};
+  el.innerHTML=sections.map(({sec,items:grp})=>`<div><div class="slbl">${lblMap[sec]||sec}</div><div class="stream-group">${grp.map(i=>renderCard(i)).join('')}</div></div>`).join('');
+}
+
+// ── setMode: clears state, resets override ────────────────────────────────
+function setMode(m){
+  mode=m;stopOverride=false;continueQuota=0;consecutiveCompletions=0;
+  document.querySelectorAll('.mode-opt').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase().startsWith(m)));
+  const visibleIds=new Set(getVisible().map(i=>i.id));
+  expandedCards=new Set([...expandedCards].filter(id=>visibleIds.has(id)));
+  render();
+}
+
+// ── focusCard: render in-place without mode switch ────────────────────────
+function focusCard(id){
+  const exists=items.find(i=>i.id===id);
+  if(!exists)return;
+  expandedCards.add(id);
+  // Check if card is currently in rendered DOM
+  const existing=document.getElementById('card-'+id);
+  if(!existing){
+    // Only switch to manage if truly necessary (not in current visible set)
+    const visibleIds=new Set(getVisible().map(i=>i.id));
+    if(!visibleIds.has(id)){
+      mode='manage';
+      document.querySelectorAll('.mode-opt').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase().startsWith('manage')));
+      const newVis=new Set(getVisible().map(i=>i.id));
+      expandedCards=new Set([...expandedCards].filter(id=>newVis.has(id)));
+      expandedCards.add(id);
     }
   }
-  if(ar.length)h+=`<div class="coll-section" style="margin-top:4px"><button class="coll-btn" onclick="toggleColl('arch-body',this)"><span>Archived (${ar.length})</span><span>▸</span></button><div class="coll-body" id="arch-body">${ar.map(i=>renderCard(i)).join('')}</div></div>`;
-  btm.innerHTML=h;
+  render();
+  setTimeout(()=>{const el=document.getElementById('card-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--accent)';setTimeout(()=>el.style.outline='none',1600)}},80);
 }
 
-function toggleColl(id,btn){const b=document.getElementById(id);if(!b)return;const open=b.classList.toggle('open');btn.querySelector('span:last-child').textContent=open?'▾':'▸'}
-
-// ── renderCard ─────────────────────────────────────────────────────────────
+// ── Card render ────────────────────────────────────────────────────────────
 function renderCard(item){
   const done=item.status==='done'||item.status==='archived';
   const c=item.content||{};
   const ctx=item.context||'work';
-  const urgent=isUrgent(item)&&!done;
-  const imp=item.important_personal;
-  const pinned=todayFocus.includes(item.id);
-  const age=ageDays(item.created_at);
-  const lk=actionsLocked||done;
   const ov=isOverdue(c.due),tod=isToday(c.due);
-  const stateChip=()=>{if(ov)return`<span class="mc mc-overdue">Overdue</span>`;if(tod)return`<span class="mc mc-due">Due today</span>`;if(imp)return`<span class="mc mc-imp">🌟 Important</span>`;return''};
-  const ctxBtn=`<button class="mc mc-ctx" onclick="toggleCtx('${item.id}')">${ctx==='personal'?'Personal':'Work'}</button>`;
-  const ca=(lbl,fn,cls,safe)=>`<button class="ca ${cls}${safe?' ca-safe':''}" onclick="${fn}" ${lk&&!safe?'disabled':''}>${lbl}</button>`;
-  let inner='';
+  const expanded=expandedCards.has(item.id);
+  const lk=actionsLocked||done;
+  const isFocus=mode==='focus';
 
-  if(item.type==='communication'){
-    const tone=c.tone||'normal';
-    inner=`<div class="card-top"><div class="card-chips">${stateChip()}<span class="mc mc-cat">${c.category||'General'}</span>${ctxBtn}</div><span class="card-time">${fmt(item.created_at)}</span></div>
-    <div class="card-body">${esc(trunc(c.preview||'',180))}</div>
-    <div class="tone-row"><span class="tlbl">Tone</span>
-      <button class="tbtn${tone==='soft'?' on':''}" onclick="setTone('${item.id}','soft')">Soft</button>
-      <button class="tbtn${tone==='normal'?' on':''}" onclick="setTone('${item.id}','normal')">Normal</button>
-      <button class="tbtn${tone==='firm'?' on':''}" onclick="setTone('${item.id}','firm')">Firm</button>
-    </div>
-    <div class="reply-wrap"><div class="reply-ey">Suggested reply</div>
-      <div class="reply-body" id="rt-${item.id}">${esc(c.reply||'')}</div>
-      <textarea class="reply-edit" id="re-${item.id}" style="display:none">${esc(c.reply||'')}</textarea>
-    </div>
-    <div class="card-actions">
-      ${ca('Copy reply',`copyReply('${item.id}')`,`ca-primary`,true)}${ca('Edit reply',`toggleEdit('${item.id}')`,`ca-tonal`)}
-      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
-    </div>`;
-  }else if(item.type==='reflection'){
-    inner=`<div class="card-top"><div class="card-chips">${stateChip()}</div><span class="card-time">${fmt(item.created_at)}</span></div>
-    <div class="card-body rfl">${esc(c.text||'')}</div>
-    <div class="card-actions">
-      ${!done?ca('Keep',`keepItem('${item.id}')`,`ca-muted`)+ca('→ Task',`convertToTask('${item.id}')`,`ca-tonal`)+ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)+ca(imp?'🌟 Important':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
-    </div>`;
-  }else if(item.type==='routine'){
-    const nd=routineND(item);
-    inner=`<div class="card-top"><div class="card-chips">${c.frequency?`<span class="mc" style="background:var(--teal-l);color:var(--teal)">${c.frequency}</span>`:''}</div><span class="card-time">${fmt(item.created_at)}</span></div>
-    <div class="card-title">${esc(c.title||c.text||'Routine')}</div>
-    <div class="routine-sub">${c.last_completed?`Last: ${c.last_completed}`:'Not started'}${nd?' · Next: '+nd:''}</div>
-    <div class="card-actions">
-      ${!done?ca('Done for today',`completeRoutine('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'🌟':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
-    </div>`;
-  }else if(item.type==='obligation'){
-    inner=`<div class="card-top"><div class="card-chips">${stateChip()}${ctxBtn}</div><span class="card-time">${fmt(item.created_at)}</span></div>
-    ${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||c.text||'')}" onkeydown="if(event.key==='Enter')saveIE('${item.id}');if(event.key==='Escape')cancelIE('${item.id}')">`:`<div class="card-title">${esc(c.title||c.text||'Obligation')}</div>`}
-    ${c.due?`<div class="card-due${ov?' ov':''}">${ov?'Overdue · ':tod?'Due today · ':'Due '}${c.due}</div>`:''}
-    ${c.frequency?`<div class="routine-sub">Repeats: ${c.frequency}</div>`:''}
-    <div class="card-actions">
-      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+(item._editing?ca('Save',`saveIE('${item.id}')`,`ca-primary`)+ca('Cancel',`cancelIE('${item.id}')`,`ca-muted`):ca('Edit',`startIE('${item.id}')`,`ca-muted`))+ca(imp?'🌟':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
-    </div>`;
-  }else if(item.type==='task'){
-    inner=`<div class="card-top"><div class="card-chips">${stateChip()}${ctxBtn}</div><span class="card-time">${fmt(item.created_at)}</span></div>
-    ${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||'')}" onkeydown="if(event.key==='Enter')saveIE('${item.id}');if(event.key==='Escape')cancelIE('${item.id}')">`:`<div class="card-title">${esc(c.title||'Untitled')}</div>`}
-    ${c.due?`<div class="card-due${ov?' ov':''}">${ov?'Overdue · ':tod?'Due today · ':'Due '}${c.due}</div>`:''}
-    <div class="card-actions">
-      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+(item._editing?ca('Save',`saveIE('${item.id}')`,`ca-primary`)+ca('Cancel',`cancelIE('${item.id}')`,`ca-muted`):ca('Edit',`startIE('${item.id}')`,`ca-muted`))+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'🌟':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
-    </div>`;
-  }else{
-    const ageBadge=age>=7?`<span class="mc" style="background:var(--orange-l);color:var(--orange)">${age}d old</span>`:age>=3?`<span class="mc" style="background:var(--surface3);color:var(--on-s2)">${age}d</span>`:'';
-    inner=`<div class="card-top"><div class="card-chips">${ageBadge}${ctxBtn}</div><span class="card-time">${fmt(item.created_at)}</span></div>
-    <div class="card-body">${esc(c.text||'')}</div>
-    <div class="card-actions">
-      ${!done?ca('→ Task',`convertToTask('${item.id}')`,`ca-tonal`)+ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`):''}
-      ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
-    </div>
-    ${age>=7&&!done?`<div class="review-row"><span class="rlbl">Review</span>${ca('→ Task',`convertToTask('${item.id}')`,`ca-tonal`)}${ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)}${ca('Keep',`keepItem('${item.id}')`,`ca-muted`)}</div>`:''}`;
+  let wCls='w-normal';
+  if(!done){if(ov||(item.type==='obligation'&&(ov||tod)))wCls='w-urgent';else if(item.priority==='high'||tod)wCls='w-high';else if(item.context==='personal'||item.type==='routine')wCls='w-personal'}
+  let typeCls='';
+  if(item.type==='reflection')typeCls=' type-reflection';
+  if(item.type==='routine')typeCls=' type-routine';
+  if(item.type==='obligation'&&wCls==='w-urgent')typeCls=' type-obligation';
+  const ipCls=item.in_progress&&!done?' in-progress-card':'';
+
+  const sub=()=>{
+    if(ov)return`<div class="card-sub urgent">Overdue${c.due?' · '+c.due:''}</div>`;
+    if(tod)return`<div class="card-sub urgent">Due today</div>`;
+    if(item.type==='routine'){const nd=routineND(item);return`<div class="card-sub">${c.last_completed?'Last: '+c.last_completed:'Not started'}${nd?' · Next: '+nd:''}</div>`}
+    if(item.type==='communication')return`<div class="card-sub">${c.category||'Email'} · ${fmt(item.created_at)}</div>`;
+    if(item.type==='reflection')return`<div class="card-sub">${fmt(item.created_at)}</div>`;
+    if(c.due)return`<div class="card-sub">Due ${c.due}</div>`;
+    return'';
+  };
+
+  const primaryBtn=()=>{
+    if(done)return'';
+    if(item.type==='communication')return`<button class="card-act copy ca-lock" onclick="copyReply('${item.id}');event.stopPropagation()" ${lk?'disabled':''}>Copy reply</button>`;
+    if(item.type==='routine')return`<button class="card-act routine ca-lock" onclick="completeRoutine('${item.id}');event.stopPropagation()" ${lk?'disabled':''}>Done today</button>`;
+    if(item.type==='reflection')return'';
+    return`<button class="card-act done ca-lock" onclick="markDone('${item.id}');event.stopPropagation()" ${lk?'disabled':''}>Done</button>`;
+  };
+
+  let detail='';
+  if(expanded){
+    if(item.type==='reflection'){
+      detail=`<div class="rfl-body">${esc(c.text||'')}</div>
+      <div class="card-detail-actions">
+        <button class="ca ca-muted" onclick="keepItem('${item.id}')">Keep</button>
+        <button class="ca ca-accent ca-lock" onclick="convertToTask('${item.id}')" ${lk?'disabled':''}>→ Task</button>
+        ${!isFocus?`<button class="ca ca-muted ca-lock" onclick="archiveItem('${item.id}')" ${lk?'disabled':''}>Archive</button>`:''}
+        ${!isFocus?`<button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>`:''}
+      </div>`;
+    }else if(item.type==='communication'){
+      const tone=c.tone||'normal';
+      detail=`<div class="tone-row"><span class="tlbl">Tone</span>
+        <button class="tbtn${tone==='soft'?' on':''}" onclick="setTone('${item.id}','soft')">Soft</button>
+        <button class="tbtn${tone==='normal'?' on':''}" onclick="setTone('${item.id}','normal')">Normal</button>
+        <button class="tbtn${tone==='firm'?' on':''}" onclick="setTone('${item.id}','firm')">Firm</button>
+      </div>
+      <div class="reply-wrap"><div class="reply-ey">Suggested reply</div>
+        <div class="reply-body" id="rt-${item.id}">${esc(c.reply||'')}</div>
+        <textarea class="reply-edit" id="re-${item.id}" style="display:none">${esc(c.reply||'')}</textarea>
+      </div>
+      <div class="card-detail-actions">
+        <button class="ca ca-muted" onclick="toggleEdit('${item.id}')">Edit reply</button>
+        <button class="ca ca-muted ca-lock" onclick="markDone('${item.id}')" ${lk?'disabled':''}>Mark done</button>
+        ${!isFocus?`<button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>`:''}
+      </div>`;
+    }else{
+      const focusActions=`
+        ${item._editing?`<button class="ca ca-accent ca-lock" onclick="saveIE('${item.id}')" ${lk?'disabled':''}>Save</button><button class="ca ca-muted" onclick="cancelIE('${item.id}')">Cancel</button>`:`<button class="ca ca-muted ca-lock" onclick="startIE('${item.id}')" ${lk?'disabled':''}>Edit</button>`}
+        <button class="ca ca-muted ca-lock ca-imp${item.important_personal?' on':''}" onclick="toggleImp('${item.id}')" ${lk?'disabled':''}>${item.important_personal?'🌟 Important':'Mark important'}</button>
+        <button class="ca ca-muted ca-lock" onclick="toggleCtx('${item.id}')" ${lk?'disabled':''}>${ctx==='personal'?'→ Work':'→ Personal'}</button>`;
+      const manageExtra=!isFocus?`
+        ${item.type==='idea'?`<button class="ca ca-accent ca-lock" onclick="convertToTask('${item.id}')" ${lk?'disabled':''}>→ Task</button>`:''}
+        ${item.type==='task'||item.type==='obligation'||item.type==='idea'?`<button class="ca ca-muted ca-lock" onclick="archiveItem('${item.id}')" ${lk?'disabled':''}>Archive</button>`:''}
+        <button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>`:'';
+      detail=`${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||c.text||iTitle(item))}" onkeydown="if(event.key==='Enter')saveIE('${item.id}');if(event.key==='Escape')cancelIE('${item.id}')">`:''}
+        <div class="card-detail-actions">${focusActions}${manageExtra}</div>`;
+    }
   }
-  const cls=`card type-${item.type}${done?' done':''}${urgent?' urgent':''}${ctx==='personal'?' personal':''}`;
-  return`<div class="${cls}" id="card-${item.id}"><div class="stripe ${item.type}"></div><div class="card-in">${inner}</div></div>`;
+
+  // Part E: in-progress dot indicator
+  const ipDot=item.in_progress&&!done?`<span class="ip-dot" title="In progress"></span>`:'';
+
+  return`<div class="card${done?' done':''}${typeCls} ${wCls}${ipCls}" id="card-${item.id}">
+    <div class="card-in" onclick="toggleCardExpand('${item.id}')">
+      <div class="card-left">
+        <div class="card-title">${esc(iTitle(item))}${item.important_personal&&!done?' 🌟':''}${ipDot}</div>
+        ${sub()}
+      </div>${primaryBtn()}
+    </div>
+    ${!done?`<div class="card-detail${expanded?' open':''}"><div style="padding-top:0">${detail}</div></div>`:''}
+  </div>`;
+}
+
+// ── Part E: expand tracking with in-progress timer ────────────────────────
+function toggleCardExpand(id){
+  if(expandedCards.has(id)){
+    expandedCards.delete(id);
+    // Clear in-progress timer if collapsing before threshold
+    if(expandTimer&&expandTimer.id===id){
+      clearTimeout(expandTimer.t);
+      expandTimer=null;
+    }
+  }else{
+    expandedCards.add(id);
+    // Start 10s timer to mark in-progress
+    if(expandTimer){clearTimeout(expandTimer.t);expandTimer=null}
+    expandTimer={
+      id,
+      t:setTimeout(()=>{
+        const i=items.find(x=>x.id===id);
+        if(i&&!i.in_progress&&i.status==='active'&&i.type!=='reflection'){
+          i.in_progress=true;
+          render();
+        }
+        expandTimer=null;
+      },10000)
+    };
+  }
+  resetIdleTimer();
+  render();
 }
 
 // ── Card actions ───────────────────────────────────────────────────────────
-function startIE(id){const i=items.find(x=>x.id===id);if(!i)return;i._editing=true;render();setTimeout(()=>{const e=document.getElementById('ie-'+id);if(e){e.focus();e.select()}},50)}
+function startIE(id){
+  const i=items.find(x=>x.id===id);if(!i)return;
+  i._editing=true;
+  resetIdleTimer();
+  consecutiveCompletions=0; // Reset streak on edit
+  render();
+  setTimeout(()=>{const e=document.getElementById('ie-'+id);if(e){e.focus();e.select()}},50);
+}
 function cancelIE(id){const i=items.find(x=>x.id===id);if(i){i._editing=false;render()}}
 async function saveIE(id){
   const i=items.find(x=>x.id===id);if(!i)return;
   const el=document.getElementById('ie-'+id);if(!el)return;
+  const prev={content:{...i.content},effort:i.effort};
   i.content.title=el.value;i._editing=false;i.effort=dEffort(el.value,i.type);
-  try{await dbUpdate(id,{content:i.content,effort:i.effort});render();showToast('Saved')}catch(e){render()}
+  consecutiveCompletions=0; // Reset streak on edit
+  resetIdleTimer();
+  render();
+  try{await dbUpdate(id,{content:i.content,effort:i.effort});showToast('Saved')}
+  catch(e){Object.assign(i,prev);render();showToast('Sync issue — retry')}
 }
 async function toggleCtx(id){
   if(!requireSession())return;
   const i=items.find(x=>x.id===id);if(!i)return;
+  const prev={context:i.context,important_personal:i.important_personal};
   i.context=i.context==='personal'?'work':'personal';if(i.context!=='personal')i.important_personal=false;
-  try{await dbUpdate(id,{context:i.context,important_personal:i.important_personal});render()}catch(e){}
+  resetIdleTimer();
+  render();
+  try{await dbUpdate(id,{context:i.context,important_personal:i.important_personal})}
+  catch(e){Object.assign(i,prev);render();showToast('Sync issue — retry')}
 }
 async function toggleImp(id){
   if(!requireSession())return;
   const i=items.find(x=>x.id===id);if(!i)return;
+  const prev={important_personal:i.important_personal,context:i.context};
   i.important_personal=!i.important_personal;if(i.important_personal)i.context='personal';
-  try{await dbUpdate(id,{important_personal:i.important_personal,context:i.context});render();showToast(i.important_personal?'Marked important':'Removed')}catch(e){}
+  resetIdleTimer();
+  render();
+  try{await dbUpdate(id,{important_personal:i.important_personal,context:i.context});showToast(i.important_personal?'Marked important':'Removed')}
+  catch(e){Object.assign(i,prev);render();showToast('Sync issue — retry')}
 }
 function setTone(id,tone){
   const i=items.find(x=>x.id===id);if(!i)return;
-  i.content.tone=tone;
-  // genReply inline
   const n=extractName(i.content.full||i.content.preview||''),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';
-  const T={soft:{Neutering:`${g}Thank you for reaching out. Our subsidised programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK] or WhatsApp us.${sign}`,Surrender:`${g}We understand. Our intake is on a waiting list. Please share a photo, species, breed, and age.${sign}`,Volunteering:`${g}Thank you! New volunteers complete our Pet Care Programme (PCP) first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Your support means everything. Donate at [INSERT DONATION LINK]. Tax-exempt receipts above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},normal:{Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Our intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}Thank you. All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK]. Receipts above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},firm:{Neutering:`${g}Our subsidised neutering programme, Potong Royong, is slot-based. Walk-ins not accepted. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Intake is on a strict waiting list. Provide: species, breed, age, reason, photo.${sign}`,Volunteering:`${g}All volunteers complete PCP before joining shifts. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Donate via [INSERT DONATION LINK] only.${sign}`,General:`${g}Thank you. We respond within 2–3 working days.${sign}`}};
-  i.content.reply=(T[tone]||T.normal)[i.content.category]||(T[tone]||T.normal).General;
-  dbUpdate(id,{content:i.content}).catch(()=>{});
+  const T={soft:{Neutering:`${g}Thank you for reaching out about neutering. Our subsidised programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}We understand. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}Thank you! New volunteers complete our Pet Care Programme (PCP) first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Your support means everything. Donate at [INSERT DONATION LINK].${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},normal:{Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK].${sign}`,General:`${g}Thank you. We'll respond within 2–3 working days.${sign}`},firm:{Neutering:`${g}Our subsidised programme, Potong Royong, is slot-based. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Intake is on a strict waiting list. Provide: species, breed, age, reason, photo.${sign}`,Volunteering:`${g}All volunteers complete PCP first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Donate via [INSERT DONATION LINK] only.${sign}`,General:`${g}We respond within 2–3 working days.${sign}`}};
+  const prev={tone:i.content.tone,reply:i.content.reply};
+  i.content.tone=tone;i.content.reply=(T[tone]||T.normal)[i.content.category]||(T[tone]||T.normal).General;
   const rt=document.getElementById('rt-'+id),re=document.getElementById('re-'+id);
   if(rt)rt.textContent=i.content.reply;if(re)re.value=i.content.reply;
   document.querySelectorAll(`#card-${id} .tbtn`).forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase()===tone));
+  resetIdleTimer();
+  dbUpdate(id,{content:i.content}).catch(()=>{i.content.tone=prev.tone;i.content.reply=prev.reply;showToast('Sync issue — retry')});
   showToast('Tone updated');
 }
 function extractName(text){const m=text.match(/(?:my name is|i am|i'm|from|regards,|sincerely,|cheers,)\s*([A-Z][a-z]+(?: [A-Z][a-z]+)?)/i);if(m)return m[1];for(const l of text.split('\n').slice(-5)){const nm=l.trim().match(/^([A-Z][a-z]+(?: [A-Z][a-z]+)?)$/);if(nm&&nm[1].length<30)return nm[1]}return null}
-function toggleEdit(id){
-  const te=document.getElementById('rt-'+id),ee=document.getElementById('re-'+id);
-  if(!te||!ee)return;
-  if(ee.style.display==='none'){ee.style.display='block';te.style.display='none'}
-  else{const v=ee.value;te.textContent=v;ee.style.display='none';te.style.display='block';const i=items.find(x=>x.id===id);if(i){i.content.reply=v;dbUpdate(id,{content:i.content}).catch(()=>{})}}
-}
-function copyReply(id){
-  const i=items.find(x=>x.id===id);if(!i)return;
-  navigator.clipboard.writeText(i.content?.reply||'').catch(()=>{const ta=document.createElement('textarea');ta.value=i.content?.reply||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)});
-  showToast('Reply copied');
-}
+function toggleEdit(id){const te=document.getElementById('rt-'+id),ee=document.getElementById('re-'+id);if(!te||!ee)return;if(ee.style.display==='none'){ee.style.display='block';te.style.display='none'}else{const v=ee.value;te.textContent=v;ee.style.display='none';te.style.display='block';const i=items.find(x=>x.id===id);if(i){const prev=i.content.reply;i.content.reply=v;dbUpdate(id,{content:i.content}).catch(()=>{i.content.reply=prev;showToast('Sync issue — retry')})}}}
+function copyReply(id){const i=items.find(x=>x.id===id);if(!i)return;navigator.clipboard.writeText(i.content?.reply||'').catch(()=>{const ta=document.createElement('textarea');ta.value=i.content?.reply||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)});resetIdleTimer();showToast('Reply copied')}
+
 async function markDone(id){
   if(!requireSession())return;
   const idx=items.findIndex(i=>i.id===id);if(idx<0)return;
@@ -1109,100 +1042,99 @@ async function markDone(id){
   const ts=new Date().toISOString();
   const eff=items[idx].effort||'medium';
   if(eff==='low')bMem.low++;else if(eff==='medium')bMem.med++;else bMem.high++;
-  saveBMem();items[idx].status='done';items[idx].completed_at=ts;render();
-  try{await dbUpdate(id,{status:'done',completed_at:ts})}catch(e){items[idx]=prev;render();return}
+  items[idx].status='done';items[idx].completed_at=ts;
+  expandedCards.delete(id);
+
+  // Part C: increment streak
+  consecutiveCompletions++;
+  resetIdleTimer();
+
+  // Part G: controlled continuation decrement
+  if(stopOverride&&continueQuota>0){
+    continueQuota--;
+    if(continueQuota<=0){
+      stopOverride=false;
+      continueQuota=0;
+    }
+  }
+
+  stopOverride=stopOverride&&continueQuota>0; // Recalculate
+  render();
+  try{await dbUpdate(id,{status:'done',completed_at:ts});saveBMem()}
+  catch(e){
+    if(eff==='low'&&bMem.low>0)bMem.low--;else if(eff==='medium'&&bMem.med>0)bMem.med--;else if(bMem.high>0)bMem.high--;
+    consecutiveCompletions=Math.max(0,consecutiveCompletions-1);
+    items[idx]=prev;render();showToast('Sync issue — retry');return;
+  }
   showUndo(id,prev);
-  setTimeout(()=>{const nna=pickNA();if(nna){const c=document.getElementById('card-'+nna.id);if(c)c.classList.add('chain');const gn=document.getElementById('gc-na');if(gn)gn.classList.add('pulse');setTimeout(()=>{if(c)c.classList.remove('chain');if(gn)gn.classList.remove('pulse')},1200)}},300);
+  setTimeout(()=>{renderNA(pickNA(),((na,pm)=>na&&pm&&na.id===pm.id)(pickNA(),pickPM()));renderPersonalAnchor(pickPM(),pickNA())},300);
 }
+
 async function completeRoutine(id){
   if(!requireSession())return;
   const i=items.find(x=>x.id===id);if(!i)return;
-  i.content.last_completed=todayStr;
-  try{await dbUpdate(id,{content:i.content,completed_at:new Date().toISOString()});render();showToast('Routine done ✓')}catch(e){}
+  const prev={content:{...i.content},completed_at:i.completed_at};
+  i.content.last_completed=todayStr;i.completed_at=new Date().toISOString();
+  consecutiveCompletions++;
+  resetIdleTimer();
+  if(stopOverride&&continueQuota>0){continueQuota--;if(continueQuota<=0){stopOverride=false;continueQuota=0}}
+  render();showToast('Routine done ✓');
+  try{await dbUpdate(id,{content:i.content,completed_at:i.completed_at})}
+  catch(e){i.content=prev.content;i.completed_at=prev.completed_at;consecutiveCompletions=Math.max(0,consecutiveCompletions-1);render();showToast('Sync issue — retry')}
 }
-async function keepItem(id){
-  const i=items.find(x=>x.id===id);if(!i)return;
-  const ts=new Date().toISOString();i.reviewed_at=ts;
-  try{await dbUpdate(id,{reviewed_at:ts});render();showToast('Kept')}catch(e){}
-}
+
+async function keepItem(id){const i=items.find(x=>x.id===id);if(!i)return;const prev={reviewed_at:i.reviewed_at};const ts=new Date().toISOString();i.reviewed_at=ts;try{await dbUpdate(id,{reviewed_at:ts});expandedCards.delete(id);render();showToast('Kept')}catch(e){i.reviewed_at=prev.reviewed_at;render();showToast('Sync issue — retry')}}
+
 async function archiveItem(id){
   if(!requireSession())return;
   const idx=items.findIndex(i=>i.id===id);if(idx<0)return;
-  items[idx].status='archived';render();
-  try{await dbUpdate(id,{status:'archived'});showToast('Archived')}catch(e){items[idx].status='active';render()}
+  const prev=items[idx].status;
+  items[idx].status='archived';expandedCards.delete(id);resetIdleTimer();render();
+  try{await dbUpdate(id,{status:'archived'});showToast('Archived')}
+  catch(e){items[idx].status=prev;render();showToast('Sync issue — retry')}
 }
+
 async function convertToTask(id){
   if(!requireSession())return;
   const i=items.find(x=>x.id===id);if(!i)return;
   const txt=i.content.text||i.content.title||'Task from idea';
-  try{const saved=await dbSave({type:'task',content:{title:txt},priority:'medium',context:i.context||'work',important_personal:i.important_personal||false,effort:dEffort(txt,'task'),status:'active',created_at:new Date().toISOString()});
-    if(saved){items.unshift(enrich(saved));await markDone(id);render();showToast('Converted to task')}}catch(e){}
+  try{const saved=await dbSave({type:'task',content:{title:txt,due:''},priority:'medium',context:i.context||'work',important_personal:i.important_personal||false,effort:dEffort(txt,'task'),status:'active',created_at:new Date().toISOString()});if(saved){items.unshift(enrich(saved));stopOverride=false;continueQuota=0;consecutiveCompletions=0;await markDone(id);render();showToast('Converted to task')}}catch(e){}
 }
+
 async function deleteItem(id){
   if(!confirm('Delete permanently?'))return;
-  items=items.filter(i=>i.id!==id);render();
-  try{await dbDelete(id);showToast('Deleted')}catch(e){await loadItems()}
+  const snapshot=[...items];
+  items=items.filter(i=>i.id!==id);expandedCards.delete(id);resetIdleTimer();render();
+  try{await dbDelete(id);showToast('Deleted')}
+  catch(e){items=snapshot;render();showToast('Sync issue — retry')}
 }
-function showUndo(id,prev){
-  clearTimeout(undoTimer);undoStack={id,prev};
-  document.getElementById('undo-bar').classList.add('show');
-  undoTimer=setTimeout(()=>{document.getElementById('undo-bar').classList.remove('show');undoStack=null},5000);
-}
+
+function showUndo(id,prev){clearTimeout(undoTimer);undoStack={id,prev};document.getElementById('undo-bar').classList.add('show');undoTimer=setTimeout(()=>{document.getElementById('undo-bar').classList.remove('show');undoStack=null},5000)}
 async function undoDone(){
   if(!undoStack)return;
   const{id,prev}=undoStack;const idx=items.findIndex(i=>i.id===id);
   if(idx>=0){
-    const eff=items[idx].effort||'medium';
-    if(eff==='low'&&bMem.low>0)bMem.low--;else if(eff==='medium'&&bMem.med>0)bMem.med--;else if(bMem.high>0)bMem.high--;
-    saveBMem();items[idx]=prev;
-    try{await dbUpdate(id,{status:'active',completed_at:null});render();showToast('Undone')}catch(e){}
+    const eff=items[idx].effort||'medium';if(eff==='low'&&bMem.low>0)bMem.low--;else if(eff==='medium'&&bMem.med>0)bMem.med--;else if(bMem.high>0)bMem.high--;
+    consecutiveCompletions=Math.max(0,consecutiveCompletions-1);
+    items[idx]=prev;
+    try{await dbUpdate(id,{status:'active',completed_at:null});saveBMem();render();showToast('Undone')}
+    catch(e){render();showToast('Sync issue — retry')}
   }
   document.getElementById('undo-bar').classList.remove('show');undoStack=null;clearTimeout(undoTimer);
 }
-function scrollTo(id){
-  const el=document.getElementById('card-'+id);
-  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--accent)';setTimeout(()=>el.style.outline='none',1400)}
-}
 
 // ── Capture ────────────────────────────────────────────────────────────────
-function onCapIn(){
-  if(ovr)return;
-  const val=document.getElementById('cap-in').value;
-  const det=dType(val),sugCtx=val.length>2?dCtx(val):null;
-  const el=document.getElementById('detect-hint');
-  if(!det){el.innerHTML='What\'s on your mind?';return}
-  const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};
-  el.innerHTML=`<span>Detected: ${lbl[det]||det}</span>${sugCtx==='personal'?' · Personal?':''}`;
-  const fw=document.getElementById('freq-w');if(fw)fw.style.display=(det==='routine'||det==='obligation')?'block':'none';
-  if(sugCtx&&sugCtx!==capCtx)setCtx(sugCtx);
-}
-function setOvr(type,btn){
-  ovr=type===ovr?null:type;
-  document.querySelectorAll('.sc:not(#ctx-work):not(#ctx-personal)').forEach(b=>b.classList.remove('on'));
-  if(ovr)btn.classList.add('on');
-  const fw=document.getElementById('freq-w');if(fw)fw.style.display=(ovr==='routine'||ovr==='obligation')?'block':'none';
-  const el=document.getElementById('detect-hint');
-  if(ovr){const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};el.innerHTML=`<span>Set to: ${lbl[ovr]}</span>`}else onCapIn();
-}
-function setCtx(ctx){
-  capCtx=ctx;
-  document.getElementById('ctx-work').className='sc'+(ctx==='work'?' on':'');
-  document.getElementById('ctx-personal').className='sc ctx-p'+(ctx==='personal'?' on':'');
-}
-function toggleRef(){const b=document.getElementById('ref-body'),btn=document.getElementById('ref-btn');const open=b.classList.toggle('open');btn.textContent=(open?'▾':'▸')+' More options'}
+function onCapIn(){if(ovr)return;const val=document.getElementById('cap-in').value,det=dType(val),sugCtx=val.length>2?dCtx(val):null,el=document.getElementById('detect-hint');if(!det){el.innerHTML='What needs to happen?';return}const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};el.innerHTML=`<span>${lbl[det]||det} detected</span>${sugCtx==='personal'?' · Personal?':''}`;const fw=document.getElementById('freq-w');if(fw)fw.style.display=(det==='routine'||det==='obligation')?'block':'none';if(sugCtx&&sugCtx!==capCtx)setCtx(sugCtx)}
+function setOvr(type,btn){ovr=type===ovr?null:type;document.querySelectorAll('.sc:not(#ctx-work):not(#ctx-personal)').forEach(b=>b.classList.remove('on'));if(ovr)btn.classList.add('on');const fw=document.getElementById('freq-w');if(fw)fw.style.display=(ovr==='routine'||ovr==='obligation')?'block':'none';const el=document.getElementById('detect-hint');if(ovr){const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};el.innerHTML=`<span>Set to: ${lbl[ovr]}</span>`}else onCapIn()}
+function setCtx(ctx){capCtx=ctx;document.getElementById('ctx-work').className='sc'+(ctx==='work'?' on':'');document.getElementById('ctx-personal').className='sc ctx-p'+(ctx==='personal'?' on':'')}
+function toggleAdv(){const b=document.getElementById('sheet-adv'),btn=document.getElementById('adv-btn');const open=b.classList.toggle('open');btn.textContent=(open?'▾':'▸')+' Options'}
 function openSheet(){
   if(!requireSession())return;
   document.getElementById('sheet-bg').classList.add('open');
-  ovr=null;capCtx='work';
-  document.querySelectorAll('.sc').forEach(b=>b.classList.remove('on'));
-  setCtx('work');
-  document.getElementById('detect-hint').innerHTML='What\'s on your mind?';
-  document.getElementById('ref-body').classList.remove('open');
-  document.getElementById('ref-btn').textContent='▸ More options';
-  document.getElementById('cap-in').value='';
-  document.getElementById('cap-due').value='';
-  document.getElementById('cap-freq').value='';
-  document.getElementById('cap-pri').value='medium';
+  ovr=null;capCtx='work';document.querySelectorAll('.sc').forEach(b=>b.classList.remove('on'));setCtx('work');
+  document.getElementById('detect-hint').innerHTML='What needs to happen?';
+  document.getElementById('sheet-adv').classList.remove('open');document.getElementById('adv-btn').textContent='▸ Options';
+  document.getElementById('cap-in').value='';document.getElementById('cap-due').value='';document.getElementById('cap-freq').value='';document.getElementById('cap-pri').value='medium';
   const fw=document.getElementById('freq-w');if(fw)fw.style.display='none';
   setTimeout(()=>document.getElementById('cap-in').focus(),80);
 }
@@ -1211,49 +1143,27 @@ function bgClick(e){if(e.target===document.getElementById('sheet-bg'))closeSheet
 
 async function submitCap(){
   if(!requireSession())return;
-  const txt=document.getElementById('cap-in').value.trim();
-  if(!txt){showToast('Type something first');return}
-  const type=ovr||dType(txt)||'idea';
-  const pri=document.getElementById('cap-pri').value||'medium';
-  const ctx=capCtx||'work';
-  const due=document.getElementById('cap-due').value;
-  const freq=document.getElementById('cap-freq').value;
-  const effort=dEffort(txt,type);
-  const impP=ctx==='personal'&&dImp(txt);
-  const now=new Date().toISOString();
+  const txt=document.getElementById('cap-in').value.trim();if(!txt){showToast('Type something first');return}
+  const type=ovr||dType(txt)||'idea',pri=document.getElementById('cap-pri').value||'medium',ctx=capCtx||'work';
+  const due=document.getElementById('cap-due').value,freq=document.getElementById('cap-freq').value;
+  const effort=dEffort(txt,type),impP=ctx==='personal'&&dImp(txt),now=new Date().toISOString();
   let item={status:'active',created_at:now,context:ctx,priority:pri,effort,important_personal:impP};
-  if(type==='communication'){
-    const s=txt.toLowerCase();let sc=0,cat='General';
-    if(/neuter|mandul|spay|castrat|potong/.test(s)){cat='Neutering';sc=/subsidis/.test(s)?3:2}
-    else if(/surrender|rehome|re-home|give up/.test(s)){cat='Surrender';sc=2}
-    else if(/volunteer|volunteering/.test(s)){cat='Volunteering';sc=2}
-    else if(/donat|contribut|fund/.test(s)){cat='Donation';sc=2}
-    const confidence=sc>=3?'high':sc>=2?'medium':'low';
-    // simple reply
-    const n=extractName(txt),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';
-    const replies={Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Our intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}Thank you. All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK]. Receipts above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`};
-    item={...item,type:'communication',content:{preview:txt.replace(/\s+/g,' ').slice(0,300),category:cat,confidence,reply:replies[cat]||replies.General,full:txt,tone:'normal'}};
-  }else if(type==='task')item={...item,type:'task',content:{title:txt,due}}
+  if(type==='communication'){const s=txt.toLowerCase();let sc=0,cat='General';if(/neuter|mandul|spay|castrat|potong/.test(s)){cat='Neutering';sc=2}else if(/surrender|rehome|re-home|give up/.test(s)){cat='Surrender';sc=2}else if(/volunteer|volunteering/.test(s)){cat='Volunteering';sc=2}else if(/donat|contribut|fund/.test(s)){cat='Donation';sc=2}const n=extractName(txt),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';const replies={Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK].${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`};item={...item,type:'communication',content:{preview:txt.replace(/\s+/g,' ').slice(0,300),category:cat,confidence:sc>=2?'medium':'low',reply:replies[cat]||replies.General,full:txt,tone:'normal'}}}
+  else if(type==='task')item={...item,type:'task',content:{title:txt,due}}
   else if(type==='reflection')item={...item,type:'reflection',context:'personal',content:{text:txt}}
   else if(type==='obligation')item={...item,type:'obligation',context:ctx,content:{title:txt,due,frequency:freq||null}}
   else if(type==='routine')item={...item,type:'routine',context:'personal',content:{title:txt,frequency:freq||'weekly',last_completed:null}}
   else item={...item,type:'idea',content:{text:txt}}
   document.getElementById('save-btn').disabled=true;
+  // Part G/H: reset override on new item
+  stopOverride=false;continueQuota=0;consecutiveCompletions=0;
   try{const saved=await dbSave(item);if(saved){items.unshift(enrich(saved));render();closeSheet();showToast('Saved')}}catch(e){}
   document.getElementById('save-btn').disabled=false;
 }
 
-function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');renderStream()}
-function setEnergy(level,btn){energy=level;document.querySelectorAll('.eopt').forEach(b=>b.classList.remove('on'));btn.classList.add('on');render()}
-
 let toastT;
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200)}
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape')closeSheet();
-  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSheet()}
-});
-
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2000)}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSheet()}});
 bootstrap();
 </script>
 </body>
