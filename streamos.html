@@ -6,439 +6,562 @@
 <title>StreamOS</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+/* ── Design tokens ─────────────────────────────────────────────────────── */
 :root{
-  --md-bg:#f8f9fa;--md-surface:#fff;--md-surface2:#f1f3f4;--md-surface3:#e8eaed;
-  --md-on-surface:#202124;--md-on-surface2:#5f6368;--md-on-surface3:#80868b;--md-on-surface4:#bdc1c6;
-  --md-border:#dadce0;--md-border-light:#e8eaed;
-  --md-accent:#1a73e8;--md-accent-light:#e8f0fe;--md-accent-dark:#1557b0;
-  --md-green:#188038;--md-green-light:#e6f4ea;--md-green-border:#ceead6;
-  --md-orange:#e37400;--md-orange-light:#fef7e0;--md-orange-border:#fce8b2;
-  --md-red:#d93025;--md-red-light:#fce8e6;--md-red-border:#f5c6c3;
-  --md-blue:#1a73e8;--md-blue-light:#e8f0fe;
-  --md-teal:#007b83;--md-teal-light:#e0f7fa;
-  --md-purple:#7b1fa2;--md-purple-light:#f3e5f5;
-  --md-personal-bg:#e6f4ea;--md-personal-border:#ceead6;
-  --shadow-1:0 1px 2px rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);
-  --shadow-2:0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);
-  --shadow-3:0 4px 8px 3px rgba(60,64,67,.15),0 1px 3px rgba(60,64,67,.3);
-  --r:8px;--r-sm:6px;--r-pill:24px;
-  --font:'Google Sans',Roboto,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --bg:#f8f9fa;--surface:#fff;--surface2:#f1f3f4;--surface3:#e8eaed;
+  --on-s:#202124;--on-s2:#5f6368;--on-s3:#80868b;--on-s4:#bdc1c6;
+  --border:#dadce0;--border-l:#e8eaed;
+  --accent:#1a73e8;--accent-l:#e8f0fe;--accent-d:#1557b0;
+  --green:#188038;--green-l:#e6f4ea;--green-b:#ceead6;
+  --orange:#e37400;--orange-l:#fef7e0;--orange-b:#fce8b2;
+  --red:#d93025;--red-l:#fce8e6;--red-b:#f5c6c3;
+  --teal:#007b83;--teal-l:#e0f7fa;
+  --purple:#7b1fa2;--purple-l:#f3e5f5;
+  --personal-bg:#e6f4ea;--personal-b:#ceead6;
+  --s1:0 1px 2px rgba(60,64,67,.3),0 1px 3px 1px rgba(60,64,67,.15);
+  --s2:0 1px 2px rgba(60,64,67,.3),0 2px 6px 2px rgba(60,64,67,.15);
+  --s3:0 4px 8px 3px rgba(60,64,67,.15),0 1px 3px rgba(60,64,67,.3);
+  --r:8px;--rsm:6px;--rpill:24px;
+  --f:'Google Sans',Roboto,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  /* layout */
+  --content-max:600px;
+  --sidebar-w:280px;
+  --rail-w:240px;
+  --gap:16px;
 }
 @media(prefers-color-scheme:dark){:root{
-  --md-bg:#1c1b1f;--md-surface:#2b2930;--md-surface2:#36343b;--md-surface3:#48464e;
-  --md-on-surface:#e6e1e5;--md-on-surface2:#cac4d0;--md-on-surface3:#938f99;--md-on-surface4:#49454f;
-  --md-border:#49454f;--md-border-light:#36343b;
-  --md-accent:#a8c7fa;--md-accent-light:#1e3354;--md-accent-dark:#d3e3fd;
-  --md-green:#81c995;--md-green-light:#1e3a24;--md-green-border:#2d5a34;
-  --md-orange:#ffb74d;--md-orange-light:#3d2800;--md-orange-border:#5c3a00;
-  --md-red:#f28b82;--md-red-light:#3d0f0a;--md-red-border:#5c1a14;
-  --md-blue:#a8c7fa;--md-blue-light:#1e3354;
-  --md-teal:#80deea;--md-teal-light:#00363a;
-  --md-purple:#ce93d8;--md-purple-light:#3e1045;
-  --md-personal-bg:#1e3a24;--md-personal-border:#2d5a34;
-  --shadow-1:0 1px 2px rgba(0,0,0,.5),0 1px 3px 1px rgba(0,0,0,.3);
-  --shadow-2:0 1px 2px rgba(0,0,0,.5),0 2px 6px 2px rgba(0,0,0,.3);
-  --shadow-3:0 4px 8px 3px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.5);
+  --bg:#1c1b1f;--surface:#2b2930;--surface2:#36343b;--surface3:#48464e;
+  --on-s:#e6e1e5;--on-s2:#cac4d0;--on-s3:#938f99;--on-s4:#49454f;
+  --border:#49454f;--border-l:#36343b;
+  --accent:#a8c7fa;--accent-l:#1e3354;--accent-d:#d3e3fd;
+  --green:#81c995;--green-l:#1e3a24;--green-b:#2d5a34;
+  --orange:#ffb74d;--orange-l:#3d2800;--orange-b:#5c3a00;
+  --red:#f28b82;--red-l:#3d0f0a;--red-b:#5c1a14;
+  --teal:#80deea;--teal-l:#00363a;
+  --purple:#ce93d8;--purple-l:#3e1045;
+  --personal-bg:#1e3a24;--personal-b:#2d5a34;
+  --s1:0 1px 2px rgba(0,0,0,.5),0 1px 3px 1px rgba(0,0,0,.3);
+  --s2:0 1px 2px rgba(0,0,0,.5),0 2px 6px 2px rgba(0,0,0,.3);
+  --s3:0 4px 8px 3px rgba(0,0,0,.3),0 1px 3px rgba(0,0,0,.5);
 }}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--font);background:var(--md-bg);color:var(--md-on-surface);min-height:100vh;-webkit-font-smoothing:antialiased;font-size:14px}
+body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100vh;-webkit-font-smoothing:antialiased;font-size:14px;overflow-x:hidden}
 
-/* ─── Boot overlay ─── */
-#boot-overlay{position:fixed;inset:0;background:var(--md-bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
-#boot-overlay.hidden{display:none}
-.md-spinner{width:36px;height:36px;border:3px solid var(--md-border);border-top-color:var(--md-accent);border-radius:50%;animation:spin .8s linear infinite}
+/* ── Boot overlay ──────────────────────────────────────────────────────── */
+#boot{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+#boot.off{display:none}
+.spinner{width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.boot-label{font-size:14px;color:var(--md-on-surface2);font-weight:500}
-#boot-error{display:none;text-align:center;padding:0 24px}
-.boot-err-title{font-size:16px;font-weight:500;color:var(--md-on-surface);margin-bottom:8px}
-.boot-err-sub{font-size:13px;color:var(--md-on-surface2);margin-bottom:20px;line-height:1.5}
-.boot-err-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.boot-lbl{font-size:14px;color:var(--on-s2);font-weight:500}
+#boot-err{display:none;text-align:center;padding:0 28px}
+.boot-err-h{font-size:16px;font-weight:500;color:var(--on-s);margin-bottom:8px}
+.boot-err-p{font-size:13px;color:var(--on-s2);margin-bottom:20px;line-height:1.5}
+.boot-err-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
-/* ─── Action lock overlay ─── */
-#lock-overlay{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,0.04);pointer-events:none}
-#lock-overlay.show{display:block}
-#lock-badge{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--md-on-surface);color:var(--md-surface);padding:8px 18px;border-radius:var(--r-pill);font-size:13px;font-weight:500;z-index:51;display:none;pointer-events:none;font-family:var(--font)}
+/* ── Lock badge ────────────────────────────────────────────────────────── */
+#lock-badge{position:fixed;top:68px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:7px 16px;border-radius:var(--rpill);font-size:12px;font-weight:600;z-index:300;display:none;pointer-events:none;font-family:var(--f);white-space:nowrap;box-shadow:var(--s2)}
 #lock-badge.show{display:block}
 
-/* ─── Session banner ─── */
-#session-banner{display:none;position:sticky;top:0;z-index:200;background:var(--md-red-light);border-bottom:1px solid var(--md-red-border);padding:10px 16px}
-#session-banner.show{display:block}
-.banner-inner{max-width:600px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.banner-text{font-size:13px;color:var(--md-red);font-weight:500}
+/* ── Session banner ────────────────────────────────────────────────────── */
+#banner{display:none;position:sticky;top:0;z-index:200;background:var(--red-l);border-bottom:1px solid var(--red-b);padding:10px 16px}
+#banner.show{display:block}
+.banner-in{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.banner-txt{font-size:13px;color:var(--red);font-weight:500}
 .banner-btns{display:flex;gap:8px}
 
-/* ─── Material buttons ─── */
-.btn{border:none;cursor:pointer;font-family:var(--font);font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;border-radius:var(--r-pill)}
-.btn-filled{background:var(--md-accent);color:#fff;padding:8px 18px;font-size:13px}.btn-filled:hover{opacity:.9}
-.btn-filled.green{background:var(--md-green)}.btn-filled.red{background:var(--md-red)}
-.btn-tonal{background:var(--md-accent-light);color:var(--md-accent);padding:8px 16px;font-size:13px}.btn-tonal:hover{opacity:.85}
-.btn-outlined{background:transparent;color:var(--md-accent);border:1px solid var(--md-border);padding:7px 15px;font-size:13px}.btn-outlined:hover{background:var(--md-accent-light)}
-.btn-text{background:transparent;color:var(--md-accent);padding:6px 12px;font-size:13px}.btn-text:hover{background:var(--md-accent-light)}
-.btn-text.danger{color:var(--md-red)}.btn-text.danger:hover{background:var(--md-red-light)}
-.btn-text.muted{color:var(--md-on-surface2)}.btn-text.muted:hover{background:var(--md-surface2)}
-.btn-sm{padding:5px 12px;font-size:12px}
+/* ── Buttons ───────────────────────────────────────────────────────────── */
+.btn{border:none;cursor:pointer;font-family:var(--f);font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:opacity .15s;border-radius:var(--rpill)}
+.filled{background:var(--accent);color:#fff;padding:8px 18px;font-size:13px}.filled:hover{opacity:.9}
+.filled.g{background:var(--green)}.filled.r{background:var(--red)}
+.tonal{background:var(--accent-l);color:var(--accent);padding:8px 16px;font-size:13px}.tonal:hover{opacity:.85}
+.outlined{background:transparent;color:var(--accent);border:1px solid var(--border);padding:7px 15px;font-size:13px}.outlined:hover{background:var(--accent-l)}
+.ghost{background:transparent;color:var(--on-s2);padding:6px 12px;font-size:13px}.ghost:hover{background:var(--surface2)}
+.ghost.r{color:var(--red)}.ghost.r:hover{background:var(--red-l)}
+.sm{padding:5px 12px;font-size:12px}
 .btn:disabled{opacity:.38;cursor:not-allowed}
 
-/* ─── Auth ─── */
-#auth-screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;background:var(--md-bg)}
-#auth-screen.show{display:flex}
-.auth-card{background:var(--md-surface);border-radius:12px;padding:40px 32px;max-width:380px;width:100%;box-shadow:var(--shadow-2)}
-.auth-logo{font-size:24px;font-weight:500;color:var(--md-accent);margin-bottom:4px;letter-spacing:-.5px}
-.auth-tagline{font-size:13px;color:var(--md-on-surface2);margin-bottom:32px}
-.auth-label{display:block;font-size:12px;font-weight:500;color:var(--md-on-surface2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
-.auth-input{width:100%;background:var(--md-surface2);border:1px solid var(--md-border);border-radius:var(--r-sm);padding:11px 13px;font-size:14px;color:var(--md-on-surface);font-family:var(--font);outline:none;transition:border-color .15s;margin-bottom:12px}
-.auth-input:focus{border-color:var(--md-accent);background:var(--md-surface)}
-.auth-divider{text-align:center;font-size:12px;color:var(--md-on-surface3);margin:10px 0}
+/* ── Auth ──────────────────────────────────────────────────────────────── */
+#auth{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;background:var(--bg)}
+#auth.show{display:flex}
+.auth-card{background:var(--surface);border-radius:12px;padding:40px 32px;max-width:380px;width:100%;box-shadow:var(--s2)}
+.auth-logo{font-size:24px;font-weight:500;color:var(--accent);margin-bottom:4px;letter-spacing:-.5px}
+.auth-tag{font-size:13px;color:var(--on-s2);margin-bottom:32px}
+.flbl{display:block;font-size:12px;font-weight:500;color:var(--on-s2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+.finput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:11px 13px;font-size:14px;color:var(--on-s);font-family:var(--f);outline:none;transition:border-color .15s;margin-bottom:12px}
+.finput:focus{border-color:var(--accent);background:var(--surface)}
+.auth-div{text-align:center;font-size:12px;color:var(--on-s3);margin:10px 0}
 .auth-msg{font-size:13px;text-align:center;margin-top:12px;min-height:18px}
-.auth-msg.ok{color:var(--md-green)}.auth-msg.err{color:var(--md-red)}
+.auth-msg.ok{color:var(--green)}.auth-msg.err{color:var(--red)}
 
-/* ─── App ─── */
-#app-screen{display:none}
-#app-screen.show{display:block;padding-bottom:90px}
+/* ═══════════════════════════════════════════════════════════════════════
+   APP SHELL — LAYOUT SYSTEM
+   compact  (<720px):  single column, mobile-native
+   medium   (720-1099px): wider single column, more breathing room
+   expanded (≥1100px): three-region desktop layout
+═══════════════════════════════════════════════════════════════════════ */
+#app{display:none}
+#app.show{display:block}
 
-/* ─── Top bar ─── */
-.topbar{position:sticky;top:0;z-index:100;background:var(--md-surface);border-bottom:1px solid var(--md-border-light);padding:0 16px}
-.topbar-inner{max-width:600px;margin:0 auto;height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.topbar-brand{flex:1;min-width:0}
-.topbar-title{font-size:18px;font-weight:500;color:var(--md-accent);letter-spacing:-.3px}
-.topbar-sub{font-size:11px;color:var(--md-on-surface3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.topbar-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.energy-group{display:flex;background:var(--md-surface2);border:1px solid var(--md-border);border-radius:var(--r-pill);overflow:hidden}
-.energy-opt{border:none;background:transparent;font-family:var(--font);font-size:12px;font-weight:500;color:var(--md-on-surface2);padding:5px 12px;cursor:pointer;transition:all .15s;white-space:nowrap}
-.energy-opt.active{background:var(--md-accent);color:#fff}
-.sync-chip{font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--r-pill);border:1px solid var(--md-border);background:var(--md-surface2);color:var(--md-on-surface2);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:var(--font)}
-.sync-chip:hover{border-color:var(--md-accent);color:var(--md-accent)}
-.sync-chip.saving{background:var(--md-orange-light);border-color:var(--md-orange-border);color:var(--md-orange)}
-.sync-chip.error{background:var(--md-red-light);border-color:var(--md-red-border);color:var(--md-red)}
-.sync-chip.reconnecting{background:var(--md-blue-light);border-color:var(--md-border);color:var(--md-blue)}
+/* ── Topbar ────────────────────────────────────────────────────────────── */
+.topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border-l);padding:0 var(--gap)}
+.topbar-in{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:1280px;margin:0 auto}
+.brand{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
+.brand-title{font-size:18px;font-weight:500;color:var(--accent);letter-spacing:-.3px}
+.brand-sub{font-size:11px;color:var(--on-s3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.focus-lbl{font-size:11px;font-weight:600;color:var(--on-s3);text-transform:uppercase;letter-spacing:.5px;display:none}
+.energy-grp{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rpill);overflow:hidden}
+.eopt{border:none;background:transparent;font-family:var(--f);font-size:12px;font-weight:500;color:var(--on-s2);padding:5px 11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.eopt.on{background:var(--accent);color:#fff}
+.sync-chip{font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--rpill);border:1px solid var(--border);background:var(--surface2);color:var(--on-s2);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:var(--f)}
+.sync-chip:hover{border-color:var(--accent);color:var(--accent)}
+.sync-chip.saving{background:var(--orange-l);border-color:var(--orange-b);color:var(--orange)}
+.sync-chip.err{background:var(--red-l);border-color:var(--red-b);color:var(--red)}
+.sync-chip.reconn{background:var(--accent-l);border-color:var(--border);color:var(--accent)}
 
-/* ─── Filter ─── */
-.filter-row{max-width:600px;margin:0 auto;padding:10px 16px 4px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
-.filter-row::-webkit-scrollbar{display:none}
-.md-chip{border:1px solid var(--md-border);background:var(--md-surface);color:var(--md-on-surface2);font-size:13px;font-weight:500;padding:5px 14px;border-radius:var(--r-pill);cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--font)}
-.md-chip.active{background:var(--md-accent-light);color:var(--md-accent);border-color:var(--md-accent)}
+/* ── COMPACT layout (default / mobile) ────────────────────────────────── */
+.app-body{max-width:var(--content-max);margin:0 auto;padding:0}
 
-/* ─── Content ─── */
-.content{max-width:600px;margin:0 auto;padding:12px 16px 0}
+/* Filters */
+.filters{padding:10px 16px 4px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--border);background:var(--surface);color:var(--on-s2);font-size:13px;font-weight:500;padding:5px 14px;border-radius:var(--rpill);cursor:pointer;white-space:nowrap;transition:all .15s;font-family:var(--f)}
+.chip.on{background:var(--accent-l);color:var(--accent);border-color:var(--accent)}
 
-/* ─── Guidance ─── */
-.gc{border-radius:var(--r);padding:16px;margin-bottom:10px;background:var(--md-surface);box-shadow:var(--shadow-1);transition:box-shadow .2s}
-.gc:hover{box-shadow:var(--shadow-2)}
-.gc.next-action{background:var(--md-accent-light);border-left:3px solid var(--md-accent)}
-.gc.personal-must{background:var(--md-personal-bg);border-left:3px solid var(--md-green)}
-.gc.nudge{background:var(--md-surface2);box-shadow:none;border:1px solid var(--md-border-light)}
-.gc.stop{background:var(--md-green-light);border-left:3px solid var(--md-green);text-align:center}
-.gc.pulse{animation:gpulse .9s ease}
-@keyframes gpulse{0%{box-shadow:var(--shadow-1)}50%{box-shadow:0 0 0 4px rgba(26,115,232,.18)}100%{box-shadow:var(--shadow-1)}}
-.gc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--md-on-surface3);margin-bottom:8px}
-.gc-label.accent{color:var(--md-accent)}.gc-label.green{color:var(--md-green)}
-.gc-row{display:flex;align-items:center;gap:12px}
-.gc-text{flex:1;min-width:0;cursor:pointer}
-.gc-title{font-size:15px;font-weight:500;color:var(--md-on-surface);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.gc-meta{font-size:12px;color:var(--md-on-surface2);margin-top:3px}
-.nudge-text{font-size:13px;color:var(--md-on-surface2);line-height:1.5;font-style:italic}
-.stop-title{font-size:15px;font-weight:500;color:var(--md-green);margin-bottom:4px}
-.stop-sub{font-size:13px;color:var(--md-green);opacity:.85}
+/* Main regions */
+.region-guidance{padding:12px 16px 0}
+.region-focus{padding:0 16px}
+.region-stream{padding:4px 16px}
+.region-later{padding:4px 16px}
+.region-bottom{padding:8px 16px}
 
-/* ─── Focus row ─── */
-.focus-card{background:var(--md-surface);border-radius:var(--r);box-shadow:var(--shadow-1);margin-bottom:10px;overflow:hidden}
-.focus-header{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--md-on-surface3);padding:12px 16px 8px}
+/* ── MEDIUM layout (720px+) ────────────────────────────────────────────── */
+@media(min-width:720px){
+  :root{--content-max:680px;--gap:20px}
+  .app-body{max-width:780px;padding:0}
+  .topbar-in{gap:16px}
+  .focus-lbl{display:block}
+  .region-guidance{padding:16px 20px 0}
+  .region-focus{padding:0 20px}
+  .region-stream{padding:4px 20px}
+  .region-later{padding:4px 20px}
+  .region-bottom{padding:10px 20px}
+  .filters{padding:12px 20px 4px;flex-wrap:wrap;overflow:visible}
+  .card-in{padding:16px 18px 14px}
+}
+
+/* ── EXPANDED layout (1100px+) ─────────────────────────────────────────── */
+@media(min-width:1100px){
+  :root{--gap:24px}
+
+  /* Three-region grid: left-rail | main | right-rail */
+  .app-body{
+    max-width:1280px;
+    padding:0 var(--gap);
+    display:grid;
+    grid-template-columns:var(--rail-w) 1fr var(--sidebar-w);
+    grid-template-rows:auto;
+    gap:0 20px;
+    align-items:start;
+  }
+
+  /* Left rail: guidance + focus — sticky */
+  .left-rail{
+    grid-column:1;
+    grid-row:1/10;
+    position:sticky;
+    top:72px;
+    max-height:calc(100vh - 88px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:thin;
+    padding:16px 0 20px;
+  }
+  .left-rail::-webkit-scrollbar{width:4px}
+  .left-rail::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+  /* Main column: filters + stream */
+  .main-col{
+    grid-column:2;
+    grid-row:1/10;
+    padding:16px 0 100px;
+    min-width:0;
+  }
+
+  /* Right rail: later / done / archived */
+  .right-rail{
+    grid-column:3;
+    grid-row:1/10;
+    position:sticky;
+    top:72px;
+    max-height:calc(100vh - 88px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:thin;
+    padding:16px 0 20px;
+  }
+  .right-rail::-webkit-scrollbar{width:4px}
+  .right-rail::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+  /* Move guidance + focus into left rail */
+  .region-guidance,.region-focus{padding:0 0 10px}
+  .region-stream{padding:0}
+  .region-later,.region-bottom{padding:0 0 8px}
+
+  /* Filters inside main col */
+  .filters{padding:0 0 12px;flex-wrap:wrap;overflow:visible;gap:6px}
+
+  /* Expanded cards get more room */
+  .card-in{padding:16px 20px 14px}
+
+  /* FAB moves to bottom-right of viewport, slightly inward */
+  .fab{right:calc(var(--sidebar-w) + var(--gap) + 20px) !important;transform:none !important;bottom:28px}
+
+  /* Section labels bigger */
+  .slbl{font-size:11px;padding:10px 0 5px}
+
+  /* Right rail section labels */
+  .rail-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--on-s3);padding:4px 0 8px;display:flex;align-items:center;gap:8px}
+  .rail-lbl::after{content:'';flex:1;height:1px;background:var(--border-l)}
+}
+
+/* Guidance */
+.gc{border-radius:var(--r);padding:14px 16px;margin-bottom:10px;background:var(--surface);box-shadow:var(--s1)}
+.gc:hover{box-shadow:var(--s2)}
+.gc.na{background:var(--accent-l);border-left:3px solid var(--accent)}
+.gc.pm{background:var(--personal-bg);border-left:3px solid var(--green)}
+.gc.nudge{background:var(--surface2);box-shadow:none;border:1px solid var(--border-l)}
+.gc.stop{background:var(--green-l);border-left:3px solid var(--green);text-align:center}
+.gc.pulse{animation:gp .9s ease}
+@keyframes gp{0%{box-shadow:var(--s1)}50%{box-shadow:0 0 0 4px rgba(26,115,232,.15)}100%{box-shadow:var(--s1)}}
+.gc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--on-s3);margin-bottom:7px}
+.gc-lbl.a{color:var(--accent)}.gc-lbl.g{color:var(--green)}
+.gc-row{display:flex;align-items:center;gap:10px}
+.gc-txt{flex:1;min-width:0;cursor:pointer}
+.gc-title{font-size:14px;font-weight:500;color:var(--on-s);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-meta{font-size:12px;color:var(--on-s2);margin-top:2px}
+.nudge-txt{font-size:13px;color:var(--on-s2);line-height:1.5;font-style:italic}
+.stop-h{font-size:14px;font-weight:500;color:var(--green);margin-bottom:4px}
+.stop-s{font-size:12px;color:var(--green);opacity:.85}
+
+/* Focus card */
+.focus-card{background:var(--surface);border-radius:var(--r);box-shadow:var(--s1);margin-bottom:10px;overflow:hidden}
+.focus-hd{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--on-s3);padding:10px 14px 7px}
 .focus-list{display:flex;flex-direction:column}
-.focus-item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-top:1px solid var(--md-border-light);cursor:pointer;transition:background .12s}
-.focus-item:first-child{border-top:none}
-.focus-item:hover{background:var(--md-surface2)}
-.focus-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--md-border)}
-.focus-dot.green{background:var(--md-green)}.focus-dot.blue{background:var(--md-accent)}.focus-dot.red{background:var(--md-red)}
-.focus-label{font-size:13px;color:var(--md-on-surface);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.focus-tag{font-size:11px;color:var(--md-on-surface3)}
-.focus-remove{border:none;background:none;color:var(--md-on-surface3);cursor:pointer;font-size:14px;padding:2px 6px;border-radius:4px}
-.focus-remove:hover{color:var(--md-red);background:var(--md-red-light)}
+.focus-row{display:flex;align-items:center;gap:10px;padding:8px 14px;border-top:1px solid var(--border-l);cursor:pointer;transition:background .12s}
+.focus-row:first-child{border-top:none}
+.focus-row:hover{background:var(--surface2)}
+.fdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--border)}
+.fdot.g{background:var(--green)}.fdot.b{background:var(--accent)}.fdot.r{background:var(--red)}
+.flabel{font-size:13px;color:var(--on-s);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ftag{font-size:11px;color:var(--on-s3)}
+.fremove{border:none;background:none;color:var(--on-s3);cursor:pointer;font-size:13px;padding:2px 6px;border-radius:4px}
+.fremove:hover{color:var(--red);background:var(--red-l)}
 
-/* ─── Stream ─── */
+/* Stream */
 .stream{display:flex;flex-direction:column;gap:8px}
-.sec-label{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--md-on-surface3);padding:8px 0 4px;display:flex;align-items:center;gap:10px}
-.sec-label::after{content:'';flex:1;height:1px;background:var(--md-border-light)}
-.empty-state{text-align:center;padding:48px 20px;color:var(--md-on-surface2)}
-.empty-icon{font-size:40px;margin-bottom:10px}
-.empty-text{font-size:14px;line-height:1.5}
-.stream-error{display:flex;flex-direction:column;align-items:center;gap:12px;padding:48px 20px}
-.stream-error p{font-size:14px;color:var(--md-on-surface2);text-align:center;line-height:1.5}
+.slbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--on-s3);padding:8px 0 4px;display:flex;align-items:center;gap:10px}
+.slbl::after{content:'';flex:1;height:1px;background:var(--border-l)}
+.empty{text-align:center;padding:48px 20px;color:var(--on-s2)}
+.empty-ic{font-size:40px;margin-bottom:10px}
+.stream-err{display:flex;flex-direction:column;align-items:center;gap:12px;padding:48px 20px}
+.stream-err p{font-size:14px;color:var(--on-s2);text-align:center;line-height:1.55}
 
-/* ─── Cards ─── */
-.card{background:var(--md-surface);border-radius:var(--r);box-shadow:var(--shadow-1);overflow:hidden;transition:box-shadow .2s,opacity .2s}
-.card:hover{box-shadow:var(--shadow-2)}
-.card.done{opacity:.45}
-.card.locked{opacity:.6;pointer-events:none}
-.card-stripe{height:4px}
-.card-stripe.task{background:var(--md-accent)}.card-stripe.idea{background:var(--md-orange)}
-.card-stripe.reflection{background:var(--md-purple)}.card-stripe.obligation{background:var(--md-orange)}
-.card-stripe.routine{background:var(--md-teal)}.card-stripe.communication{background:var(--md-blue)}
-.card-inner{padding:14px 16px 12px}
-.card.personal .card-inner{background:var(--md-personal-bg)}
-.card.type-reflection .card-inner{background:var(--md-purple-light)}
-.card.type-routine .card-inner{background:var(--md-teal-light)}
-.card.type-obligation .card-inner{background:var(--md-orange-light)}
-.card.urgent .card-inner{background:var(--md-red-light)}
-.card.chain-next{animation:gpulse .9s ease}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
-.card-chips{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-.mc{font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--r-pill)}
-.mc-task{background:var(--md-blue-light);color:var(--md-blue)}.mc-idea{background:var(--md-orange-light);color:var(--md-orange)}
-.mc-reflection{background:var(--md-purple-light);color:var(--md-purple)}.mc-obligation{background:var(--md-orange-light);color:var(--md-orange);border:1px solid var(--md-orange-border)}
-.mc-routine{background:var(--md-teal-light);color:var(--md-teal)}.mc-communication{background:var(--md-blue-light);color:var(--md-blue)}
-.mc-high{background:var(--md-red-light);color:var(--md-red)}.mc-overdue{background:var(--md-red);color:#fff}
-.mc-imp{background:var(--md-orange-light);color:var(--md-orange)}.mc-ctx{background:var(--md-surface3);color:var(--md-on-surface2);cursor:pointer;border:none;font-family:var(--font);font-size:11px;font-weight:500;padding:3px 8px;border-radius:var(--r-pill)}
-.mc-ctx:hover{background:var(--md-accent-light);color:var(--md-accent)}
-.card-time{font-size:11px;color:var(--md-on-surface3);white-space:nowrap;flex-shrink:0}
-.card-title{font-size:15px;font-weight:400;color:var(--md-on-surface);line-height:1.4;margin-bottom:4px}
-.card-due{font-size:12px;color:var(--md-on-surface2);margin-bottom:8px}
-.card-due.ov{color:var(--md-red);font-weight:500}
-.card-body{font-size:14px;color:var(--md-on-surface);line-height:1.55;margin-bottom:10px;word-break:break-word}
-.card-body.reflect{font-style:italic;color:var(--md-on-surface2);font-size:14px;line-height:1.65}
-.inline-edit{width:100%;background:var(--md-surface2);border:1px solid var(--md-accent);border-radius:var(--r-sm);padding:8px 10px;font-size:14px;color:var(--md-on-surface);font-family:var(--font);outline:none;margin-bottom:8px}
+/* Cards */
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--s1);overflow:hidden;transition:box-shadow .2s,opacity .2s}
+.card:hover{box-shadow:var(--s2)}
+.card.done{opacity:.42}
+.card.chain{animation:gp .9s ease}
+.stripe{height:4px}
+.stripe.task{background:var(--accent)}.stripe.idea{background:var(--orange)}
+.stripe.reflection{background:var(--purple)}.stripe.obligation{background:var(--orange)}
+.stripe.routine{background:var(--teal)}.stripe.communication{background:#1a73e8}
+.card-in{padding:13px 15px 11px}
+.card.personal .card-in{background:var(--personal-bg)}
+.card.type-reflection .card-in{background:var(--purple-l)}
+.card.type-routine .card-in{background:var(--teal-l)}
+.card.type-obligation .card-in{background:var(--orange-l)}
+.card.urgent .card-in{background:var(--red-l)}
+.card.locked .card-in{opacity:.65}
+.card.locked .ca:not(.ca-safe){pointer-events:none;opacity:.35}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
+.card-chips{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.mc{font-size:11px;font-weight:500;padding:2px 7px;border-radius:var(--rpill)}
+.mc-overdue{background:var(--red);color:#fff}
+.mc-due{background:var(--red-l);color:var(--red)}
+.mc-imp{background:var(--orange-l);color:var(--orange)}
+.mc-ctx{background:var(--surface3);color:var(--on-s2);cursor:pointer;border:none;font-family:var(--f);font-size:11px;font-weight:500;padding:2px 7px;border-radius:var(--rpill)}
+.mc-ctx:hover{background:var(--accent-l);color:var(--accent)}
+.mc-cat{background:var(--accent-l);color:var(--accent)}
+.card-time{font-size:11px;color:var(--on-s3);white-space:nowrap;flex-shrink:0}
+.card-title{font-size:15px;font-weight:400;color:var(--on-s);line-height:1.4;margin-bottom:4px}
+.card-due{font-size:12px;color:var(--on-s2);margin-bottom:7px}
+.card-due.ov{color:var(--red);font-weight:500}
+.card-body{font-size:14px;color:var(--on-s);line-height:1.55;margin-bottom:9px;word-break:break-word}
+.card-body.rfl{font-style:italic;color:var(--on-s2);line-height:1.65}
+.inline-edit{width:100%;background:var(--surface2);border:1px solid var(--accent);border-radius:var(--rsm);padding:8px 10px;font-size:14px;color:var(--on-s);font-family:var(--f);outline:none;margin-bottom:8px}
+.routine-sub{font-size:12px;color:var(--teal);font-weight:500;margin-bottom:8px}
 .card-actions{display:flex;gap:4px;flex-wrap:wrap;align-items:center;margin-top:4px}
-.ca{border:none;cursor:pointer;font-family:var(--font);font-weight:500;font-size:12px;padding:6px 12px;border-radius:var(--r-pill);transition:all .12s}
-.ca-done{background:var(--md-green);color:#fff}.ca-done:hover{opacity:.9}
-.ca-primary{background:var(--md-accent);color:#fff}.ca-primary:hover{opacity:.9}
-.ca-tonal{background:var(--md-accent-light);color:var(--md-accent)}.ca-tonal:hover{opacity:.85}
-.ca-muted{background:var(--md-surface2);color:var(--md-on-surface2)}.ca-muted:hover{background:var(--md-surface3)}
-.ca-danger{background:transparent;color:var(--md-red);padding:6px 8px}.ca-danger:hover{background:var(--md-red-light)}
-.ca-imp.on{background:var(--md-orange-light);color:var(--md-orange)}.ca-imp{background:var(--md-surface2);color:var(--md-on-surface2)}
-.ca-pin.on{background:var(--md-accent-light);color:var(--md-accent)}.ca-pin{background:var(--md-surface2);color:var(--md-on-surface2)}
+.ca{border:none;cursor:pointer;font-family:var(--f);font-weight:500;font-size:12px;padding:6px 12px;border-radius:var(--rpill);transition:all .12s}
+.ca-done{background:var(--green);color:#fff}.ca-done:hover{opacity:.9}
+.ca-primary{background:var(--accent);color:#fff}.ca-primary:hover{opacity:.9}
+.ca-tonal{background:var(--accent-l);color:var(--accent)}.ca-tonal:hover{opacity:.85}
+.ca-muted{background:var(--surface2);color:var(--on-s2)}.ca-muted:hover{background:var(--surface3)}
+.ca-danger{background:transparent;color:var(--red);padding:6px 8px}.ca-danger:hover{background:var(--red-l)}
+.ca-imp.on{background:var(--orange-l);color:var(--orange)}.ca-imp{background:var(--surface2);color:var(--on-s2)}
+.ca-pin.on{background:var(--accent-l);color:var(--accent)}.ca-pin{background:var(--surface2);color:var(--on-s2)}
 .ca:disabled{opacity:.35;cursor:not-allowed}
-.routine-sub{font-size:12px;color:var(--md-teal);font-weight:500;margin-bottom:8px}
+.review-row{display:flex;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border-l);align-items:center}
+.rlbl{font-size:11px;color:var(--on-s3);font-weight:500;margin-right:2px}
 
-/* ─── Reply ─── */
-.reply-wrap{background:var(--md-surface2);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px}
-.reply-eyebrow{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--md-on-surface3);margin-bottom:6px}
-.reply-body{font-size:13px;color:var(--md-on-surface2);line-height:1.6;white-space:pre-wrap}
-.reply-edit{width:100%;background:var(--md-surface);border:1px solid var(--md-accent);border-radius:var(--r-sm);padding:9px 11px;font-size:13px;color:var(--md-on-surface);line-height:1.6;resize:vertical;min-height:80px;font-family:var(--font);outline:none}
-.tone-row{display:flex;gap:5px;margin-bottom:9px;align-items:center}
-.tone-lbl{font-size:11px;color:var(--md-on-surface3);font-weight:500;margin-right:2px}
-.tone-btn{border:1px solid var(--md-border);background:none;font-size:11px;font-weight:500;padding:3px 9px;border-radius:var(--r-pill);cursor:pointer;color:var(--md-on-surface2);font-family:var(--font);transition:all .12s}
-.tone-btn.active{background:var(--md-accent);color:#fff;border-color:var(--md-accent)}
-.review-row{display:flex;gap:5px;margin-top:8px;padding-top:8px;border-top:1px solid var(--md-border-light);align-items:center}
-.review-lbl{font-size:11px;color:var(--md-on-surface3);font-weight:500;margin-right:2px}
+/* Reply */
+.reply-wrap{background:var(--surface2);border-radius:var(--rsm);padding:11px 13px;margin-bottom:10px}
+.reply-ey{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--on-s3);margin-bottom:5px}
+.reply-body{font-size:13px;color:var(--on-s2);line-height:1.6;white-space:pre-wrap}
+.reply-edit{width:100%;background:var(--surface);border:1px solid var(--accent);border-radius:var(--rsm);padding:9px 11px;font-size:13px;color:var(--on-s);line-height:1.6;resize:vertical;min-height:80px;font-family:var(--f);outline:none}
+.tone-row{display:flex;gap:5px;margin-bottom:8px;align-items:center}
+.tlbl{font-size:11px;color:var(--on-s3);font-weight:500;margin-right:2px}
+.tbtn{border:1px solid var(--border);background:none;font-size:11px;font-weight:500;padding:3px 9px;border-radius:var(--rpill);cursor:pointer;color:var(--on-s2);font-family:var(--f);transition:all .12s}
+.tbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-/* ─── Low mode ─── */
-body.low .low-hide{display:none!important}
-
-/* ─── Bottom ─── */
-.bottom{max-width:600px;margin:0 auto;padding:8px 16px;display:flex;flex-direction:column;gap:6px}
-.coll-btn{width:100%;background:none;border:1px solid var(--md-border-light);border-radius:var(--r-sm);padding:10px 14px;font-size:13px;font-weight:500;color:var(--md-on-surface2);cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:space-between;transition:all .15s}
-.coll-btn:hover{border-color:var(--md-accent);color:var(--md-accent)}
+/* Collapse sections */
+.coll-section{margin-bottom:8px}
+.coll-btn{width:100%;background:none;border:1px solid var(--border-l);border-radius:var(--rsm);padding:9px 13px;font-size:13px;font-weight:500;color:var(--on-s2);cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:space-between;transition:all .15s}
+.coll-btn:hover{border-color:var(--accent);color:var(--accent)}
 .coll-body{display:none;flex-direction:column;gap:7px;margin-top:6px}
 .coll-body.open{display:flex}
 
-/* ─── FAB ─── */
-.fab{position:fixed;bottom:24px;right:50%;transform:translateX(calc(50% + 316px));background:var(--md-accent);color:#fff;border:none;border-radius:var(--r-pill);padding:0 22px;height:52px;font-size:14px;font-weight:500;cursor:pointer;box-shadow:var(--shadow-3);display:flex;align-items:center;gap:8px;z-index:200;font-family:var(--font);transition:opacity .15s}
-.fab:hover{opacity:.92}
-.fab:disabled{opacity:.35;cursor:not-allowed}
-@media(max-width:760px){.fab{right:16px;transform:none}}
+/* Low mode */
+body.low .low-hide{display:none!important}
 
-/* ─── Sheet ─── */
+/* FAB */
+.fab{position:fixed;bottom:24px;right:20px;background:var(--accent);color:#fff;border:none;border-radius:var(--rpill);padding:0 22px;height:52px;font-size:14px;font-weight:500;cursor:pointer;box-shadow:var(--s3);display:flex;align-items:center;gap:8px;z-index:200;font-family:var(--f);transition:opacity .15s,right .3s}
+.fab:hover{opacity:.92}.fab:disabled{opacity:.35;cursor:not-allowed}
+@media(min-width:720px){.fab{right:24px}}
+
+/* ── SHEET / MODAL ─────────────────────────────────────────────────────── */
 .sheet-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;align-items:flex-end;justify-content:center}
 .sheet-bg.open{display:flex}
-@media(min-width:600px){.sheet-bg{align-items:center;padding:20px}}
-.sheet{background:var(--md-surface);border-radius:16px 16px 0 0;width:100%;max-width:600px;padding:0 0 36px;box-shadow:var(--shadow-3);max-height:90vh;overflow-y:auto}
-@media(min-width:600px){.sheet{border-radius:16px;max-height:78vh}}
-.sheet-drag{width:36px;height:4px;background:var(--md-border);border-radius:2px;margin:10px auto 16px}
-@media(min-width:600px){.sheet-drag{display:none}}
+.sheet{background:var(--surface);border-radius:16px 16px 0 0;width:100%;max-width:600px;padding:0 0 36px;box-shadow:var(--s3);max-height:90vh;overflow-y:auto}
+.sheet-drag{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 16px}
+/* On medium+, become centered modal */
+@media(min-width:720px){
+  .sheet-bg{align-items:center;padding:20px}
+  .sheet{border-radius:16px;max-height:78vh}
+  .sheet-drag{display:none}
+}
 .sheet-body{padding:0 20px}
-.detect-hint{font-size:12px;color:var(--md-on-surface3);margin-bottom:8px;min-height:18px;font-weight:500}
-.detect-hint span{color:var(--md-accent)}
-.cap-textarea{width:100%;background:var(--md-surface2);border:1px solid var(--md-border);border-radius:var(--r-sm);padding:13px;font-size:15px;color:var(--md-on-surface);font-family:var(--font);outline:none;resize:none;min-height:80px;line-height:1.5;transition:border-color .15s}
-.cap-textarea:focus{border-color:var(--md-accent);background:var(--md-surface)}
-.sheet-row{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap}
-.row-label{font-size:12px;font-weight:600;color:var(--md-on-surface2);white-space:nowrap}
-.sel-chip{border:1px solid var(--md-border);background:none;font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--r-pill);cursor:pointer;color:var(--md-on-surface2);font-family:var(--font);transition:all .12s;white-space:nowrap}
-.sel-chip.active{background:var(--md-accent-light);color:var(--md-accent);border-color:var(--md-accent)}
-.sel-chip.ctx-p.active{background:var(--md-personal-bg);color:var(--md-green);border-color:var(--md-green)}
-.refine-toggle{border:none;background:none;font-size:12px;color:var(--md-on-surface2);cursor:pointer;font-family:var(--font);margin-top:12px;font-weight:500;padding:2px 0}
-.refine-toggle:hover{color:var(--md-accent)}
-.refine-body{display:none;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--md-border-light)}
-.refine-body.open{display:flex}
-.field-lbl{display:block;font-size:12px;font-weight:600;color:var(--md-on-surface2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
-.field-input,.field-select{width:100%;background:var(--md-surface2);border:1px solid var(--md-border);border-radius:var(--r-sm);padding:9px 12px;font-size:13px;color:var(--md-on-surface);font-family:var(--font);outline:none;transition:border-color .15s}
-.field-input:focus,.field-select:focus{border-color:var(--md-accent)}
+.detect-hint{font-size:12px;color:var(--on-s3);margin-bottom:8px;min-height:18px;font-weight:500}
+.detect-hint span{color:var(--accent)}
+.cap-ta{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:13px;font-size:15px;color:var(--on-s);font-family:var(--f);outline:none;resize:none;min-height:80px;line-height:1.5;transition:border-color .15s}
+.cap-ta:focus{border-color:var(--accent);background:var(--surface)}
+.srow{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap}
+.srow-lbl{font-size:12px;font-weight:600;color:var(--on-s2);white-space:nowrap}
+.sc{border:1px solid var(--border);background:none;font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--rpill);cursor:pointer;color:var(--on-s2);font-family:var(--f);transition:all .12s;white-space:nowrap}
+.sc.on{background:var(--accent-l);color:var(--accent);border-color:var(--accent)}
+.sc.ctx-p.on{background:var(--personal-bg);color:var(--green);border-color:var(--green)}
+.ref-toggle{border:none;background:none;font-size:12px;color:var(--on-s2);cursor:pointer;font-family:var(--f);margin-top:12px;font-weight:500;padding:2px 0}
+.ref-toggle:hover{color:var(--accent)}
+.ref-body{display:none;flex-direction:column;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border-l)}
+.ref-body.open{display:flex}
+.flbl2{display:block;font-size:12px;font-weight:600;color:var(--on-s2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.fi,.fsel{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--rsm);padding:9px 12px;font-size:13px;color:var(--on-s);font-family:var(--f);outline:none;transition:border-color .15s}
+.fi:focus,.fsel:focus{border-color:var(--accent)}
 
-/* ─── Toasts ─── */
-.undo-bar{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--md-on-surface);color:var(--md-surface);padding:10px 16px;border-radius:var(--r-pill);font-size:13px;font-weight:500;z-index:999;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-3);opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--font)}
+/* Undo / toast */
+.undo-bar{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:10px 16px;border-radius:var(--rpill);font-size:13px;font-weight:500;z-index:999;display:flex;align-items:center;gap:12px;box-shadow:var(--s3);opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--f)}
 .undo-bar.show{opacity:1;pointer-events:all}
-.undo-action{background:var(--md-accent);color:#fff;border:none;border-radius:var(--r-pill);padding:4px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font)}
-.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--md-on-surface);color:var(--md-surface);padding:10px 20px;border-radius:var(--r-pill);font-size:13px;font-weight:500;z-index:998;opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--font);white-space:nowrap}
+.undo-act{background:var(--accent);color:#fff;border:none;border-radius:var(--rpill);padding:4px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f)}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:10px 20px;border-radius:var(--rpill);font-size:13px;font-weight:500;z-index:998;opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--f);white-space:nowrap}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
 
-<!-- Boot overlay -->
-<div id="boot-overlay">
-  <div id="boot-spinner" class="md-spinner"></div>
-  <div id="boot-label" class="boot-label">Starting up…</div>
-  <div id="boot-error">
-    <div class="boot-err-title">Couldn't load StreamOS</div>
-    <div class="boot-err-sub" id="boot-err-sub">Something went wrong. Check your connection.</div>
-    <div class="boot-err-actions">
-      <button class="btn btn-filled" onclick="retryBoot()">Try again</button>
-      <button class="btn btn-outlined" onclick="signOut()">Sign out</button>
+<div id="boot">
+  <div id="boot-spin" class="spinner"></div>
+  <div id="boot-lbl" class="boot-lbl">Starting up…</div>
+  <div id="boot-err">
+    <div class="boot-err-h">Couldn't start StreamOS</div>
+    <div class="boot-err-p" id="boot-err-p">Check your connection and try again.</div>
+    <div class="boot-err-btns">
+      <button class="btn filled sm" onclick="retryBoot()">Try again</button>
+      <button class="btn outlined sm" onclick="signOut()">Sign out</button>
     </div>
   </div>
 </div>
 
-<!-- Action lock overlay -->
-<div id="lock-overlay"></div>
-<div id="lock-badge">Paused — session lost</div>
+<div id="lock-badge"></div>
 
-<!-- Session banner -->
-<div id="session-banner">
-  <div class="banner-inner">
-    <span class="banner-text" id="banner-msg">Session expired. Your changes are paused.</span>
+<div id="banner">
+  <div class="banner-in">
+    <span class="banner-txt" id="banner-msg">Session expired.</span>
     <div class="banner-btns">
-      <button class="btn btn-outlined btn-sm" onclick="handleReconnect()">Reconnect</button>
-      <button class="btn btn-filled btn-sm red" onclick="signOut()">Sign out</button>
+      <button class="btn outlined sm" onclick="handleReconnect()">Reconnect</button>
+      <button class="btn filled sm r" onclick="signOut()">Sign out</button>
     </div>
   </div>
 </div>
 
-<!-- Auth -->
-<div id="auth-screen">
+<div id="auth">
   <div class="auth-card">
     <div class="auth-logo">StreamOS</div>
-    <div class="auth-tagline">Your personal operating system</div>
+    <div class="auth-tag">Your personal operating system</div>
     <div id="auth-magic">
-      <label class="auth-label">Email</label>
-      <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" autocomplete="email">
-      <button class="btn btn-filled" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="sendMagicLink()">Send magic link</button>
-      <div class="auth-divider">or</div>
-      <button class="btn btn-outlined" style="width:100%;justify-content:center;padding:10px;font-size:13px" onclick="showPwForm()">Sign in with password</button>
+      <label class="flbl">Email</label>
+      <input class="finput" id="auth-email" type="email" placeholder="you@example.com" autocomplete="email">
+      <button class="btn filled" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="sendMagicLink()">Send magic link</button>
+      <div class="auth-div">or</div>
+      <button class="btn outlined" style="width:100%;justify-content:center;padding:10px;font-size:13px" onclick="showPwForm()">Sign in with password</button>
     </div>
     <div id="auth-pw" style="display:none">
-      <label class="auth-label">Email</label>
-      <input class="auth-input" id="pw-email" type="email" placeholder="you@example.com" autocomplete="email">
-      <label class="auth-label">Password</label>
-      <input class="auth-input" id="pw-pass" type="password" placeholder="••••••••" autocomplete="current-password">
-      <button class="btn btn-filled" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="signInPw()">Sign in</button>
-      <div style="margin-top:8px"><button class="btn btn-text muted" style="font-size:13px" onclick="showMagicForm()">Use magic link instead</button></div>
+      <label class="flbl">Email</label>
+      <input class="finput" id="pw-email" type="email" placeholder="you@example.com" autocomplete="email">
+      <label class="flbl">Password</label>
+      <input class="finput" id="pw-pass" type="password" placeholder="••••••••" autocomplete="current-password">
+      <button class="btn filled" style="width:100%;justify-content:center;padding:11px;font-size:14px" onclick="signInPw()">Sign in</button>
+      <div style="margin-top:8px"><button class="btn ghost sm" onclick="showMagicForm()">Use magic link instead</button></div>
     </div>
     <div class="auth-msg" id="auth-msg"></div>
   </div>
 </div>
 
-<!-- App -->
-<div id="app-screen">
+<div id="app">
   <div class="topbar">
-    <div class="topbar-inner">
-      <div class="topbar-brand">
-        <div class="topbar-title">StreamOS</div>
-        <div class="topbar-sub" id="topbar-sub">—</div>
+    <div class="topbar-in">
+      <div class="brand">
+        <div class="brand-title">StreamOS</div>
+        <div class="brand-sub" id="topbar-sub">—</div>
       </div>
-      <div class="topbar-controls">
-        <div class="energy-group">
-          <button class="energy-opt" onclick="setEnergy('low',this)">Low</button>
-          <button class="energy-opt active" onclick="setEnergy('medium',this)">Med</button>
-          <button class="energy-opt" onclick="setEnergy('high',this)">High</button>
+      <div class="topbar-right">
+        <span class="focus-lbl">Focus</span>
+        <div class="energy-grp">
+          <button class="eopt" onclick="setEnergy('low',this)">Light</button>
+          <button class="eopt on" onclick="setEnergy('medium',this)">Standard</button>
+          <button class="eopt" onclick="setEnergy('high',this)">Deep</button>
         </div>
-        <button class="sync-chip" id="sync-chip" onclick="syncChipClick()">Ready</button>
+        <button class="sync-chip" id="sync-chip" onclick="syncClick()" title="Tap to reconnect or sign out">Synced</button>
       </div>
     </div>
   </div>
 
-  <div class="filter-row low-hide">
-    <button class="md-chip active" onclick="setFilter('all',this)">All</button>
-    <button class="md-chip" onclick="setFilter('personal',this)">Personal</button>
-    <button class="md-chip" onclick="setFilter('work',this)">Work</button>
-    <button class="md-chip" onclick="setFilter('obligation',this)">Obligations</button>
-    <button class="md-chip" onclick="setFilter('routine',this)">Routines</button>
-    <button class="md-chip" onclick="setFilter('reflection',this)">Reflections</button>
-  </div>
+  <!-- Responsive app body — JS adds layout class -->
+  <div class="app-body" id="app-body">
 
-  <div class="content">
-    <div id="guidance-area"></div>
-    <div id="focus-area" class="low-hide"></div>
-  </div>
-  <div class="content" style="padding-top:0">
-    <div class="stream" id="stream"></div>
-  </div>
-  <div class="content low-hide" style="padding-top:4px">
-    <button class="coll-btn" onclick="toggleColl('low-later-body',this)"><span>Later</span><span>▸</span></button>
-    <div class="coll-body" id="low-later-body"></div>
-  </div>
-  <div class="bottom" id="bottom"></div>
-</div>
+    <!-- LEFT RAIL (desktop) / inline (mobile+tablet) -->
+    <div class="left-rail" id="left-rail">
+      <div class="region-guidance" id="region-guidance">
+        <div id="guidance"></div>
+      </div>
+      <div class="region-focus low-hide" id="region-focus">
+        <div id="focus-area"></div>
+      </div>
+    </div>
+
+    <!-- MAIN COLUMN -->
+    <div class="main-col" id="main-col">
+      <div class="filters low-hide" id="filters">
+        <button class="chip on" onclick="setFilter('all',this)">All</button>
+        <button class="chip" onclick="setFilter('personal',this)">Personal</button>
+        <button class="chip" onclick="setFilter('work',this)">Work</button>
+        <button class="chip" onclick="setFilter('obligation',this)">Obligations</button>
+        <button class="chip" onclick="setFilter('routine',this)">Routines</button>
+        <button class="chip" onclick="setFilter('reflection',this)">Reflections</button>
+      </div>
+      <div class="region-stream">
+        <div class="stream" id="stream"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT RAIL (desktop) / bottom (mobile+tablet) -->
+    <div class="right-rail" id="right-rail">
+      <div class="region-later low-hide" id="region-later">
+        <div class="coll-section">
+          <button class="coll-btn" onclick="toggleColl('low-later',this)"><span>Later</span><span>▸</span></button>
+          <div class="coll-body" id="low-later"></div>
+        </div>
+      </div>
+      <div class="region-bottom" id="region-bottom"></div>
+    </div>
+
+  </div><!-- end app-body -->
+</div><!-- end app -->
 
 <button class="fab" id="fab" onclick="openSheet()"><span style="font-size:20px;line-height:1">+</span> Capture</button>
 
-<!-- Capture sheet -->
-<div class="sheet-bg" id="sheet-bg" onclick="sheetBgClick(event)">
+<div class="sheet-bg" id="sheet-bg" onclick="bgClick(event)">
   <div class="sheet">
     <div class="sheet-drag"></div>
     <div class="sheet-body">
       <div class="detect-hint" id="detect-hint">What's on your mind?</div>
-      <textarea class="cap-textarea" id="cap-input" placeholder="Task, thought, email, reflection…" oninput="onCapInput()" rows="3"></textarea>
-      <div class="sheet-row">
-        <span class="row-label">Type</span>
-        <button class="sel-chip" onclick="setOverride('task',this)">Task</button>
-        <button class="sel-chip" onclick="setOverride('idea',this)">Idea</button>
-        <button class="sel-chip" onclick="setOverride('reflection',this)">Reflection</button>
-        <button class="sel-chip" onclick="setOverride('obligation',this)">Obligation</button>
-        <button class="sel-chip" onclick="setOverride('routine',this)">Routine</button>
-        <button class="sel-chip" onclick="setOverride('communication',this)">Email</button>
+      <textarea class="cap-ta" id="cap-in" placeholder="Task, thought, email, reflection…" oninput="onCapIn()" rows="3"></textarea>
+      <div class="srow">
+        <span class="srow-lbl">Type</span>
+        <button class="sc" onclick="setOvr('task',this)">Task</button>
+        <button class="sc" onclick="setOvr('idea',this)">Idea</button>
+        <button class="sc" onclick="setOvr('reflection',this)">Reflection</button>
+        <button class="sc" onclick="setOvr('obligation',this)">Obligation</button>
+        <button class="sc" onclick="setOvr('routine',this)">Routine</button>
+        <button class="sc" onclick="setOvr('communication',this)">Email</button>
       </div>
-      <div class="sheet-row">
-        <span class="row-label">Context</span>
-        <button class="sel-chip active" id="ctx-work" onclick="setCtx('work')">Work</button>
-        <button class="sel-chip ctx-p" id="ctx-personal" onclick="setCtx('personal')">Personal</button>
+      <div class="srow">
+        <span class="srow-lbl">Context</span>
+        <button class="sc on" id="ctx-work" onclick="setCtx('work')">Work</button>
+        <button class="sc ctx-p" id="ctx-personal" onclick="setCtx('personal')">Personal</button>
       </div>
-      <button class="refine-toggle" id="refine-btn" onclick="toggleRefine()">▸ More options</button>
-      <div class="refine-body" id="refine-body">
-        <div><label class="field-lbl">Due date</label><input type="date" class="field-input" id="cap-due"></div>
-        <div id="freq-wrap" style="display:none">
-          <label class="field-lbl">Frequency</label>
-          <select class="field-select" id="cap-freq">
-            <option value="">—</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
+      <button class="ref-toggle" id="ref-btn" onclick="toggleRef()">▸ More options</button>
+      <div class="ref-body" id="ref-body">
+        <div><label class="flbl2">Due date</label><input type="date" class="fi" id="cap-due"></div>
+        <div id="freq-w" style="display:none"><label class="flbl2">Frequency</label>
+          <select class="fsel" id="cap-freq">
+            <option value="">—</option><option value="daily">Daily</option>
+            <option value="weekly">Weekly</option><option value="monthly">Monthly</option><option value="yearly">Yearly</option>
           </select>
         </div>
-        <div><label class="field-lbl">Priority</label>
-          <select class="field-select" id="cap-priority">
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
+        <div><label class="flbl2">Priority</label>
+          <select class="fsel" id="cap-pri">
+            <option value="medium" selected>Medium</option><option value="high">High</option><option value="low">Low</option>
           </select>
         </div>
       </div>
       <div style="margin-top:16px">
-        <button class="btn btn-filled" id="save-btn" style="width:100%;justify-content:center;padding:12px;font-size:14px" onclick="submitCapture()">Save</button>
+        <button class="btn filled" id="save-btn" style="width:100%;justify-content:center;padding:12px;font-size:14px" onclick="submitCap()">Save</button>
       </div>
     </div>
   </div>
 </div>
 
 <div class="undo-bar" id="undo-bar">
-  <span>Marked done</span>
-  <button class="undo-action" onclick="undoDone()">Undo</button>
+  <span>Marked done</span><button class="undo-act" onclick="undoDone()">Undo</button>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
+// ── Layout detection ───────────────────────────────────────────────────────
+function updateLayout(){
+  const w=window.innerWidth;
+  const b=document.body;
+  b.classList.remove('layout-compact','layout-medium','layout-expanded');
+  if(w>=1100){b.classList.add('layout-expanded')}
+  else if(w>=720){b.classList.add('layout-medium')}
+  else{b.classList.add('layout-compact')}
+}
+updateLayout();
+window.addEventListener('resize',updateLayout);
+
 // ── Supabase ───────────────────────────────────────────────────────────────
 const{createClient}=supabase;
 const SB=createClient(
   'https://ityciofmpvqsqhonhxvd.supabase.co',
   'sb_publishable_tpsNlUn2PEKoFUgcUdyTNg_0gZKyELZ',
-  {auth:{storage:window.localStorage,storageKey:'sos-auth-v2',autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}}
+  {auth:{storage:window.localStorage,storageKey:'sos-v3',autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}}
 );
 
-// ── App state: booting | ready | saving | reconnecting | session_expired | error
-let STATE='booting';
-let USER=null,items=[],energy='medium',override=null,captureCtx='work';
-let undoStack=null,undoTimer=null,activeFilter='all',lastLoadedAt=0;
+// ── State ──────────────────────────────────────────────────────────────────
+let STATE='booting',USER=null,items=[],energy='medium',ovr=null,capCtx='work';
+let undoStack=null,undoTimer=null,activeFilter='all',loadedAt=0;
 let todayFocus=[];try{todayFocus=JSON.parse(localStorage.getItem('tf')||'[]')}catch(e){}
-let bMem={completedLow:0,completedMed:0,completedHigh:0,avoidedHigh:0};
+let bMem={low:0,med:0,high:0,avoided:0};
 let actionsLocked=false;
 
 const NOW=new Date(),H=NOW.getHours();
@@ -447,343 +570,15 @@ const todayStr=NOW.toISOString().slice(0,10);
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-// ── Real timeout helper ────────────────────────────────────────────────────
-function withTimeout(promise,ms,label){
-  let tid;
-  const timer=new Promise((_,rej)=>{tid=setTimeout(()=>rej(new Error(`Timeout after ${ms}ms: ${label}`)),ms)});
-  return Promise.race([promise,timer]).finally(()=>clearTimeout(tid));
-}
-
-// ── State machine ──────────────────────────────────────────────────────────
-function applyState(s,msg){
-  STATE=s;
-  const chip=document.getElementById('sync-chip');
-  const banner=document.getElementById('session-banner');
-  const fab=document.getElementById('fab');
-  const saveBtn=document.getElementById('save-btn');
-  const lockOverlay=document.getElementById('lock-overlay');
-  const lockBadge=document.getElementById('lock-badge');
-
-  const labels={ready:'Ready',saving:'Saving…',reconnecting:'Reconnecting…',session_expired:'Session expired',error:'Error'};
-  const cls={saving:' saving',session_expired:' error',error:' error',reconnecting:' reconnecting'};
-  chip.textContent=labels[s]||s;
-  chip.className='sync-chip'+(cls[s]||'');
-
-  const locked=s==='session_expired'||s==='error'||s==='reconnecting';
-  actionsLocked=locked;
-  if(fab){fab.disabled=locked;fab.style.opacity=locked?'.35':''}
-  if(saveBtn)saveBtn.disabled=locked;
-
-  if(locked){
-    lockOverlay.classList.add('show');
-    lockBadge.classList.add('show');
-    lockBadge.textContent=s==='reconnecting'?'Reconnecting…':'Session paused — actions disabled';
-    // dim all cards
-    document.querySelectorAll('.card:not(.done)').forEach(c=>c.classList.add('locked'));
-  }else{
-    lockOverlay.classList.remove('show');
-    lockBadge.classList.remove('show');
-    document.querySelectorAll('.card.locked').forEach(c=>c.classList.remove('locked'));
-  }
-
-  if(s==='session_expired'||s==='error'){
-    banner.classList.add('show');
-    document.getElementById('banner-msg').textContent=msg||(s==='session_expired'?'Session expired. Please sign in again.':'Something went wrong. Your changes are paused.');
-  }else{
-    banner.classList.remove('show');
-  }
-
-  if(s==='saving')setTimeout(()=>{if(STATE==='saving')applyState('ready')},4000);
-}
-
-function requireSession(){
-  if(!USER||actionsLocked){
-    applyState('session_expired','Session lost. Please sign in again.');
-    return false;
-  }
-  return true;
-}
-
-// ── Boot overlay helpers ───────────────────────────────────────────────────
-function showBootSpinner(label){
-  const o=document.getElementById('boot-overlay');
-  o.classList.remove('hidden');
-  document.getElementById('boot-spinner').style.display='block';
-  document.getElementById('boot-label').style.display='block';
-  document.getElementById('boot-error').style.display='none';
-  document.getElementById('boot-label').textContent=label||'Loading…';
-}
-function showBootError(msg){
-  document.getElementById('boot-spinner').style.display='none';
-  document.getElementById('boot-label').style.display='none';
-  document.getElementById('boot-error').style.display='block';
-  document.getElementById('boot-err-sub').textContent=msg||'Something went wrong.';
-}
-function hideBootOverlay(){
-  document.getElementById('boot-overlay').classList.add('hidden');
-}
-async function retryBoot(){
-  showBootSpinner('Retrying…');
-  await bootstrap();
-}
-
-// ── Bootstrap — explicit, never relies on onAuthStateChange alone ──────────
-async function bootstrap(){
-  applyState('booting');
-  showBootSpinner('Starting up…');
-  try{
-    const{data:{session},error}=await withTimeout(SB.auth.getSession(),8000,'getSession');
-    if(error)throw error;
-    if(session?.user){
-      USER=session.user;
-      showApp();
-      showBootSpinner('Loading your stream…');
-      // Load memory and stream in parallel; bmem failure must not block readiness
-      const[,itemsOk]=await Promise.allSettled([
-        loadBMem().catch(e=>console.warn('bMem load failed (non-fatal):',e)),
-        loadItems()
-      ]);
-      if(itemsOk.status==='rejected'){
-        // loadItems already shows error UI; keep boot overlay hidden
-      }
-      hideBootOverlay();
-      applyState('ready');
-    }else{
-      hideBootOverlay();
-      showAuth();
-    }
-  }catch(e){
-    const msg=e.message.includes('Timeout')?'Connection timed out. Check your network and try again.':
-      e.message||'Could not connect to the server.';
-    showBootError(msg);
-    applyState('error',msg);
-  }
-}
-
-// ── onAuthStateChange — handles post-boot events only ─────────────────────
-let authHandlerReady=false;
-SB.auth.onAuthStateChange(async(event,session)=>{
-  // Skip the INITIAL_SESSION — bootstrap handles that
-  if(event==='INITIAL_SESSION')return;
-
-  if(event==='SIGNED_IN'&&session?.user){
-    if(!USER){
-      USER=session.user;
-      showApp();
-      showBootSpinner('Loading your stream…');
-      await Promise.allSettled([
-        loadBMem().catch(e=>console.warn('bMem:',e)),
-        loadItems()
-      ]);
-      hideBootOverlay();
-      applyState('ready');
-    }
-  }else if(event==='TOKEN_REFRESHED'&&session?.user){
-    USER=session.user;
-    if(STATE==='session_expired')applyState('ready');
-  }else if(event==='SIGNED_OUT'){
-    USER=null;items=[];
-    hideBootOverlay();showAuth();applyState('ready');
-  }
-});
-
-function showApp(){
-  document.getElementById('auth-screen').classList.remove('show');
-  document.getElementById('app-screen').classList.add('show');
-  if(USER)document.getElementById('topbar-sub').textContent=`${DAYS[NOW.getDay()]}, ${NOW.getDate()} ${MONTHS[NOW.getMonth()]} · ${USER.email.split('@')[0]}`;
-}
-function showAuth(){
-  document.getElementById('app-screen').classList.remove('show');
-  document.getElementById('auth-screen').classList.add('show');
-}
-
-// ── Auth UI ────────────────────────────────────────────────────────────────
-function showPwForm(){document.getElementById('auth-magic').style.display='none';document.getElementById('auth-pw').style.display='block';setAuthMsg('')}
-function showMagicForm(){document.getElementById('auth-pw').style.display='none';document.getElementById('auth-magic').style.display='block';setAuthMsg('')}
-async function sendMagicLink(){
-  const email=document.getElementById('auth-email').value.trim();
-  if(!email){setAuthMsg('Enter your email address.','err');return}
-  const{error}=await SB.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});
-  if(error)setAuthMsg(error.message,'err');
-  else setAuthMsg('Magic link sent — check your inbox.','ok');
-}
-async function signInPw(){
-  const email=document.getElementById('pw-email').value.trim();
-  const pw=document.getElementById('pw-pass').value;
-  if(!email||!pw){setAuthMsg('Enter email and password.','err');return}
-  const{error}=await SB.auth.signInWithPassword({email,password:pw});
-  if(error)setAuthMsg(error.message,'err');
-}
-async function signOut(){
-  try{await SB.auth.signOut()}catch(e){}
-  USER=null;items=[];
-  localStorage.removeItem('sos-auth-v2');localStorage.removeItem('tf');
-  hideBootOverlay();showAuth();applyState('ready');
-  document.getElementById('auth-msg').textContent='';
-}
-async function handleReconnect(){
-  applyState('reconnecting','Reconnecting…');
-  try{
-    const{data,error}=await withTimeout(SB.auth.refreshSession(),8000,'refreshSession');
-    if(error||!data.session)throw new Error('Refresh failed');
-    USER=data.session.user;
-    applyState('ready');
-    // Silently reload if data is stale
-    if(Date.now()-lastLoadedAt>60000)loadItems().catch(()=>{});
-  }catch(e){
-    applyState('session_expired','Could not reconnect. Please sign in again.');
-  }
-}
-function syncChipClick(){
-  if(STATE==='session_expired'||STATE==='error')handleReconnect();
-  else if(USER)signOut();
-}
-function setAuthMsg(msg,cls=''){
-  const el=document.getElementById('auth-msg');el.textContent=msg;el.className='auth-msg'+(cls?' '+cls:'');
-}
-
-// ── DB ─────────────────────────────────────────────────────────────────────
-async function dbSave(item){
-  if(!USER){applyState('session_expired','Session lost. Please sign in again.');throw new Error('no_session')}
-  if(actionsLocked)throw new Error('actions_locked');
-  applyState('saving');
-  try{
-    const{data,error}=await withTimeout(
-      SB.from('stream_items').insert({...item,user_id:USER.id}).select().single(),
-      10000,'dbSave'
-    );
-    if(error)throw error;
-    applyState('ready');
-    return data;
-  }catch(e){
-    const msg=e.message.includes('Timeout')?'Save timed out. Check your connection.':
-      e.message.includes('JWT')||e.message.includes('auth')?'Session expired during save.':
-      'Save failed: '+e.message;
-    if(e.message.includes('JWT')||e.message.includes('auth'))applyState('session_expired',msg);
-    else applyState('error',msg);
-    throw e;
-  }
-}
-async function dbUpdate(id,patch){
-  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
-  if(actionsLocked)throw new Error('actions_locked');
-  applyState('saving');
-  try{
-    const{error}=await withTimeout(
-      SB.from('stream_items').update(patch).eq('id',id).eq('user_id',USER.id),
-      10000,'dbUpdate'
-    );
-    if(error)throw error;
-    applyState('ready');
-  }catch(e){
-    const msg=e.message.includes('Timeout')?'Update timed out.':
-      e.message.includes('JWT')||e.message.includes('auth')?'Session expired.':
-      'Update failed: '+e.message;
-    if(e.message.includes('JWT')||e.message.includes('auth'))applyState('session_expired',msg);
-    else applyState('error',msg);
-    throw e;
-  }
-}
-async function dbDelete(id){
-  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
-  if(actionsLocked)throw new Error('actions_locked');
-  applyState('saving');
-  try{
-    const{error}=await withTimeout(
-      SB.from('stream_items').delete().eq('id',id).eq('user_id',USER.id),
-      10000,'dbDelete'
-    );
-    if(error)throw error;
-    applyState('ready');
-  }catch(e){
-    const msg=e.message.includes('JWT')||e.message.includes('auth')?'Session expired.':'Delete failed: '+e.message;
-    if(e.message.includes('JWT')||e.message.includes('auth'))applyState('session_expired',msg);
-    else applyState('error',msg);
-    throw e;
-  }
-}
-
-async function loadItems(){
-  if(!USER)return;
-  showStreamLoading();
-  try{
-    const{data,error}=await withTimeout(
-      SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),
-      8000,'loadItems'
-    );
-    if(error){
-      if(error.message.includes('JWT')||error.message.includes('auth')){
-        applyState('session_expired','Session expired. Please sign in again.');
-      }else{
-        applyState('error','Could not load stream: '+error.message);
-      }
-      showStreamError(error.message);
-      return;
-    }
-    items=(data||[]).map(enrichItem);
-    lastLoadedAt=Date.now();
-    render();
-  }catch(e){
-    const msg=e.message.includes('Timeout')?'Loading timed out. Check your connection.':e.message;
-    applyState('error',msg);
-    showStreamError(msg);
-  }
-}
-function showStreamLoading(){
-  document.getElementById('stream').innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--md-on-surface2);font-size:14px">Loading your stream…</div>`;
-}
-function showStreamError(msg){
-  document.getElementById('stream').innerHTML=`<div class="stream-error">
-    <p>Could not load your stream.<br><small style="color:var(--md-on-surface3)">${msg.includes('Timeout')?'Connection timed out.':msg}</small></p>
-    <button class="btn btn-filled" onclick="loadItems()">Retry</button>
-    <button class="btn btn-text muted" onclick="signOut()">Sign out</button>
-  </div>`;
-}
-
-async function loadBMem(){
-  if(!USER)return;
-  const{data}=await withTimeout(
-    SB.from('user_memory').select('*').eq('user_id',USER.id).maybeSingle(),
-    5000,'loadBMem'
-  );
-  if(data)bMem={completedLow:data.completed_low||0,completedMed:data.completed_medium||0,completedHigh:data.completed_high||0,avoidedHigh:data.avoided_high||0};
-  else{
-    try{await SB.from('user_memory').insert({user_id:USER.id,completed_low:0,completed_medium:0,completed_high:0,avoided_high:0})}catch(e){}
-  }
-}
-async function saveBMem(){
-  if(!USER)return;
-  try{await SB.from('user_memory').upsert({user_id:USER.id,completed_low:bMem.completedLow,completed_medium:bMem.completedMed,completed_high:bMem.completedHigh,avoided_high:bMem.avoidedHigh},{onConflict:'user_id'})}catch(e){}
-}
-
-// ── Visibility & network recovery ──────────────────────────────────────────
-document.addEventListener('visibilitychange',async()=>{
-  if(document.hidden||!USER)return;
-  // Re-check session when tab becomes visible
-  try{
-    const{data:{session}}=await withTimeout(SB.auth.getSession(),5000,'visibilityCheck');
-    if(!session){
-      applyState('session_expired','Session expired while away. Please sign in again.');
-    }else{
-      if(STATE==='session_expired'||STATE==='error')applyState('ready');
-      // Reload if data is stale (>2 min)
-      if(Date.now()-lastLoadedAt>120000)loadItems().catch(()=>{});
-    }
-  }catch(e){
-    // Network may be down — set reconnecting and retry
-    if(STATE==='ready')applyState('reconnecting','Reconnecting…');
-    setTimeout(()=>{if(STATE==='reconnecting')handleReconnect()},3000);
-  }
-});
-
-window.addEventListener('online',()=>{
-  if(STATE==='error'||STATE==='reconnecting')handleReconnect();
-});
-window.addEventListener('offline',()=>{
-  if(STATE==='ready')applyState('reconnecting','No internet connection');
-});
-
 // ── Helpers ────────────────────────────────────────────────────────────────
+function withTimeout(p,ms,lbl){
+  let t;return Promise.race([p,new Promise((_,rej)=>{t=setTimeout(()=>rej(new Error(`Timeout:${lbl}`)),ms)})]).finally(()=>clearTimeout(t));
+}
+function isAuthError(err){
+  if(!err)return false;
+  const m=(err.message||'').toLowerCase()+(err.code||'').toLowerCase();
+  return/jwt|auth|expired|token|refresh|session|invalid.*claim|not authenticated/.test(m);
+}
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const trunc=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n)+'…':s};
 const fmt=ts=>{const d=new Date(ts),df=Date.now()-d;if(df<60000)return'now';if(df<3600000)return Math.floor(df/60000)+'m';if(df<86400000)return Math.floor(df/3600000)+'h';return Math.floor(df/86400000)+'d'};
@@ -791,11 +586,11 @@ const ageDays=ts=>Math.floor((Date.now()-new Date(ts))/86400000);
 const isToday=ts=>ts&&String(ts).slice(0,10)===todayStr;
 const isOverdue=ts=>ts&&String(ts)<todayStr;
 const isUrgent=i=>i.status==='active'&&(i.priority==='high'||(i.type==='task'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))||((i.type==='obligation')&&(isOverdue(i.content?.due)||isToday(i.content?.due))));
-const routineNextDue=i=>{const f=i.content?.frequency,l=i.content?.last_completed;if(!f||!l)return null;const d=new Date(l);if(f==='daily')d.setDate(d.getDate()+1);else if(f==='weekly')d.setDate(d.getDate()+7);else if(f==='monthly')d.setMonth(d.getMonth()+1);else if(f==='yearly')d.setFullYear(d.getFullYear()+1);return d.toISOString().slice(0,10)};
-const routineDue=i=>i.type==='routine'&&i.status==='active'&&(()=>{const nd=routineNextDue(i);return!nd||nd<=todayStr})();
-const itemTitle=i=>{if(i.type==='task')return i.content?.title;if(i.type==='communication')return(i.content?.category||'Email')+' email';if(i.type==='routine')return i.content?.title||i.content?.text;if(i.type==='obligation')return i.content?.title||i.content?.text;return trunc(i.content?.text,48)};
-function detectCtx(txt){return/\b(buy|gym|dinner|family|rest|holiday|kids?|home|cook|sleep|relax|mum|dad|wife|husband|partner|friends?|weekend|grocery|groceries|birthday|health|doctor|dentist|exercise|run|walk|movie|date night|lunch|breakfast|clean|laundry|bank|renew|garden|pet|school|journal|meditate)\b/i.test(String(txt||''))?'personal':'work'}
-function detectType(txt){
+const routineND=i=>{const f=i.content?.frequency,l=i.content?.last_completed;if(!f||!l)return null;const d=new Date(l);if(f==='daily')d.setDate(d.getDate()+1);else if(f==='weekly')d.setDate(d.getDate()+7);else if(f==='monthly')d.setMonth(d.getMonth()+1);else if(f==='yearly')d.setFullYear(d.getFullYear()+1);return d.toISOString().slice(0,10)};
+const routineDue=i=>i.type==='routine'&&i.status==='active'&&(()=>{const nd=routineND(i);return!nd||nd<=todayStr})();
+const iTitle=i=>{if(i.type==='task')return i.content?.title;if(i.type==='communication')return(i.content?.category||'Email')+' email';if(i.type==='routine')return i.content?.title||i.content?.text;if(i.type==='obligation')return i.content?.title||i.content?.text;return trunc(i.content?.text,48)};
+function dCtx(txt){return/\b(buy|gym|dinner|family|rest|holiday|kids?|home|cook|sleep|relax|mum|dad|wife|husband|partner|friends?|weekend|grocery|groceries|birthday|health|doctor|dentist|exercise|run|walk|movie|date night|lunch|breakfast|clean|laundry|bank|renew|garden|pet|school|journal|meditate)\b/i.test(String(txt||''))?'personal':'work'}
+function dType(txt){
   if(!txt||txt.trim().length<2)return null;
   const t=txt.trim(),s=t.toLowerCase();
   if(t.length>80&&/from:|to:|subject:|dear |hi,|hello,|regards,|sincerely,/.test(s))return'communication';
@@ -805,48 +600,201 @@ function detectType(txt){
   if(/^(call|follow up|followup|send|email|write|ping|remind|buy|book|schedule|prepare|review|check|fix|update|submit|complete|talk|meet|order|pay|register|sign|fill|collect|research|draft)\b/i.test(t))return'task';
   return'idea';
 }
-function detectEffort(txt,type){
-  if(!txt)return'medium';
-  const t=String(txt).toLowerCase();
+function dEffort(txt,type){
+  if(!txt)return'medium';const t=String(txt).toLowerCase();
   if(type==='idea'||type==='reflection'||type==='routine')return'low';
   if(/\b(call|meeting|plan|review|report|discuss|present|proposal|analyse|analyze|design|strategy|interview|prepare)\b/.test(t))return'high';
   if(t.length<40&&/\b(send|reply|buy|pay|book|ping|check|read|confirm|update)\b/.test(t))return'low';
-  if(t.length<40)return'low';
-  return'medium';
+  if(t.length<40)return'low';return'medium';
 }
-function detectImp(txt){return/\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt||''))}
-function enrichItem(i){
-  if(!i.effort){const t=i.content?.text||i.content?.title||i.content?.preview||'';i.effort=detectEffort(t,i.type)}
-  if(i.important_personal==null){const t=i.content?.text||i.content?.title||'';i.important_personal=i.context==='personal'&&detectImp(t)}
+function dImp(txt){return/\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt||''))}
+function enrich(i){
+  if(!i.effort){const t=i.content?.text||i.content?.title||i.content?.preview||'';i.effort=dEffort(t,i.type)}
+  if(i.important_personal==null){const t=i.content?.text||i.content?.title||'';i.important_personal=i.context==='personal'&&dImp(t)}
   return i;
 }
 
-// ── Email / reply ──────────────────────────────────────────────────────────
-function classifyEmail(t){
-  const s=t.toLowerCase();let sc=0,cat='General';
-  if(/neuter|mandul|spay|castrat|potong/.test(s)){cat='Neutering';sc=/subsidis/.test(s)?3:2}
-  else if(/surrender|rehome|re-home|give up|can't keep|cannot keep/.test(s)){cat='Surrender';sc=2}
-  else if(/volunteer|volunteering/.test(s)){cat='Volunteering';sc=2}
-  else if(/donat|contribut|fund|support financially/.test(s)){cat='Donation';sc=2}
-  return{category:cat,confidence:sc>=3?'high':sc>=2?'medium':'low'};
+// ── State machine ──────────────────────────────────────────────────────────
+function applyState(s,msg){
+  STATE=s;
+  const chip=document.getElementById('sync-chip');
+  const banner=document.getElementById('banner');
+  const fab=document.getElementById('fab');
+  const saveBtn=document.getElementById('save-btn');
+  const badge=document.getElementById('lock-badge');
+  const map={ready:'Synced',saving:'Saving…',reconnecting:'Reconnecting…',session_expired:'Session expired',error:'Error'};
+  const cls={saving:'saving',session_expired:'err',error:'err',reconnecting:'reconn'};
+  chip.textContent=map[s]||s;chip.className='sync-chip'+(cls[s]?' '+cls[s]:'');
+  actionsLocked=s==='session_expired'||s==='error'||s==='reconnecting';
+  if(fab)fab.disabled=actionsLocked;if(saveBtn)saveBtn.disabled=actionsLocked;
+  const badgeTxt={reconnecting:'Reconnecting…',session_expired:'Session paused',error:'Error — actions paused'}[s];
+  if(badgeTxt){badge.textContent=badgeTxt;badge.classList.add('show')}else badge.classList.remove('show');
+  if(s==='session_expired'||s==='error'){banner.classList.add('show');document.getElementById('banner-msg').textContent=msg||(s==='session_expired'?'Session expired. Sign in again to continue.':'Something went wrong. Actions are paused.')}
+  else banner.classList.remove('show');
+  document.querySelectorAll('.card:not(.done)').forEach(c=>c.classList.toggle('locked',actionsLocked));
+  if(s==='saving')setTimeout(()=>{if(STATE==='saving')applyState('ready')},4000);
 }
-function extractName(text){
-  const m=text.match(/(?:my name is|i am|i'm|from|regards,|sincerely,|cheers,)\s*([A-Z][a-z]+(?: [A-Z][a-z]+)?)/i);
-  if(m)return m[1];
-  for(const l of text.split('\n').slice(-5)){const nm=l.trim().match(/^([A-Z][a-z]+(?: [A-Z][a-z]+)?)$/);if(nm&&nm[1].length<30)return nm[1]}
-  return null;
+function requireSession(){
+  if(!USER||actionsLocked){applyState('session_expired','Session lost. Please sign in again.');return false}return true;
 }
-function generateReply(cat,tone,raw){
-  const n=extractName(raw||'');
-  const g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n';
-  const sign='\n\nWarm regards,\nSPCA Selangor';
-  const T={
-    soft:{Neutering:`${g}Thank you for reaching out about neutering. Our subsidised programme, Potong Royong, is available for community cats and dogs. Slots fill quickly — please register at [INSERT POTONG ROYONG LINK] or WhatsApp us.${sign}`,Surrender:`${g}We understand this isn't easy. Our intake is on a waiting list. Please share a photo, species, breed, and age.${sign}`,Volunteering:`${g}Thank you! All new volunteers complete our Pet Care Programme (PCP) orientation first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Your support means everything. Please donate at [INSERT DONATION LINK]. Tax-exempt receipts issued above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days. For urgent matters, WhatsApp us.${sign}`},
-    normal:{Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available for community cats and dogs. Register at [INSERT POTONG ROYONG LINK] or WhatsApp us.${sign}`,Surrender:`${g}Thank you. Our intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}Thank you. All first-time volunteers complete our Pet Care Programme (PCP) orientation at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK]. Receipts issued above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},
-    firm:{Neutering:`${g}Our subsidised neutering programme, Potong Royong, is slot-based. Walk-ins not accepted. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Intake is on a strict waiting list. Provide: species, breed, age, reason, photo.${sign}`,Volunteering:`${g}All volunteers complete PCP orientation before joining shifts. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Donate via [INSERT DONATION LINK] only. Receipts above RM50.${sign}`,General:`${g}Thank you. We respond within 2–3 working days.${sign}`}
-  };
-  return(T[tone]||T.normal)[cat]||(T[tone]||T.normal).General;
+
+// ── Boot ───────────────────────────────────────────────────────────────────
+function bootSpinner(lbl){const b=document.getElementById('boot');b.classList.remove('off');document.getElementById('boot-spin').style.display='block';document.getElementById('boot-lbl').style.display='block';document.getElementById('boot-err').style.display='none';document.getElementById('boot-lbl').textContent=lbl||'Loading…'}
+function bootError(msg){document.getElementById('boot-spin').style.display='none';document.getElementById('boot-lbl').style.display='none';document.getElementById('boot-err').style.display='block';document.getElementById('boot-err-p').textContent=msg||'Something went wrong.'}
+function hideBoot(){document.getElementById('boot').classList.add('off')}
+async function retryBoot(){bootSpinner('Retrying…');await bootstrap()}
+
+async function bootstrap(){
+  applyState('booting');bootSpinner('Starting up…');
+  try{
+    const{data:{session},error}=await withTimeout(SB.auth.getSession(),8000,'getSession');
+    if(error)throw error;
+    if(session?.user){
+      USER=session.user;showApp();bootSpinner('Loading your stream…');
+      const results=await Promise.allSettled([loadBMem().catch(e=>{console.warn('bMem:',e)}),loadItems()]);
+      hideBoot();
+      if(results[1].status==='rejected')applyState('error','Could not load stream.');
+      else applyState('ready');
+    }else{hideBoot();showAuth()}
+  }catch(e){
+    const msg=e.message.includes('Timeout')?'Connection timed out. Check your network.':e.message||'Could not connect.';
+    bootError(msg);applyState('error',msg);
+  }
 }
+
+SB.auth.onAuthStateChange(async(event,session)=>{
+  if(event==='INITIAL_SESSION')return;
+  if(event==='SIGNED_IN'&&session?.user&&!USER){
+    USER=session.user;showApp();bootSpinner('Loading…');
+    await Promise.allSettled([loadBMem().catch(()=>{}),loadItems()]);
+    hideBoot();applyState('ready');
+  }else if(event==='TOKEN_REFRESHED'&&session?.user){
+    USER=session.user;if(STATE==='session_expired'||STATE==='reconnecting')applyState('ready');
+  }else if(event==='SIGNED_OUT'){USER=null;items=[];hideBoot();showAuth();applyState('ready')}
+});
+
+function showApp(){
+  document.getElementById('auth').classList.remove('show');
+  document.getElementById('app').classList.add('show');
+  if(USER)document.getElementById('topbar-sub').textContent=`${DAYS[NOW.getDay()]}, ${NOW.getDate()} ${MONTHS[NOW.getMonth()]} · ${USER.email.split('@')[0]}`;
+}
+function showAuth(){document.getElementById('app').classList.remove('show');document.getElementById('auth').classList.add('show')}
+
+// ── Auth ───────────────────────────────────────────────────────────────────
+function showPwForm(){document.getElementById('auth-magic').style.display='none';document.getElementById('auth-pw').style.display='block';setAuthMsg('')}
+function showMagicForm(){document.getElementById('auth-pw').style.display='none';document.getElementById('auth-magic').style.display='block';setAuthMsg('')}
+async function sendMagicLink(){
+  const email=document.getElementById('auth-email').value.trim();
+  if(!email){setAuthMsg('Enter your email address.','err');return}
+  const{error}=await SB.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});
+  if(error)setAuthMsg(error.message,'err');else setAuthMsg('Magic link sent — check your inbox.','ok');
+}
+async function signInPw(){
+  const email=document.getElementById('pw-email').value.trim(),pw=document.getElementById('pw-pass').value;
+  if(!email||!pw){setAuthMsg('Enter email and password.','err');return}
+  const{error}=await SB.auth.signInWithPassword({email,password:pw});
+  if(error)setAuthMsg(error.message,'err');
+}
+async function signOut(){
+  try{await SB.auth.signOut()}catch(e){}
+  USER=null;items=[];localStorage.removeItem('sos-v3');localStorage.removeItem('tf');
+  hideBoot();showAuth();applyState('ready');document.getElementById('auth-msg').textContent='';
+}
+async function handleReconnect(){
+  applyState('reconnecting','Reconnecting…');
+  try{
+    const{data,error}=await withTimeout(SB.auth.refreshSession(),8000,'refresh');
+    if(error||!data.session)throw new Error('Failed');
+    USER=data.session.user;applyState('ready');
+    if(Date.now()-loadedAt>60000)loadItems().catch(()=>{});
+  }catch(e){USER=null;applyState('session_expired','Could not reconnect. Please sign in again.')}
+}
+function syncClick(){
+  if(STATE==='session_expired'||STATE==='error'||STATE==='reconnecting')handleReconnect();
+  else if(USER)signOut();
+}
+function setAuthMsg(msg,cls=''){const e=document.getElementById('auth-msg');e.textContent=msg;e.className='auth-msg'+(cls?' '+cls:'')}
+
+// ── DB ─────────────────────────────────────────────────────────────────────
+async function dbSave(item){
+  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
+  if(actionsLocked)throw new Error('locked');
+  applyState('saving');
+  try{
+    const{data,error}=await withTimeout(SB.from('stream_items').insert({...item,user_id:USER.id}).select().single(),10000,'save');
+    if(error)throw error;applyState('ready');return data;
+  }catch(e){
+    if(isAuthError(e)){USER=null;applyState('session_expired','Session expired.')}
+    else applyState('error','Save failed: '+e.message);throw e;
+  }
+}
+async function dbUpdate(id,patch){
+  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
+  if(actionsLocked)throw new Error('locked');
+  applyState('saving');
+  try{
+    const{error}=await withTimeout(SB.from('stream_items').update(patch).eq('id',id).eq('user_id',USER.id),10000,'update');
+    if(error)throw error;applyState('ready');
+  }catch(e){
+    if(isAuthError(e)){USER=null;applyState('session_expired','Session expired.')}
+    else applyState('error','Update failed: '+e.message);throw e;
+  }
+}
+async function dbDelete(id){
+  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
+  if(actionsLocked)throw new Error('locked');
+  applyState('saving');
+  try{
+    const{error}=await withTimeout(SB.from('stream_items').delete().eq('id',id).eq('user_id',USER.id),10000,'delete');
+    if(error)throw error;applyState('ready');
+  }catch(e){
+    if(isAuthError(e)){USER=null;applyState('session_expired','Session expired.')}
+    else applyState('error','Delete failed: '+e.message);throw e;
+  }
+}
+async function loadItems(){
+  if(!USER)return;
+  showStreamLoading();
+  try{
+    const{data,error}=await withTimeout(SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),8000,'loadItems');
+    if(error)throw error;
+    items=(data||[]).map(enrich);loadedAt=Date.now();render();
+  }catch(e){
+    const isAuth=isAuthError(e);
+    if(isAuth){USER=null;applyState('session_expired','Session expired.')}
+    else applyState('error',e.message.includes('Timeout')?'Loading timed out.':'Could not load stream.');
+    showStreamErr(e.message,isAuth);throw e;
+  }
+}
+function showStreamLoading(){document.getElementById('stream').innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--on-s2);font-size:14px">Loading your stream…</div>`}
+function showStreamErr(msg,isAuth){
+  document.getElementById('stream').innerHTML=`<div class="stream-err">
+    <p>${isAuth?'Your session expired. Sign in again to see your stream.':'Could not load your stream.'}<br><small style="color:var(--on-s3)">${msg.includes('Timeout')?'Connection timed out.':isAuth?'':'Try refreshing or check your connection.'}</small></p>
+    ${isAuth?`<button class="btn filled sm" onclick="signOut()">Sign in again</button>`:`<button class="btn filled sm" onclick="loadItems()">Retry</button><button class="btn ghost sm" onclick="signOut()">Sign out</button>`}
+  </div>`;
+}
+async function loadBMem(){
+  if(!USER)return;
+  const{data}=await withTimeout(SB.from('user_memory').select('*').eq('user_id',USER.id).maybeSingle(),5000,'bMem');
+  if(data)bMem={low:data.completed_low||0,med:data.completed_medium||0,high:data.completed_high||0,avoided:data.avoided_high||0};
+  else{try{await SB.from('user_memory').insert({user_id:USER.id,completed_low:0,completed_medium:0,completed_high:0,avoided_high:0})}catch(e){}}
+}
+async function saveBMem(){
+  if(!USER)return;
+  try{await SB.from('user_memory').upsert({user_id:USER.id,completed_low:bMem.low,completed_medium:bMem.med,completed_high:bMem.high,avoided_high:bMem.avoided},{onConflict:'user_id'})}catch(e){}
+}
+
+// ── Visibility/network ─────────────────────────────────────────────────────
+document.addEventListener('visibilitychange',async()=>{
+  if(document.hidden||!USER)return;
+  try{
+    const{data:{session}}=await withTimeout(SB.auth.getSession(),5000,'vis');
+    if(!session){USER=null;applyState('session_expired','Session expired while away.')}
+    else{if(STATE==='session_expired'||STATE==='error')applyState('ready');if(Date.now()-loadedAt>120000)loadItems().catch(()=>{})}
+  }catch(e){if(STATE==='ready')applyState('reconnecting','No connection')}
+});
+window.addEventListener('online',()=>{if(STATE==='error'||STATE==='reconnecting')handleReconnect()});
+window.addEventListener('offline',()=>{if(STATE==='ready')applyState('reconnecting','No internet')});
 
 // ── Guidance ───────────────────────────────────────────────────────────────
 function allowedEffort(){
@@ -858,19 +806,12 @@ function allowedEffort(){
 }
 function naScore(i){
   if(i.type==='reflection'&&!i.important_personal)return-100;
-  let s=0;
-  if(i.important_personal)s+=100;
-  if(i.context==='personal')s+=20;
-  if(isOverdue(i.content?.due))s+=50;
-  if(isToday(i.content?.due))s+=30;
+  let s=0;if(i.important_personal)s+=100;if(i.context==='personal')s+=20;
+  if(isOverdue(i.content?.due))s+=50;if(isToday(i.content?.due))s+=30;
   if(i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))s+=60;
-  if(routineDue(i))s+=35;
-  if(i.priority==='high')s+=15;
-  if(i.type==='communication')s+=5;
-  const e=i.effort||'medium';
-  if(allowedEffort().has(e))s+=10;else s-=20;
-  if(e==='low'&&bMem.completedLow>bMem.completedHigh)s+=5;
-  return s;
+  if(routineDue(i))s+=35;if(i.priority==='high')s+=15;if(i.type==='communication')s+=5;
+  const e=i.effort||'medium';if(allowedEffort().has(e))s+=10;else s-=20;
+  if(e==='low'&&bMem.low>bMem.high)s+=5;return s;
 }
 function pickNA(){const a=items.filter(i=>i.status==='active');return a.length?a.slice().sort((a,b)=>naScore(b)-naScore(a))[0]:null}
 function pickPM(){
@@ -890,19 +831,17 @@ function pickNudge(){
   const wc=a.filter(i=>i.context!=='personal'&&i.type!=='routine').length;
   const pc=a.filter(i=>i.context==='personal').length;
   if(oob.length)return`${oob.length} overdue obligation${oob.length>1?'s':''} — worth attending to.`;
-  if(dr.length)return`${dr[0].content?.title||'A routine'} is due. Small habits compound.`;
-  if(op.length)return`${op.length} overdue personal task${op.length>1?'s':''} — no rush, just worth a look.`;
+  if(dr.length)return`${dr[0].content?.title||'A routine'} is due.`;
+  if(op.length)return`${op.length} overdue personal task${op.length>1?'s':''} — worth a look.`;
   if(isEvening&&!dtP.length&&pc>0)return'Nothing personal done today. Even one small thing counts.';
-  if(oi.length>=3)return`${oi.length} ideas are getting dusty. Worth a quick pass?`;
-  if(wc>6&&pc<2)return'Work items are stacking up. Your personal list is quiet.';
+  if(oi.length>=3)return`${oi.length} ideas getting dusty. Worth a quick pass?`;
+  if(wc>6&&pc<2)return'Work is stacking up. Your personal list is quiet.';
   if(isMorning&&dt.length===0)return'Morning. One small thing done before noon makes the rest easier.';
   return null;
 }
 function checkStop(){
   const a=items.filter(i=>i.status==='active');
-  return!a.some(i=>isOverdue(i.content?.due)&&i.type!=='reflection')&&
-    !a.some(i=>i.context!=='personal'&&i.priority==='high'&&i.type!=='reflection')&&
-    items.some(i=>i.status==='done'&&i.context==='personal'&&isToday(i.completed_at||i.created_at));
+  return!a.some(i=>isOverdue(i.content?.due)&&i.type!=='reflection')&&!a.some(i=>i.context!=='personal'&&i.priority==='high'&&i.type!=='reflection')&&items.some(i=>i.status==='done'&&i.context==='personal'&&isToday(i.completed_at||i.created_at));
 }
 
 // ── Today focus ────────────────────────────────────────────────────────────
@@ -916,7 +855,7 @@ function removeTodayPin(id){todayFocus=todayFocus.filter(x=>x!==id);saveTF();ren
 function buildFocus(){
   const pinned=todayFocus.filter(id=>items.find(i=>i.id===id&&i.status==='active'));
   if(pinned.length>=3)return pinned.map(id=>({id,auto:false}));
-  const used=new Set(pinned);const sug=[];
+  const used=new Set(pinned),sug=[];
   const a=items.filter(i=>i.status==='active');
   const p=a.filter(i=>(i.context==='personal'||i.type==='routine')&&!used.has(i.id));
   if(p.length&&sug.length<3-pinned.length){sug.push({id:p[0].id,auto:true});used.add(p[0].id)}
@@ -930,70 +869,54 @@ function buildFocus(){
 // ── Render ─────────────────────────────────────────────────────────────────
 function render(){
   document.body.classList.toggle('low',energy==='low');
-  renderGuidance();renderFocus();renderStream();renderBottom();
-  // Reapply lock visuals if needed
+  renderGuidance();renderFocus();renderStream();renderSidebar();
   if(actionsLocked)document.querySelectorAll('.card:not(.done)').forEach(c=>c.classList.add('locked'));
+  else document.querySelectorAll('.card.locked').forEach(c=>c.classList.remove('locked'));
 }
 
 function renderGuidance(){
-  const el=document.getElementById('guidance-area');
+  const el=document.getElementById('guidance');
   const na=pickNA(),pm=pickPM(),nudge=pickNudge(),stop=checkStop();
   let h='';
-  if(stop)h+=`<div class="gc stop"><div class="gc-label green">You're done for now</div><div class="stop-title">Good stopping point ✓</div><div class="stop-sub">No overdue items. No urgent work. You've done something personal today.</div></div>`;
+  if(stop)h+=`<div class="gc stop"><div class="gc-lbl g">Done for now</div><div class="stop-h">Good stopping point ✓</div><div class="stop-s">No overdue. No urgent work. Personal done today.</div></div>`;
   if(na){
     const meta=isOverdue(na.content?.due)?'Overdue':isToday(na.content?.due)?'Due today':routineDue(na)?'Due now':na.type==='communication'?(na.content?.category||''):'';
     const act=na.type==='task'||na.type==='obligation'?`markDone('${na.id}')`:na.type==='communication'?`copyReply('${na.id}')`:na.type==='routine'?`completeRoutine('${na.id}')`:` convertToTask('${na.id}')`;
-    const actLabel=na.type==='task'||na.type==='obligation'?'Mark done':na.type==='communication'?'Copy reply':na.type==='routine'?'Done for today':'Convert to task';
-    h+=`<div class="gc next-action" id="gc-next">
-      <div class="gc-label accent">Next action</div>
-      <div class="gc-row">
-        <div class="gc-text" onclick="scrollToCard('${na.id}')">
-          <div class="gc-title">${esc(itemTitle(na))}${na.important_personal?' 🌟':''}</div>
-          <div class="gc-meta">${na.context==='personal'?'Personal':'Work'}${na.effort==='high'?' · High effort':''}${meta?' · '+meta:''}</div>
-        </div>
-        <button class="btn btn-filled btn-sm" onclick="${act}" ${actionsLocked?'disabled':''}>${actLabel}</button>
-      </div>
-    </div>`;
+    const aLbl=na.type==='task'||na.type==='obligation'?'Mark done':na.type==='communication'?'Copy reply':na.type==='routine'?'Done for today':'Convert to task';
+    h+=`<div class="gc na" id="gc-na"><div class="gc-lbl a">Next action</div>
+      <div class="gc-row"><div class="gc-txt" onclick="scrollTo('${na.id}')">
+        <div class="gc-title">${esc(iTitle(na))}${na.important_personal?' 🌟':''}</div>
+        <div class="gc-meta">${na.context==='personal'?'Personal':'Work'}${meta?' · '+meta:''}</div>
+      </div><button class="btn filled sm" onclick="${act}" ${actionsLocked?'disabled':''}>${aLbl}</button></div></div>`;
   }
   if(pm&&(!na||pm.id!==na.id)){
     const pmMeta=routineDue(pm)?'Due now':isOverdue(pm.content?.due)?'Overdue':isToday(pm.content?.due)?'Due today':'';
     const pmAct=pm.type==='routine'?`completeRoutine('${pm.id}')`:pm.type==='task'||pm.type==='obligation'?`markDone('${pm.id}')`:null;
-    h+=`<div class="gc personal-must">
-      <div class="gc-label green">Personal must do</div>
-      <div class="gc-row">
-        <div class="gc-text" onclick="scrollToCard('${pm.id}')">
-          <div class="gc-title">${esc(itemTitle(pm))}${pm.important_personal?' 🌟':''}</div>
-          <div class="gc-meta">${pmMeta||'Personal'}</div>
-        </div>
-        ${pmAct?`<button class="btn btn-filled btn-sm green" onclick="${pmAct}" ${actionsLocked?'disabled':''}>${pm.type==='routine'?'Done for today':'Mark done'}</button>`:`<button class="btn btn-tonal btn-sm" onclick="scrollToCard('${pm.id}')">View</button>`}
-      </div>
-    </div>`;
+    h+=`<div class="gc pm"><div class="gc-lbl g">Personal must do</div>
+      <div class="gc-row"><div class="gc-txt" onclick="scrollTo('${pm.id}')">
+        <div class="gc-title">${esc(iTitle(pm))}${pm.important_personal?' 🌟':''}</div>
+        <div class="gc-meta">${pmMeta||'Personal'}</div>
+      </div>${pmAct?`<button class="btn filled sm g" onclick="${pmAct}" ${actionsLocked?'disabled':''}>${pm.type==='routine'?'Done for today':'Mark done'}</button>`:`<button class="btn tonal sm" onclick="scrollTo('${pm.id}')">View</button>`}</div></div>`;
   }
-  if(nudge&&energy!=='low')h+=`<div class="gc nudge"><div class="nudge-text">${esc(nudge)}</div></div>`;
+  if(nudge&&energy!=='low')h+=`<div class="gc nudge"><div class="nudge-txt">${esc(nudge)}</div></div>`;
   el.innerHTML=h;
 }
 
 function renderFocus(){
   const el=document.getElementById('focus-area');
   const slots=buildFocus();
-  const any=slots.some(s=>s&&items.find(i=>i.id===s.id));
-  if(!any){el.innerHTML='';return}
-  let h=`<div class="focus-card"><div class="focus-header">Today</div><div class="focus-list">`;
+  if(!slots.some(s=>s&&items.find(i=>i.id===s.id))){el.innerHTML='';return}
+  let h=`<div class="focus-card"><div class="focus-hd">Today</div><div class="focus-list">`;
   for(let i=0;i<3;i++){
     const slot=slots[i];
     if(slot){
       const it=items.find(x=>x.id===slot.id);
       if(it){
-        const dot=it.important_personal?'red':it.context==='personal'?'green':'blue';
-        h+=`<div class="focus-item" onclick="scrollToCard('${it.id}')">
-          <div class="focus-dot ${dot}"></div>
-          <span class="focus-label">${esc(itemTitle(it))}</span>
-          <span class="focus-tag">${slot.auto?'suggested':''}</span>
-          ${!slot.auto?`<button class="focus-remove" onclick="event.stopPropagation();removeTodayPin('${it.id}')">✕</button>`:''}
-        </div>`;
+        const dc=it.important_personal?'r':it.context==='personal'?'g':'b';
+        h+=`<div class="focus-row" onclick="scrollTo('${it.id}')"><div class="fdot ${dc}"></div><span class="flabel">${esc(iTitle(it))}</span><span class="ftag">${slot.auto?'suggested':''}</span>${!slot.auto?`<button class="fremove" onclick="event.stopPropagation();removeTodayPin('${it.id}')">✕</button>`:''}</div>`;
       }
     }else{
-      h+=`<div class="focus-item"><div class="focus-dot"></div><span class="focus-label" style="color:var(--md-on-surface3);font-style:italic">Slot ${i+1} — pin from stream</span></div>`;
+      h+=`<div class="focus-row"><div class="fdot"></div><span class="flabel" style="color:var(--on-s3);font-style:italic">Slot ${i+1} — pin from stream</span></div>`;
     }
   }
   el.innerHTML=h+'</div></div>';
@@ -1014,34 +937,45 @@ function sortItems(arr){
 function renderStream(){
   const el=document.getElementById('stream');
   const vis=getVisible();
-  if(!vis.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🌊</div><div class="empty-text">Your stream is clear.<br>Tap <strong>+ Capture</strong> to add something.</div></div>`;return}
+  if(!vis.length){el.innerHTML=`<div class="empty"><div class="empty-ic">🌊</div><div>Stream is clear.<br>Tap <strong>+ Capture</strong> to add something.</div></div>`;return}
   const sorted=sortItems(vis);
   let html='',lastSec='';
   sorted.forEach(i=>{
     const sec=i.important_personal?'important':i.type==='routine'?'routine':i.type==='obligation'?'obligation':i.type==='reflection'?'reflection':i.context==='personal'?'personal':isUrgent(i)?'urgent':i.type==='communication'?'inbox':i.type==='task'?'tasks':'ideas';
-    if(sec!==lastSec){
-      const lbl={important:'Important',routine:'Routines',obligation:'Obligations',reflection:'Reflections',personal:'Personal',urgent:'Urgent',inbox:'Inbox',tasks:'Tasks',ideas:'Ideas'};
-      html+=`<div class="sec-label">${lbl[sec]}</div>`;lastSec=sec;
-    }
+    if(sec!==lastSec){const lbl={important:'Important',routine:'Routines',obligation:'Obligations',reflection:'Reflections',personal:'Personal',urgent:'Urgent',inbox:'Inbox',tasks:'Tasks',ideas:'Ideas'};html+=`<div class="slbl">${lbl[sec]}</div>`;lastSec=sec}
     html+=renderCard(i);
   });
   el.innerHTML=html;
 }
-function renderBottom(){
-  const el=document.getElementById('bottom');
+
+function renderSidebar(){
+  // Later section (low mode)
+  const lowerBody=document.getElementById('low-later');
+  if(energy==='low'){
+    const d=items.filter(i=>i.status==='active'&&i.context!=='personal'&&i.type!=='routine'&&i.type!=='obligation'&&!isUrgent(i));
+    lowerBody.innerHTML=d.length?d.slice(0,5).map(i=>renderCard(i)).join(''):`<div style="font-size:13px;color:var(--on-s3);padding:6px 0;font-style:italic">Nothing else waiting.</div>`;
+  }else{lowerBody.innerHTML=''}
+  // Bottom: completed + archived
+  const btm=document.getElementById('region-bottom');
   const dt=items.filter(i=>i.status==='done'&&isToday(i.completed_at||i.created_at));
   const ar=items.filter(i=>i.status==='archived');
   let h='';
-  if(dt.length)h+=`<button class="coll-btn" onclick="toggleColl('done-body',this)"><span>Completed today (${dt.length})</span><span>▸</span></button><div class="coll-body" id="done-body">${dt.map(i=>renderCard(i)).join('')}</div>`;
-  if(ar.length)h+=`<button class="coll-btn" onclick="toggleColl('archive-body',this)"><span>Archived (${ar.length})</span><span>▸</span></button><div class="coll-body" id="archive-body">${ar.map(i=>renderCard(i)).join('')}</div>`;
-  el.innerHTML=h;
-}
-function toggleColl(id,btn){
-  const b=document.getElementById(id);if(!b)return;
-  const open=b.classList.toggle('open');
-  btn.querySelector('span:last-child').textContent=open?'▾':'▸';
+  if(dt.length){
+    // On desktop, show compact version in right rail
+    const isExpanded=document.body.classList.contains('layout-expanded');
+    if(isExpanded){
+      h+=`<div class="rail-lbl">Completed today (${dt.length})</div><div style="display:flex;flex-direction:column;gap:6px">${dt.map(i=>renderCard(i)).join('')}</div>`;
+    }else{
+      h+=`<div class="coll-section"><button class="coll-btn" onclick="toggleColl('done-body',this)"><span>Completed today (${dt.length})</span><span>▸</span></button><div class="coll-body" id="done-body">${dt.map(i=>renderCard(i)).join('')}</div></div>`;
+    }
+  }
+  if(ar.length)h+=`<div class="coll-section" style="margin-top:4px"><button class="coll-btn" onclick="toggleColl('arch-body',this)"><span>Archived (${ar.length})</span><span>▸</span></button><div class="coll-body" id="arch-body">${ar.map(i=>renderCard(i)).join('')}</div></div>`;
+  btm.innerHTML=h;
 }
 
+function toggleColl(id,btn){const b=document.getElementById(id);if(!b)return;const open=b.classList.toggle('open');btn.querySelector('span:last-child').textContent=open?'▾':'▸'}
+
+// ── renderCard ─────────────────────────────────────────────────────────────
 function renderCard(item){
   const done=item.status==='done'||item.status==='archived';
   const c=item.content||{};
@@ -1050,147 +984,118 @@ function renderCard(item){
   const imp=item.important_personal;
   const pinned=todayFocus.includes(item.id);
   const age=ageDays(item.created_at);
-  const effort=item.effort||'medium';
   const lk=actionsLocked||done;
-
-  const ctxBtn=`<button class="mc mc-ctx" onclick="toggleCtx('${item.id}')" title="Toggle context" ${lk?'disabled':''}>${ctx==='personal'?'Personal':'Work'}</button>`;
-  const ca=(label,fn,cls,forceEnable)=>`<button class="ca ${cls}" onclick="${fn}" ${(lk&&!forceEnable)?'disabled':''}>${label}</button>`;
-
+  const ov=isOverdue(c.due),tod=isToday(c.due);
+  const stateChip=()=>{if(ov)return`<span class="mc mc-overdue">Overdue</span>`;if(tod)return`<span class="mc mc-due">Due today</span>`;if(imp)return`<span class="mc mc-imp">🌟 Important</span>`;return''};
+  const ctxBtn=`<button class="mc mc-ctx" onclick="toggleCtx('${item.id}')">${ctx==='personal'?'Personal':'Work'}</button>`;
+  const ca=(lbl,fn,cls,safe)=>`<button class="ca ${cls}${safe?' ca-safe':''}" onclick="${fn}" ${lk&&!safe?'disabled':''}>${lbl}</button>`;
   let inner='';
+
   if(item.type==='communication'){
     const tone=c.tone||'normal';
-    inner=`<div class="card-top"><div class="card-chips">
-      <span class="mc mc-communication">Email</span>
-      <span class="mc mc-task">${c.category||'General'}</span>
-      ${urgent?'<span class="mc mc-overdue">Overdue</span>':''}
-      ${imp?'<span class="mc mc-imp">Important</span>':''}${ctxBtn}
-    </div><span class="card-time">${fmt(item.created_at)}</span></div>
+    inner=`<div class="card-top"><div class="card-chips">${stateChip()}<span class="mc mc-cat">${c.category||'General'}</span>${ctxBtn}</div><span class="card-time">${fmt(item.created_at)}</span></div>
     <div class="card-body">${esc(trunc(c.preview||'',180))}</div>
-    <div class="tone-row"><span class="tone-lbl">Tone</span>
-      <button class="tone-btn${tone==='soft'?' active':''}" onclick="setTone('${item.id}','soft')">Soft</button>
-      <button class="tone-btn${tone==='normal'?' active':''}" onclick="setTone('${item.id}','normal')">Normal</button>
-      <button class="tone-btn${tone==='firm'?' active':''}" onclick="setTone('${item.id}','firm')">Firm</button>
+    <div class="tone-row"><span class="tlbl">Tone</span>
+      <button class="tbtn${tone==='soft'?' on':''}" onclick="setTone('${item.id}','soft')">Soft</button>
+      <button class="tbtn${tone==='normal'?' on':''}" onclick="setTone('${item.id}','normal')">Normal</button>
+      <button class="tbtn${tone==='firm'?' on':''}" onclick="setTone('${item.id}','firm')">Firm</button>
     </div>
-    <div class="reply-wrap"><div class="reply-eyebrow">Suggested reply</div>
+    <div class="reply-wrap"><div class="reply-ey">Suggested reply</div>
       <div class="reply-body" id="rt-${item.id}">${esc(c.reply||'')}</div>
       <textarea class="reply-edit" id="re-${item.id}" style="display:none">${esc(c.reply||'')}</textarea>
     </div>
     <div class="card-actions">
-      ${ca('Copy reply',`copyReply('${item.id}')`,`ca-primary`,true)}
-      ${ca('Edit reply',`toggleEdit('${item.id}')`,`ca-tonal`)}
-      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin to today',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`):''}
+      ${ca('Copy reply',`copyReply('${item.id}')`,`ca-primary`,true)}${ca('Edit reply',`toggleEdit('${item.id}')`,`ca-tonal`)}
+      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`):''}
       ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else if(item.type==='reflection'){
-    inner=`<div class="card-top"><div class="card-chips">
-      <span class="mc mc-reflection">Reflection</span>
-      ${imp?'<span class="mc mc-imp">Important</span>':''}
-    </div><span class="card-time">${fmt(item.created_at)}</span></div>
-    <div class="card-body reflect">${esc(c.text||'')}</div>
+    inner=`<div class="card-top"><div class="card-chips">${stateChip()}</div><span class="card-time">${fmt(item.created_at)}</span></div>
+    <div class="card-body rfl">${esc(c.text||'')}</div>
     <div class="card-actions">
-      ${!done?ca('Keep',`keepItem('${item.id}')`,`ca-muted`)+ca('Convert to task',`convertToTask('${item.id}')`,`ca-tonal`)+ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
+      ${!done?ca('Keep',`keepItem('${item.id}')`,`ca-muted`)+ca('→ Task',`convertToTask('${item.id}')`,`ca-tonal`)+ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)+ca(imp?'🌟 Important':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
       ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else if(item.type==='routine'){
-    const nd=routineNextDue(item);
-    inner=`<div class="card-top"><div class="card-chips">
-      <span class="mc mc-routine">Routine</span>
-      ${c.frequency?`<span class="mc mc-routine">${c.frequency}</span>`:''}
-    </div><span class="card-time">${fmt(item.created_at)}</span></div>
+    const nd=routineND(item);
+    inner=`<div class="card-top"><div class="card-chips">${c.frequency?`<span class="mc" style="background:var(--teal-l);color:var(--teal)">${c.frequency}</span>`:''}</div><span class="card-time">${fmt(item.created_at)}</span></div>
     <div class="card-title">${esc(c.title||c.text||'Routine')}</div>
-    <div class="routine-sub">${c.last_completed?`Last done: ${c.last_completed}`:'Not started yet'}${nd?' · Next: '+nd:''}</div>
+    <div class="routine-sub">${c.last_completed?`Last: ${c.last_completed}`:'Not started'}${nd?' · Next: '+nd:''}</div>
     <div class="card-actions">
-      ${!done?ca('Done for today',`completeRoutine('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin to today',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
+      ${!done?ca('Done for today',`completeRoutine('${item.id}')`,`ca-done`)+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'🌟':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
       ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else if(item.type==='obligation'){
-    const ov=isOverdue(c.due),tod=isToday(c.due);
-    inner=`<div class="card-top"><div class="card-chips">
-      <span class="mc mc-obligation">Obligation</span>
-      ${ov?'<span class="mc mc-overdue">Overdue</span>':tod?'<span class="mc mc-high">Due today</span>':''}
-      ${imp?'<span class="mc mc-imp">Important</span>':''}${ctxBtn}
-    </div><span class="card-time">${fmt(item.created_at)}</span></div>
-    ${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||c.text||'')}" onkeydown="if(event.key==='Enter')saveInlineEdit('${item.id}');if(event.key==='Escape')cancelEdit('${item.id}')">`:`<div class="card-title">${esc(c.title||c.text||'Obligation')}</div>`}
+    inner=`<div class="card-top"><div class="card-chips">${stateChip()}${ctxBtn}</div><span class="card-time">${fmt(item.created_at)}</span></div>
+    ${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||c.text||'')}" onkeydown="if(event.key==='Enter')saveIE('${item.id}');if(event.key==='Escape')cancelIE('${item.id}')">`:`<div class="card-title">${esc(c.title||c.text||'Obligation')}</div>`}
     ${c.due?`<div class="card-due${ov?' ov':''}">${ov?'Overdue · ':tod?'Due today · ':'Due '}${c.due}</div>`:''}
     ${c.frequency?`<div class="routine-sub">Repeats: ${c.frequency}</div>`:''}
     <div class="card-actions">
-      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+(item._editing?ca('Save',`saveInlineEdit('${item.id}')`,`ca-primary`)+ca('Cancel',`cancelEdit('${item.id}')`,`ca-muted`):ca('Edit',`startEdit('${item.id}')`,`ca-muted`))+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
+      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+(item._editing?ca('Save',`saveIE('${item.id}')`,`ca-primary`)+ca('Cancel',`cancelIE('${item.id}')`,`ca-muted`):ca('Edit',`startIE('${item.id}')`,`ca-muted`))+ca(imp?'🌟':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
       ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else if(item.type==='task'){
-    const ov=isOverdue(c.due),tod=isToday(c.due);
-    inner=`<div class="card-top"><div class="card-chips">
-      <span class="mc mc-task">Task</span>
-      ${ov?'<span class="mc mc-overdue">Overdue</span>':tod?'<span class="mc mc-high">Due today</span>':item.priority==='high'?'<span class="mc mc-high">High priority</span>':''}
-      ${imp?'<span class="mc mc-imp">Important</span>':''}
-      ${effort==='low'?'<span class="mc" style="background:var(--md-green-light);color:var(--md-green)">Quick</span>':effort==='high'?'<span class="mc mc-high">High effort</span>':''}
-      ${ctxBtn}
-    </div><span class="card-time">${fmt(item.created_at)}</span></div>
-    ${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||'')}" onkeydown="if(event.key==='Enter')saveInlineEdit('${item.id}');if(event.key==='Escape')cancelEdit('${item.id}')">`:`<div class="card-title">${esc(c.title||'Untitled')}</div>`}
+    inner=`<div class="card-top"><div class="card-chips">${stateChip()}${ctxBtn}</div><span class="card-time">${fmt(item.created_at)}</span></div>
+    ${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||'')}" onkeydown="if(event.key==='Enter')saveIE('${item.id}');if(event.key==='Escape')cancelIE('${item.id}')">`:`<div class="card-title">${esc(c.title||'Untitled')}</div>`}
     ${c.due?`<div class="card-due${ov?' ov':''}">${ov?'Overdue · ':tod?'Due today · ':'Due '}${c.due}</div>`:''}
     <div class="card-actions">
-      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+(item._editing?ca('Save',`saveInlineEdit('${item.id}')`,`ca-primary`)+ca('Cancel',`cancelEdit('${item.id}')`,`ca-muted`):ca('Edit',`startEdit('${item.id}')`,`ca-muted`))+ca(pinned?'Pinned':'Pin to today',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'Important ✓':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
+      ${!done?ca('Mark done',`markDone('${item.id}')`,`ca-done`)+(item._editing?ca('Save',`saveIE('${item.id}')`,`ca-primary`)+ca('Cancel',`cancelIE('${item.id}')`,`ca-muted`):ca('Edit',`startIE('${item.id}')`,`ca-muted`))+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`)+ca(imp?'🌟':'Mark important',`toggleImp('${item.id}')`,`ca-imp${imp?' on':''}`):''}
       ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>`;
   }else{
-    const ageBadge=age>=7?`<span class="mc mc-obligation" style="font-size:10px">${age}d old</span>`:age>=3?`<span class="mc" style="background:var(--md-surface3);color:var(--md-on-surface2)">${age}d</span>`:'';
-    const showReview=age>=7&&!done;
-    inner=`<div class="card-top"><div class="card-chips">
-      <span class="mc mc-idea">Idea</span>${ageBadge}${ctxBtn}
-    </div><span class="card-time">${fmt(item.created_at)}</span></div>
+    const ageBadge=age>=7?`<span class="mc" style="background:var(--orange-l);color:var(--orange)">${age}d old</span>`:age>=3?`<span class="mc" style="background:var(--surface3);color:var(--on-s2)">${age}d</span>`:'';
+    inner=`<div class="card-top"><div class="card-chips">${ageBadge}${ctxBtn}</div><span class="card-time">${fmt(item.created_at)}</span></div>
     <div class="card-body">${esc(c.text||'')}</div>
     <div class="card-actions">
-      ${!done?ca('Convert to task',`convertToTask('${item.id}')`,`ca-tonal`)+ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)+ca(pinned?'Pinned':'Pin to today',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`):''}
+      ${!done?ca('→ Task',`convertToTask('${item.id}')`,`ca-tonal`)+ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)+ca(pinned?'Pinned':'Pin',`pinItem('${item.id}')`,`ca-pin${pinned?' on':''}`):''}
       ${ca('Delete',`deleteItem('${item.id}')`,`ca-danger`,true)}
     </div>
-    ${showReview&&!done?`<div class="review-row"><span class="review-lbl">Review</span>${ca('Convert to task',`convertToTask('${item.id}')`,`ca-tonal`)}${ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)}${ca('Keep',`keepItem('${item.id}')`,`ca-muted`)}</div>`:''}`;
+    ${age>=7&&!done?`<div class="review-row"><span class="rlbl">Review</span>${ca('→ Task',`convertToTask('${item.id}')`,`ca-tonal`)}${ca('Archive',`archiveItem('${item.id}')`,`ca-muted`)}${ca('Keep',`keepItem('${item.id}')`,`ca-muted`)}</div>`:''}`;
   }
-
-  const cardCls=`card type-${item.type}${done?' done':''}${urgent?' urgent':''}${ctx==='personal'?' personal':''}`;
-  return`<div class="${cardCls}" id="card-${item.id}"><div class="card-stripe ${item.type}"></div><div class="card-inner">${inner}</div></div>`;
+  const cls=`card type-${item.type}${done?' done':''}${urgent?' urgent':''}${ctx==='personal'?' personal':''}`;
+  return`<div class="${cls}" id="card-${item.id}"><div class="stripe ${item.type}"></div><div class="card-in">${inner}</div></div>`;
 }
 
 // ── Card actions ───────────────────────────────────────────────────────────
-function startEdit(id){const i=items.find(x=>x.id===id);if(!i)return;i._editing=true;render();setTimeout(()=>{const e=document.getElementById('ie-'+id);if(e){e.focus();e.select()}},50)}
-function cancelEdit(id){const i=items.find(x=>x.id===id);if(i){i._editing=false;render()}}
-async function saveInlineEdit(id){
+function startIE(id){const i=items.find(x=>x.id===id);if(!i)return;i._editing=true;render();setTimeout(()=>{const e=document.getElementById('ie-'+id);if(e){e.focus();e.select()}},50)}
+function cancelIE(id){const i=items.find(x=>x.id===id);if(i){i._editing=false;render()}}
+async function saveIE(id){
   const i=items.find(x=>x.id===id);if(!i)return;
   const el=document.getElementById('ie-'+id);if(!el)return;
-  i.content.title=el.value;i._editing=false;
-  i.effort=detectEffort(el.value,i.type);
-  try{await dbUpdate(id,{content:i.content,effort:i.effort});render();showToast('Saved')}
-  catch(e){render()}
+  i.content.title=el.value;i._editing=false;i.effort=dEffort(el.value,i.type);
+  try{await dbUpdate(id,{content:i.content,effort:i.effort});render();showToast('Saved')}catch(e){render()}
 }
 async function toggleCtx(id){
   if(!requireSession())return;
   const i=items.find(x=>x.id===id);if(!i)return;
-  i.context=i.context==='personal'?'work':'personal';
-  if(i.context!=='personal')i.important_personal=false;
+  i.context=i.context==='personal'?'work':'personal';if(i.context!=='personal')i.important_personal=false;
   try{await dbUpdate(id,{context:i.context,important_personal:i.important_personal});render()}catch(e){}
 }
 async function toggleImp(id){
   if(!requireSession())return;
   const i=items.find(x=>x.id===id);if(!i)return;
-  i.important_personal=!i.important_personal;
-  if(i.important_personal)i.context='personal';
+  i.important_personal=!i.important_personal;if(i.important_personal)i.context='personal';
   try{await dbUpdate(id,{important_personal:i.important_personal,context:i.context});render();showToast(i.important_personal?'Marked important':'Removed')}catch(e){}
 }
 function setTone(id,tone){
   const i=items.find(x=>x.id===id);if(!i)return;
   i.content.tone=tone;
-  i.content.reply=generateReply(i.content.category,tone,i.content.full||i.content.preview||'');
+  // genReply inline
+  const n=extractName(i.content.full||i.content.preview||''),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';
+  const T={soft:{Neutering:`${g}Thank you for reaching out. Our subsidised programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK] or WhatsApp us.${sign}`,Surrender:`${g}We understand. Our intake is on a waiting list. Please share a photo, species, breed, and age.${sign}`,Volunteering:`${g}Thank you! New volunteers complete our Pet Care Programme (PCP) first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Your support means everything. Donate at [INSERT DONATION LINK]. Tax-exempt receipts above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},normal:{Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Our intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}Thank you. All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK]. Receipts above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},firm:{Neutering:`${g}Our subsidised neutering programme, Potong Royong, is slot-based. Walk-ins not accepted. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Intake is on a strict waiting list. Provide: species, breed, age, reason, photo.${sign}`,Volunteering:`${g}All volunteers complete PCP before joining shifts. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Donate via [INSERT DONATION LINK] only.${sign}`,General:`${g}Thank you. We respond within 2–3 working days.${sign}`}};
+  i.content.reply=(T[tone]||T.normal)[i.content.category]||(T[tone]||T.normal).General;
   dbUpdate(id,{content:i.content}).catch(()=>{});
-  const rt=document.getElementById('rt-'+id);const re=document.getElementById('re-'+id);
+  const rt=document.getElementById('rt-'+id),re=document.getElementById('re-'+id);
   if(rt)rt.textContent=i.content.reply;if(re)re.value=i.content.reply;
-  document.querySelectorAll(`#card-${id} .tone-btn`).forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===tone));
+  document.querySelectorAll(`#card-${id} .tbtn`).forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase()===tone));
   showToast('Tone updated');
 }
+function extractName(text){const m=text.match(/(?:my name is|i am|i'm|from|regards,|sincerely,|cheers,)\s*([A-Z][a-z]+(?: [A-Z][a-z]+)?)/i);if(m)return m[1];for(const l of text.split('\n').slice(-5)){const nm=l.trim().match(/^([A-Z][a-z]+(?: [A-Z][a-z]+)?)$/);if(nm&&nm[1].length<30)return nm[1]}return null}
 function toggleEdit(id){
   const te=document.getElementById('rt-'+id),ee=document.getElementById('re-'+id);
   if(!te||!ee)return;
   if(ee.style.display==='none'){ee.style.display='block';te.style.display='none'}
-  else{const v=ee.value;te.textContent=v;ee.style.display='none';te.style.display='block';
-    const i=items.find(x=>x.id===id);if(i){i.content.reply=v;dbUpdate(id,{content:i.content}).catch(()=>{})}}
+  else{const v=ee.value;te.textContent=v;ee.style.display='none';te.style.display='block';const i=items.find(x=>x.id===id);if(i){i.content.reply=v;dbUpdate(id,{content:i.content}).catch(()=>{})}}
 }
 function copyReply(id){
   const i=items.find(x=>x.id===id);if(!i)return;
@@ -1203,20 +1108,11 @@ async function markDone(id){
   const prev=JSON.parse(JSON.stringify(items[idx]));
   const ts=new Date().toISOString();
   const eff=items[idx].effort||'medium';
-  if(eff==='low')bMem.completedLow++;else if(eff==='medium')bMem.completedMed++;else bMem.completedHigh++;
-  saveBMem();
-  items[idx].status='done';items[idx].completed_at=ts;
-  render();
+  if(eff==='low')bMem.low++;else if(eff==='medium')bMem.med++;else bMem.high++;
+  saveBMem();items[idx].status='done';items[idx].completed_at=ts;render();
   try{await dbUpdate(id,{status:'done',completed_at:ts})}catch(e){items[idx]=prev;render();return}
   showUndo(id,prev);
-  setTimeout(()=>{
-    const nextNA=pickNA();
-    if(nextNA){
-      const card=document.getElementById('card-'+nextNA.id);if(card)card.classList.add('chain-next');
-      const gcn=document.getElementById('gc-next');if(gcn)gcn.classList.add('pulse');
-      setTimeout(()=>{if(card)card.classList.remove('chain-next');if(gcn)gcn.classList.remove('pulse')},1200);
-    }
-  },300);
+  setTimeout(()=>{const nna=pickNA();if(nna){const c=document.getElementById('card-'+nna.id);if(c)c.classList.add('chain');const gn=document.getElementById('gc-na');if(gn)gn.classList.add('pulse');setTimeout(()=>{if(c)c.classList.remove('chain');if(gn)gn.classList.remove('pulse')},1200)}},300);
 }
 async function completeRoutine(id){
   if(!requireSession())return;
@@ -1239,13 +1135,11 @@ async function convertToTask(id){
   if(!requireSession())return;
   const i=items.find(x=>x.id===id);if(!i)return;
   const txt=i.content.text||i.content.title||'Task from idea';
-  try{
-    const saved=await dbSave({type:'task',content:{title:txt},priority:'medium',context:i.context||'work',important_personal:i.important_personal||false,effort:detectEffort(txt,'task'),status:'active',created_at:new Date().toISOString()});
-    if(saved){items.unshift(enrichItem(saved));await markDone(id);render();showToast('Converted to task')}
-  }catch(e){}
+  try{const saved=await dbSave({type:'task',content:{title:txt},priority:'medium',context:i.context||'work',important_personal:i.important_personal||false,effort:dEffort(txt,'task'),status:'active',created_at:new Date().toISOString()});
+    if(saved){items.unshift(enrich(saved));await markDone(id);render();showToast('Converted to task')}}catch(e){}
 }
 async function deleteItem(id){
-  if(!confirm('Delete this item permanently?'))return;
+  if(!confirm('Delete permanently?'))return;
   items=items.filter(i=>i.id!==id);render();
   try{await dbDelete(id);showToast('Deleted')}catch(e){await loadItems()}
 }
@@ -1256,122 +1150,110 @@ function showUndo(id,prev){
 }
 async function undoDone(){
   if(!undoStack)return;
-  const{id,prev}=undoStack;
-  const idx=items.findIndex(i=>i.id===id);
+  const{id,prev}=undoStack;const idx=items.findIndex(i=>i.id===id);
   if(idx>=0){
     const eff=items[idx].effort||'medium';
-    if(eff==='low'&&bMem.completedLow>0)bMem.completedLow--;
-    else if(eff==='medium'&&bMem.completedMed>0)bMem.completedMed--;
-    else if(bMem.completedHigh>0)bMem.completedHigh--;
-    saveBMem();
-    items[idx]=prev;
+    if(eff==='low'&&bMem.low>0)bMem.low--;else if(eff==='medium'&&bMem.med>0)bMem.med--;else if(bMem.high>0)bMem.high--;
+    saveBMem();items[idx]=prev;
     try{await dbUpdate(id,{status:'active',completed_at:null});render();showToast('Undone')}catch(e){}
   }
   document.getElementById('undo-bar').classList.remove('show');undoStack=null;clearTimeout(undoTimer);
 }
-function scrollToCard(id){
+function scrollTo(id){
   const el=document.getElementById('card-'+id);
-  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--md-accent)';setTimeout(()=>el.style.outline='none',1400)}
+  if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--accent)';setTimeout(()=>el.style.outline='none',1400)}
 }
 
-// ── Capture sheet ──────────────────────────────────────────────────────────
-function onCapInput(){
-  if(override)return;
-  const val=document.getElementById('cap-input').value;
-  const det=detectType(val);
-  const sugCtx=val.length>2?detectCtx(val):null;
+// ── Capture ────────────────────────────────────────────────────────────────
+function onCapIn(){
+  if(ovr)return;
+  const val=document.getElementById('cap-in').value;
+  const det=dType(val),sugCtx=val.length>2?dCtx(val):null;
   const el=document.getElementById('detect-hint');
   if(!det){el.innerHTML='What\'s on your mind?';return}
   const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};
   el.innerHTML=`<span>Detected: ${lbl[det]||det}</span>${sugCtx==='personal'?' · Personal?':''}`;
-  const fw=document.getElementById('freq-wrap');if(fw)fw.style.display=(det==='routine'||det==='obligation')?'block':'none';
-  if(sugCtx&&sugCtx!==captureCtx)setCtx(sugCtx);
+  const fw=document.getElementById('freq-w');if(fw)fw.style.display=(det==='routine'||det==='obligation')?'block':'none';
+  if(sugCtx&&sugCtx!==capCtx)setCtx(sugCtx);
 }
-function setOverride(type,btn){
-  override=type===override?null:type;
-  document.querySelectorAll('.sel-chip:not(#ctx-work):not(#ctx-personal)').forEach(b=>b.classList.remove('active'));
-  if(override)btn.classList.add('active');
-  const fw=document.getElementById('freq-wrap');if(fw)fw.style.display=(override==='routine'||override==='obligation')?'block':'none';
+function setOvr(type,btn){
+  ovr=type===ovr?null:type;
+  document.querySelectorAll('.sc:not(#ctx-work):not(#ctx-personal)').forEach(b=>b.classList.remove('on'));
+  if(ovr)btn.classList.add('on');
+  const fw=document.getElementById('freq-w');if(fw)fw.style.display=(ovr==='routine'||ovr==='obligation')?'block':'none';
   const el=document.getElementById('detect-hint');
-  if(override){const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};el.innerHTML=`<span>Set to: ${lbl[override]}</span>`}
-  else onCapInput();
+  if(ovr){const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};el.innerHTML=`<span>Set to: ${lbl[ovr]}</span>`}else onCapIn();
 }
 function setCtx(ctx){
-  captureCtx=ctx;
-  document.getElementById('ctx-work').className='sel-chip'+(ctx==='work'?' active':'');
-  document.getElementById('ctx-personal').className='sel-chip ctx-p'+(ctx==='personal'?' active':'');
+  capCtx=ctx;
+  document.getElementById('ctx-work').className='sc'+(ctx==='work'?' on':'');
+  document.getElementById('ctx-personal').className='sc ctx-p'+(ctx==='personal'?' on':'');
 }
-function toggleRefine(){
-  const b=document.getElementById('refine-body');
-  const btn=document.getElementById('refine-btn');
-  const open=b.classList.toggle('open');
-  btn.textContent=(open?'▾':'▸')+' More options';
-}
+function toggleRef(){const b=document.getElementById('ref-body'),btn=document.getElementById('ref-btn');const open=b.classList.toggle('open');btn.textContent=(open?'▾':'▸')+' More options'}
 function openSheet(){
   if(!requireSession())return;
   document.getElementById('sheet-bg').classList.add('open');
-  override=null;captureCtx='work';
-  document.querySelectorAll('.sel-chip').forEach(b=>b.classList.remove('active'));
+  ovr=null;capCtx='work';
+  document.querySelectorAll('.sc').forEach(b=>b.classList.remove('on'));
   setCtx('work');
   document.getElementById('detect-hint').innerHTML='What\'s on your mind?';
-  document.getElementById('refine-body').classList.remove('open');
-  document.getElementById('refine-btn').textContent='▸ More options';
-  document.getElementById('cap-input').value='';
+  document.getElementById('ref-body').classList.remove('open');
+  document.getElementById('ref-btn').textContent='▸ More options';
+  document.getElementById('cap-in').value='';
   document.getElementById('cap-due').value='';
   document.getElementById('cap-freq').value='';
-  document.getElementById('cap-priority').value='medium';
-  const fw=document.getElementById('freq-wrap');if(fw)fw.style.display='none';
-  setTimeout(()=>document.getElementById('cap-input').focus(),80);
+  document.getElementById('cap-pri').value='medium';
+  const fw=document.getElementById('freq-w');if(fw)fw.style.display='none';
+  setTimeout(()=>document.getElementById('cap-in').focus(),80);
 }
 function closeSheet(){document.getElementById('sheet-bg').classList.remove('open')}
-function sheetBgClick(e){if(e.target===document.getElementById('sheet-bg'))closeSheet()}
+function bgClick(e){if(e.target===document.getElementById('sheet-bg'))closeSheet()}
 
-async function submitCapture(){
+async function submitCap(){
   if(!requireSession())return;
-  const txt=document.getElementById('cap-input').value.trim();
+  const txt=document.getElementById('cap-in').value.trim();
   if(!txt){showToast('Type something first');return}
-  const type=override||detectType(txt)||'idea';
-  const priority=document.getElementById('cap-priority').value||'medium';
-  const ctx=captureCtx||'work';
+  const type=ovr||dType(txt)||'idea';
+  const pri=document.getElementById('cap-pri').value||'medium';
+  const ctx=capCtx||'work';
   const due=document.getElementById('cap-due').value;
   const freq=document.getElementById('cap-freq').value;
-  const effort=detectEffort(txt,type);
-  const impP=ctx==='personal'&&detectImp(txt);
+  const effort=dEffort(txt,type);
+  const impP=ctx==='personal'&&dImp(txt);
   const now=new Date().toISOString();
-  let item={status:'active',created_at:now,context:ctx,priority,effort,important_personal:impP};
-  if(type==='communication'){const{category,confidence}=classifyEmail(txt);const reply=generateReply(category,'normal',txt);item={...item,type:'communication',content:{preview:txt.replace(/\s+/g,' ').slice(0,300),category,confidence,reply,full:txt,tone:'normal'}}}
-  else if(type==='task')item={...item,type:'task',content:{title:txt,due}}
+  let item={status:'active',created_at:now,context:ctx,priority:pri,effort,important_personal:impP};
+  if(type==='communication'){
+    const s=txt.toLowerCase();let sc=0,cat='General';
+    if(/neuter|mandul|spay|castrat|potong/.test(s)){cat='Neutering';sc=/subsidis/.test(s)?3:2}
+    else if(/surrender|rehome|re-home|give up/.test(s)){cat='Surrender';sc=2}
+    else if(/volunteer|volunteering/.test(s)){cat='Volunteering';sc=2}
+    else if(/donat|contribut|fund/.test(s)){cat='Donation';sc=2}
+    const confidence=sc>=3?'high':sc>=2?'medium':'low';
+    // simple reply
+    const n=extractName(txt),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';
+    const replies={Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Our intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}Thank you. All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK]. Receipts above RM50.${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`};
+    item={...item,type:'communication',content:{preview:txt.replace(/\s+/g,' ').slice(0,300),category:cat,confidence,reply:replies[cat]||replies.General,full:txt,tone:'normal'}};
+  }else if(type==='task')item={...item,type:'task',content:{title:txt,due}}
   else if(type==='reflection')item={...item,type:'reflection',context:'personal',content:{text:txt}}
   else if(type==='obligation')item={...item,type:'obligation',context:ctx,content:{title:txt,due,frequency:freq||null}}
   else if(type==='routine')item={...item,type:'routine',context:'personal',content:{title:txt,frequency:freq||'weekly',last_completed:null}}
   else item={...item,type:'idea',content:{text:txt}}
   document.getElementById('save-btn').disabled=true;
-  try{
-    const saved=await dbSave(item);
-    if(saved){items.unshift(enrichItem(saved));render();closeSheet();showToast('Saved')}
-  }catch(e){}
+  try{const saved=await dbSave(item);if(saved){items.unshift(enrich(saved));render();closeSheet();showToast('Saved')}}catch(e){}
   document.getElementById('save-btn').disabled=false;
 }
 
-function setFilter(f,btn){
-  activeFilter=f;document.querySelectorAll('.md-chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');renderStream();
-}
-function setEnergy(level,btn){
-  energy=level;document.querySelectorAll('.energy-opt').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();
-}
+function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');renderStream()}
+function setEnergy(level,btn){energy=level;document.querySelectorAll('.eopt').forEach(b=>b.classList.remove('on'));btn.classList.add('on');render()}
 
 let toastT;
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);
-}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200)}
 
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape')closeSheet();
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSheet()}
 });
 
-// ── Start ──────────────────────────────────────────────────────────────────
 bootstrap();
 </script>
 </body>
