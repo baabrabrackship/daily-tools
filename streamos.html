@@ -409,18 +409,19 @@ function scheduleNextMidnight(){
 scheduleNextMidnight();
 
 // ── Utils ──────────────────────────────────────────────────────────────────
-function withTimeout(p,ms,l){let t;return Promise.race([p,new Promise((_,rej)=>{t=setTimeout(()=>rej(new Error(`Timeout:${l}`)),ms)})]).finally(()=>clearTimeout(t))}
-function isAuthErr(e){if(!e)return false;const m=(e.message||'').toLowerCase()+(e.code||'').toLowerCase();return/jwt|auth|expired|token|refresh|session|invalid.*claim|not authenticated/.test(m)}
 function isActionable(i){
   return !i.node_type || i.node_type === 'item';
 }
+function withTimeout(p,ms,l){let t;return Promise.race([p,new Promise((_,rej)=>{t=setTimeout(()=>rej(new Error(`Timeout:${l}`)),ms)})]).finally(()=>clearTimeout(t))}
+function isAuthErr(e){if(!e)return false;const m=(e.message||'').toLowerCase()+(e.code||'').toLowerCase();return/jwt|auth|expired|token|refresh|session|invalid.*claim|not authenticated/.test(m)}
+
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const trunc=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n)+'…':s};
 const fmt=ts=>{const d=new Date(ts),df=Date.now()-d;if(df<60000)return'just now';if(df<3600000)return Math.floor(df/60000)+'m';if(df<86400000)return Math.floor(df/3600000)+'h';return Math.floor(df/86400000)+'d'};
 const ageDays=ts=>Math.floor((Date.now()-new Date(ts))/86400000);
 const isToday=ts=>ts&&String(ts).slice(0,10)===todayStr;
 const isOverdue=ts=>ts&&String(ts)<todayStr;
-const isUrgent=i=>i.status==='active'&&(i.priority==='high'||(i.type==='task'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))||((i.type==='obligation')&&(isOverdue(i.content?.due)||isToday(i.content?.due))));
+const isUrgent=i=>i.status==='active' && isActionable(i)&&(i.priority==='high'||(i.type==='task'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))||((i.type==='obligation')&&(isOverdue(i.content?.due)||isToday(i.content?.due))));
 const routineND=i=>{const f=i.content?.frequency,l=i.content?.last_completed;if(!f||!l)return null;const d=new Date(l);if(f==='daily')d.setDate(d.getDate()+1);else if(f==='weekly')d.setDate(d.getDate()+7);else if(f==='monthly')d.setMonth(d.getMonth()+1);else if(f==='yearly')d.setFullYear(d.getFullYear()+1);return d.toISOString().slice(0,10)};
 const routineDue=i=>i.type==='routine'&&i.status==='active'&&(()=>{const nd=routineND(i);return!nd||nd<=todayStr})();
 const iTitle=i=>{if(i.type==='task')return i.content?.title;if(i.type==='communication')return(i.content?.category||'Email')+' email';if(i.type==='routine')return i.content?.title||i.content?.text;if(i.type==='obligation')return i.content?.title||i.content?.text;return trunc(i.content?.text,52)};
@@ -437,7 +438,8 @@ function dType(txt){
 }
 function dEffort(txt,type){if(!txt)return'medium';const t=String(txt).toLowerCase();if(type==='idea'||type==='reflection'||type==='routine')return'low';if(/\b(call|meeting|plan|review|report|discuss|present|proposal|analyse|analyze|design|strategy|interview|prepare)\b/.test(t))return'high';if(t.length<40&&/\b(send|reply|buy|pay|book|ping|check|read|confirm|update)\b/.test(t))return'low';if(t.length<40)return'low';return'medium'}
 function dImp(txt){return/\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt||''))}
-function enrich(i){if(!i.effort){const t=i.content?.text||i.content?.title||i.content?.preview||'';i.effort=dEffort(t,i.type)}if(i.important_personal==null){const t=i.content?.text||i.content?.title||'';i.important_personal=i.context==='folder'&&dImp(t)}return i}
+function enrich(i)function enrich(i){
+  if(i.node_type === 'folder') return i;
 
 // ── Part A: Energy decay (D) ────────────────────────────────────────────────
 function energyDecayedEffort(base){
@@ -667,7 +669,7 @@ function pickNA(){
 }
 
 function pickPM(){
-  const base=items.filter(i=>i.status==='active'&&(
+  const base=items.filter(i=>i.status==='active' && isActionable(i)&&(
     i.context==='personal'||i.type==='routine'||i.type==='obligation'||
     (i.type==='reflection'&&isEvening)
   ));
@@ -698,7 +700,7 @@ function pickNudge(){
 // ── Part G: Stop state with continueQuota ─────────────────────────────────
 function checkStop(){
   if(stopOverride)return false;
-  const a=items.filter(i=>i.status==='active');
+  const a=items.filter(i=>i.status==='active' && isActionable(i));
   return!a.some(i=>isOverdue(i.content?.due)&&i.type!=='reflection')
     &&!a.some(i=>i.context!=='personal'&&i.priority==='high'&&i.type!=='reflection')
     &&items.some(i=>i.status==='done'&&i.context==='personal'&&isToday(i.completed_at||i.created_at));
@@ -731,7 +733,7 @@ function renderPersonalAnchor(pm,na){
 function renderStop(stop){
   const el=document.getElementById('stop-zone');
   if(!stop){el.innerHTML='';return}
-  const activeCount=items.filter(i=>i.status==='active').length;
+  const activeCount=items.filter(i=>i.status==='active' && isActionable(i)).length;
   // Part I: night shutdown nudge
   const nightExtra=isNight&&activeCount>0
     ?`<div style="font-size:12px;color:var(--green);opacity:.75;margin-bottom:10px">${activeCount} item${activeCount>1?'s':''} still active — capture anything urgent, then close.</div>`
@@ -759,7 +761,7 @@ function doContinue(){
 function renderNA(na,naIspm){
   const el=document.getElementById('na-area');
   // Part H: day closed — suppress Next Action
-  if(dayClosed&&!items.some(i=>i.status==='active'&&isUrgent(i))){
+  if(dayClosed&&!items.some(i=>i.status==='active' && isActionable(i) && isUrgent(i))){
     el.innerHTML='';return;
   }
   if(!na||naIspm){el.innerHTML='';return}
