@@ -438,8 +438,18 @@ function dType(txt){
 }
 function dEffort(txt,type){if(!txt)return'medium';const t=String(txt).toLowerCase();if(type==='idea'||type==='reflection'||type==='routine')return'low';if(/\b(call|meeting|plan|review|report|discuss|present|proposal|analyse|analyze|design|strategy|interview|prepare)\b/.test(t))return'high';if(t.length<40&&/\b(send|reply|buy|pay|book|ping|check|read|confirm|update)\b/.test(t))return'low';if(t.length<40)return'low';return'medium'}
 function dImp(txt){return/\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt||''))}
-function enrich(i)function enrich(i){
+function enrich(i){
   if(i.node_type === 'folder') return i;
+  if(!i.effort){
+    const t=i.content?.text||i.content?.title||i.content?.preview||'';
+    i.effort=dEffort(t,i.type);
+  }
+  if(i.important_personal==null){
+    const t=i.content?.text||i.content?.title||'';
+    i.important_personal=i.context==='personal'&&dImp(t);
+  }
+  return i;
+}
 
 // ── Part A: Energy decay (D) ────────────────────────────────────────────────
 function energyDecayedEffort(base){
