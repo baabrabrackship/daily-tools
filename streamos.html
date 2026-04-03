@@ -1089,40 +1089,11 @@ async function markDone(id){
   resetIdleTimer();
 
   // Part G: controlled continuation decrement
-  if(stopOverride&&continueQuota>0){
+    if(stopOverride&&continueQuota>0){
     continueQuota--;
     if(continueQuota<=0){
       stopOverride=false;
       continueQuota=0;
-
-  async function createFolder(name, parentId=null){
-  if(!requireSession()) return;
-
-  const now = new Date().toISOString();
-
-  const folder = {
-    name,
-    node_type: 'folder',
-    parent_id: parentId,
-    status: 'active',
-    created_at: now,
-    context: 'work',
-    priority: 'low',
-    effort: 'low',
-    important_personal: false
-  };
-
-  try{
-    const saved = await dbSave(folder);
-    if(saved){
-      items.unshift(enrich(saved));
-      render();
-      return saved;
-    }
-  }catch(e){
-    showToast('Failed to create folder');
-  }
-}
     }
   }
 
@@ -1168,7 +1139,34 @@ async function convertToTask(id){
   const txt=i.content.text||i.content.title||'Task from idea';
   try{const saved=await dbSave({type:'task',content:{title:txt,due:''},priority:'medium',context:i.context||'work',important_personal:i.important_personal||false,effort:dEffort(txt,'task'),status:'active',created_at:new Date().toISOString()});if(saved){items.unshift(enrich(saved));stopOverride=false;continueQuota=0;consecutiveCompletions=0;await markDone(id);render();showToast('Converted to task')}}catch(e){}
 }
+async function createFolder(name, parentId=null){
+  if(!requireSession()) return;
 
+  const now = new Date().toISOString();
+
+  const folder = {
+    name,
+    node_type: 'folder',
+    parent_id: parentId,
+    status: 'active',
+    created_at: now,
+    context: 'work',
+    priority: 'low',
+    effort: 'low',
+    important_personal: false
+  };
+
+  try{
+    const saved = await dbSave(folder);
+    if(saved){
+      items.unshift(enrich(saved));
+      render();
+      return saved;
+    }
+  }catch(e){
+    showToast('Failed to create folder');
+  }
+}
 async function deleteItem(id){
   if(!confirm('Delete permanently?'))return;
   const snapshot=[...items];
@@ -1213,10 +1211,19 @@ async function submitCap(){
   if(!requireSession())return;
   const txt=document.getElementById('cap-in').value.trim();if(!txt){showToast('Type something first');return}
   const type=ovr||dType(txt)||'idea',pri=document.getElementById('cap-pri').value||'medium',ctx=capCtx||'work';
-  const due=document.getElementById('cap-due').value,freq=document.getElementById('cap-freq').value;
+    const due=document.getElementById('cap-due').value,freq=document.getElementById('cap-freq').value;
   const effort=dEffort(txt,type),impP=ctx==='personal'&&dImp(txt),now=new Date().toISOString();
-  item.node_type = 'item';
-item.parent_id = currentFolderId;};
+
+  let item={
+    status:'active',
+    created_at:now,
+    context:ctx,
+    priority:pri,
+    effort,
+    important_personal:impP,
+    node_type:'item',
+    parent_id:currentFolderId
+  };
   if(type==='communication'){const s=txt.toLowerCase();let sc=0,cat='General';if(/neuter|mandul|spay|castrat|potong/.test(s)){cat='Neutering';sc=2}else if(/surrender|rehome|re-home|give up/.test(s)){cat='Surrender';sc=2}else if(/volunteer|volunteering/.test(s)){cat='Volunteering';sc=2}else if(/donat|contribut|fund/.test(s)){cat='Donation';sc=2}const n=extractName(txt),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';const replies={Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK].${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`};item={...item,type:'communication',content:{preview:txt.replace(/\s+/g,' ').slice(0,300),category:cat,confidence:sc>=2?'medium':'low',reply:replies[cat]||replies.General,full:txt,tone:'normal'}}}
   else if(type==='task')item={...item,type:'task',content:{title:txt,due}}
   else if(type==='reflection')item={...item,type:'reflection',context:'personal',content:{text:txt}}
