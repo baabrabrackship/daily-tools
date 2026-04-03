@@ -411,6 +411,9 @@ scheduleNextMidnight();
 // ── Utils ──────────────────────────────────────────────────────────────────
 function withTimeout(p,ms,l){let t;return Promise.race([p,new Promise((_,rej)=>{t=setTimeout(()=>rej(new Error(`Timeout:${l}`)),ms)})]).finally(()=>clearTimeout(t))}
 function isAuthErr(e){if(!e)return false;const m=(e.message||'').toLowerCase()+(e.code||'').toLowerCase();return/jwt|auth|expired|token|refresh|session|invalid.*claim|not authenticated/.test(m)}
+function isActionable(i){
+  return !i.node_type || i.node_type === 'item';
+}
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const trunc=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n)+'…':s};
 const fmt=ts=>{const d=new Date(ts),df=Date.now()-d;if(df<60000)return'just now';if(df<3600000)return Math.floor(df/60000)+'m';if(df<86400000)return Math.floor(df/3600000)+'h';return Math.floor(df/86400000)+'d'};
@@ -434,7 +437,7 @@ function dType(txt){
 }
 function dEffort(txt,type){if(!txt)return'medium';const t=String(txt).toLowerCase();if(type==='idea'||type==='reflection'||type==='routine')return'low';if(/\b(call|meeting|plan|review|report|discuss|present|proposal|analyse|analyze|design|strategy|interview|prepare)\b/.test(t))return'high';if(t.length<40&&/\b(send|reply|buy|pay|book|ping|check|read|confirm|update)\b/.test(t))return'low';if(t.length<40)return'low';return'medium'}
 function dImp(txt){return/\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt||''))}
-function enrich(i){if(!i.effort){const t=i.content?.text||i.content?.title||i.content?.preview||'';i.effort=dEffort(t,i.type)}if(i.important_personal==null){const t=i.content?.text||i.content?.title||'';i.important_personal=i.context==='personal'&&dImp(t)}return i}
+function enrich(i){if(!i.effort){const t=i.content?.text||i.content?.title||i.content?.preview||'';i.effort=dEffort(t,i.type)}if(i.important_personal==null){const t=i.content?.text||i.content?.title||'';i.important_personal=i.context==='folder'&&dImp(t)}return i}
 
 // ── Part A: Energy decay (D) ────────────────────────────────────────────────
 function energyDecayedEffort(base){
@@ -646,7 +649,7 @@ function naScore(i){
 }
 
 function pickNA(){
-  const a=items.filter(i=>i.status==='active');
+  const a = items.filter(i => i.status === 'active' && isActionable(i));
   if(!a.length)return null;
   let candidates=a.slice().sort((a,b)=>naScore(b)-naScore(a));
   // Part C: if on a reactive streak, force strategic item
@@ -673,7 +676,7 @@ function pickPM(){
 }
 
 function pickNudge(){
-  const a=items.filter(i=>i.status==='active');
+  const a = items.filter(i => i.status === 'active' && isActionable(i));
   const dt=items.filter(i=>i.status==='done'&&isToday(i.completed_at||i.created_at));
   const dtP=dt.filter(i=>i.context==='personal');
   const oob=a.filter(i=>i.type==='obligation'&&isOverdue(i.content?.due));
@@ -783,7 +786,7 @@ function renderNudge(){
 
 // ── getVisible ─────────────────────────────────────────────────────────────
 function getVisible(){
-  const a=items.filter(i=>i.status==='active');
+  const a = items.filter(i => i.status === 'active' && isActionable(i));
   if(mode==='overwhelmed'){
     const slots=[],used=new Set();
     // Slot 1: soonest overdue/due-today obligation
