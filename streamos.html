@@ -6,6 +6,7 @@
 <title>StreamOS</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+/* ── Design tokens ───────────────────────────────────────────────────────── */
 :root{
   --bg:#f4f4f4;--surface:#fff;--surface2:#f0f0f0;--surface3:#e6e6e6;
   --on-s:#111;--on-s2:#555;--on-s3:#999;--on-s4:#ccc;
@@ -39,9 +40,13 @@
   --s2:0 2px 10px rgba(0,0,0,.5);
   --s3:0 8px 28px rgba(0,0,0,.7);
 }}
+
+/* ── Reset ───────────────────────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{font-size:15px}
 body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* ── Boot screen ─────────────────────────────────────────────────────────── */
 #boot{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 #boot.off{display:none}
 .spinner{width:28px;height:28px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
@@ -51,11 +56,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100v
 .boot-err-h{font-size:16px;font-weight:600;color:var(--on-s);margin-bottom:6px}
 .boot-err-p{font-size:13px;color:var(--on-s2);margin-bottom:18px;line-height:1.5}
 .boot-err-btns{display:flex;gap:10px;justify-content:center}
-#banner{display:none;position:sticky;top:0;z-index:300;background:var(--red-l);border-bottom:1px solid var(--red-b);padding:10px 20px}
-#banner.show{display:block}
-.banner-in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.banner-txt{font-size:13px;color:var(--red);font-weight:500}
-.banner-btns{display:flex;gap:8px}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
 .btn{border:none;cursor:pointer;font-family:var(--f);font-weight:500;display:inline-flex;align-items:center;gap:5px;transition:opacity .15s;border-radius:var(--rpill);font-size:13px}
 .btn:hover{opacity:.85}.btn:disabled{opacity:.35;cursor:not-allowed}
 .b-fill{background:var(--accent);color:#fff;padding:8px 18px}
@@ -63,6 +65,15 @@ body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100v
 .b-out{background:transparent;border:1px solid var(--border);color:var(--on-s2);padding:7px 15px}
 .b-ghost{background:transparent;color:var(--on-s2);padding:6px 10px}
 .b-sm{padding:5px 12px;font-size:12px}
+
+/* ── Banner ──────────────────────────────────────────────────────────────── */
+#banner{display:none;position:sticky;top:0;z-index:300;background:var(--red-l);border-bottom:1px solid var(--red-b);padding:10px 20px}
+#banner.show{display:block}
+.banner-in{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.banner-txt{font-size:13px;color:var(--red);font-weight:500}
+.banner-btns{display:flex;gap:8px}
+
+/* ── Auth ────────────────────────────────────────────────────────────────── */
 #auth{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px}
 #auth.show{display:flex}
 .auth-card{background:var(--surface);border-radius:16px;padding:40px 32px;max-width:360px;width:100%;box-shadow:var(--s2)}
@@ -74,6 +85,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100v
 .auth-div{text-align:center;font-size:11px;color:var(--on-s3);margin:8px 0}
 .auth-msg{font-size:13px;text-align:center;margin-top:10px;min-height:18px}
 .auth-msg.ok{color:var(--green)}.auth-msg.err{color:var(--red)}
+
+/* ── App shell ───────────────────────────────────────────────────────────── */
 #app{display:none}
 #app.show{display:block;padding-bottom:100px}
 .topbar{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom:1px solid var(--border-l);padding:0 20px}
@@ -92,7 +105,19 @@ body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100v
 .pm-item{display:block;width:100%;text-align:left;border:none;background:none;font-family:var(--f);font-size:13px;padding:11px 16px;cursor:pointer;color:var(--on-s2);transition:background .12s}
 .pm-item:hover{background:var(--surface2)}.pm-item.danger{color:var(--red)}
 .pm-divider{height:1px;background:var(--border-l)}
+
+/* ── Page layout ─────────────────────────────────────────────────────────── */
 .page{max-width:640px;margin:0 auto;padding:0 20px}
+
+/* ── Folder breadcrumb (VFS navigation stub) ─────────────────────────────── */
+#folder-bar{display:none;padding:8px 0 0}
+#folder-bar.show{display:block}
+.folder-crumb{font-size:12px;color:var(--on-s3);display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.folder-crumb-seg{cursor:pointer;color:var(--accent);text-decoration:none}
+.folder-crumb-seg:hover{text-decoration:underline}
+.folder-crumb-sep{color:var(--on-s4)}
+
+/* ── Personal anchor ─────────────────────────────────────────────────────── */
 .anchor-zone{padding:16px 0 4px}
 .personal-anchor{background:var(--personal-bg);border:1.5px solid var(--personal-b);border-radius:var(--r);padding:16px 18px;cursor:pointer;transition:box-shadow .15s;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .personal-anchor:hover{box-shadow:var(--s1)}
@@ -103,6 +128,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100v
 .pa-meta{font-size:12px;color:var(--on-s3);margin-top:3px}
 .pa-action{flex-shrink:0;border:none;background:var(--green);color:#fff;border-radius:var(--rsm);padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);transition:opacity .15s;white-space:nowrap}
 .pa-action:hover{opacity:.9}.pa-action:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── Next action ─────────────────────────────────────────────────────────── */
 .na-zone{padding:8px 0 4px}
 .na-card{background:var(--accent-l);border:1.5px solid var(--accent);border-radius:var(--r);padding:18px 18px 16px;transition:box-shadow .15s}
 .na-card.urgent{background:var(--red-l);border-color:var(--red-b)}
@@ -113,6 +140,8 @@ body{font-family:var(--f);background:var(--bg);color:var(--on-s);min-height:100v
 .na-btn{width:100%;border:none;background:var(--accent);color:#fff;border-radius:var(--rsm);padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--f);transition:opacity .15s;letter-spacing:-.1px}
 .na-btn:hover{opacity:.9}.na-btn:disabled{opacity:.35;cursor:not-allowed}
 .na-btn.g{background:var(--green)}.na-btn.r{background:var(--red)}
+
+/* ── Stop state ──────────────────────────────────────────────────────────── */
 body.stopped .stream-items{pointer-events:none;opacity:.3}
 body.stopped .na-zone{pointer-events:none;opacity:.5}
 .stop-zone{display:none;padding:8px 0}
@@ -123,9 +152,16 @@ body.stopped .stop-zone{display:block}
 .stop-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 .stop-act{border:1px solid var(--green-b);background:var(--surface);color:var(--green);border-radius:var(--rpill);padding:7px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);transition:all .15s}
 .stop-act:hover{background:var(--green-l)}.stop-act.primary{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ── Stream ──────────────────────────────────────────────────────────────── */
 .slbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--on-s4);padding:16px 0 6px;display:flex;align-items:center;gap:8px}
 .slbl::after{content:'';flex:1;height:1px;background:var(--border-l)}
-.stream-items{display:flex;flex-direction:column;gap:1px}
+.stream-group{background:var(--surface);border-radius:var(--r);overflow:hidden;box-shadow:var(--s1);margin-bottom:4px}
+.empty{text-align:center;padding:40px 20px;color:var(--on-s3);font-size:14px}
+.nudge-strip{padding:12px 0 4px}
+.nudge-txt{font-size:12px;color:var(--on-s3);line-height:1.5;font-style:italic;text-align:center}
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
 .card{background:var(--surface);border-radius:0;border-bottom:1px solid var(--border-l);transition:background .12s,opacity .2s;overflow:hidden}
 .card:first-child{border-radius:var(--r) var(--r) 0 0}
 .card:last-child{border-radius:0 0 var(--r) var(--r);border-bottom:none}
@@ -140,6 +176,8 @@ body.stopped .stop-zone{display:block}
 .card.type-routine{background:var(--teal-l)}
 .card.type-obligation.w-urgent{background:var(--red-l)}
 .card.in-progress-card{box-shadow:inset 3px 0 0 var(--accent)}
+/* VFS folder card style */
+.card.type-folder{background:var(--surface2);border-left:3px solid var(--border)}
 .card-in{padding:12px 14px 11px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
 .card-in:hover{background:rgba(0,0,0,.02)}
 .card-left{flex:1;min-width:0}
@@ -152,6 +190,7 @@ body.stopped .stop-zone{display:block}
 .card-act.done{background:var(--green);color:#fff}
 .card-act.copy{background:var(--accent-l);color:var(--accent)}
 .card-act.routine{background:var(--teal-l);color:var(--teal)}
+.card-act.folder-open{background:var(--surface3);color:var(--on-s2)}
 .card-detail{display:none;padding:0 14px 12px 16px;border-top:1px solid var(--border-l)}
 .card-detail.open{display:block}
 .card-detail-actions{display:flex;gap:5px;flex-wrap:wrap;padding-top:10px}
@@ -162,6 +201,7 @@ body.stopped .stop-zone{display:block}
 .ca-imp.on{background:var(--orange-l);color:var(--orange)}
 .ca:disabled{opacity:.35;cursor:not-allowed}
 .inline-edit{width:100%;background:var(--surface2);border:1px solid var(--accent);border-radius:var(--rsm);padding:7px 10px;font-size:14px;color:var(--on-s);font-family:var(--f);outline:none;margin:8px 0}
+.rfl-body{font-size:13px;color:var(--on-s2);font-style:italic;line-height:1.6;padding:8px 0 4px}
 .reply-wrap{background:var(--surface2);border-radius:var(--rsm);padding:10px 12px;margin-bottom:8px}
 .reply-ey{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--on-s3);margin-bottom:5px}
 .reply-body{font-size:12px;color:var(--on-s2);line-height:1.6;white-space:pre-wrap}
@@ -170,14 +210,12 @@ body.stopped .stop-zone{display:block}
 .tlbl{font-size:11px;color:var(--on-s3);margin-right:2px}
 .tbtn{border:1px solid var(--border);background:none;font-size:11px;padding:3px 9px;border-radius:var(--rpill);cursor:pointer;color:var(--on-s2);font-family:var(--f)}
 .tbtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-.rfl-body{font-size:13px;color:var(--on-s2);font-style:italic;line-height:1.6;padding:8px 0 4px}
-.routine-next{font-size:12px;color:var(--teal);margin-bottom:6px}
-.stream-group{background:var(--surface);border-radius:var(--r);overflow:hidden;box-shadow:var(--s1);margin-bottom:4px}
-.empty{text-align:center;padding:40px 20px;color:var(--on-s3);font-size:14px}
-.nudge-strip{padding:12px 0 4px}
-.nudge-txt{font-size:12px;color:var(--on-s3);line-height:1.5;font-style:italic;text-align:center}
+
+/* ── FAB ─────────────────────────────────────────────────────────────────── */
 .fab{position:fixed;bottom:24px;right:24px;background:var(--accent);color:#fff;border:none;border-radius:var(--rpill);padding:0 24px;height:52px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:var(--s3);display:flex;align-items:center;gap:8px;z-index:200;font-family:var(--f);transition:opacity .15s}
 .fab:hover{opacity:.92}.fab:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── Capture sheet ───────────────────────────────────────────────────────── */
 .sheet-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;align-items:flex-end;justify-content:center}
 .sheet-bg.open{display:flex}
 @media(min-width:640px){.sheet-bg{align-items:center;padding:20px}}
@@ -205,6 +243,8 @@ body.stopped .stop-zone{display:block}
 .cap-save-row{margin-top:14px}
 .cap-save{width:100%;background:var(--accent);color:#fff;border:none;border-radius:var(--rsm);padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--f);transition:opacity .15s}
 .cap-save:hover{opacity:.9}.cap-save:disabled{opacity:.35;cursor:not-allowed}
+
+/* ── Toasts / undo ───────────────────────────────────────────────────────── */
 .undo-bar{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--on-s);color:var(--surface);padding:9px 14px;border-radius:var(--rpill);font-size:13px;font-weight:500;z-index:999;display:flex;align-items:center;gap:11px;box-shadow:var(--s3);opacity:0;transition:opacity .2s;pointer-events:none;font-family:var(--f)}
 .undo-bar.show{opacity:1;pointer-events:all}
 .undo-act{background:var(--accent);color:#fff;border:none;border-radius:var(--rpill);padding:4px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f)}
@@ -216,6 +256,7 @@ body.stopped .stop-zone{display:block}
 </head>
 <body>
 
+<!-- Boot -->
 <div id="boot">
   <div id="boot-spin" class="spinner"></div>
   <div id="boot-lbl" class="boot-lbl">Starting up…</div>
@@ -229,6 +270,7 @@ body.stopped .stop-zone{display:block}
   </div>
 </div>
 
+<!-- Session banner -->
 <div id="banner">
   <div class="banner-in">
     <span class="banner-txt" id="banner-msg">Session expired.</span>
@@ -239,6 +281,7 @@ body.stopped .stop-zone{display:block}
   </div>
 </div>
 
+<!-- Auth -->
 <div id="auth">
   <div class="auth-card">
     <div class="auth-logo">StreamOS</div>
@@ -262,6 +305,7 @@ body.stopped .stop-zone{display:block}
   </div>
 </div>
 
+<!-- App -->
 <div id="app">
   <div class="topbar">
     <div class="topbar-in">
@@ -287,6 +331,8 @@ body.stopped .stop-zone{display:block}
   </div>
 
   <div class="page">
+    <!-- VFS folder breadcrumb (hidden when at root) -->
+    <div id="folder-bar"></div>
     <div class="anchor-zone"><div id="personal-anchor"></div></div>
     <div class="stop-zone" id="stop-zone"></div>
     <div class="na-zone"><div id="na-area"></div></div>
@@ -295,14 +341,16 @@ body.stopped .stop-zone{display:block}
   </div>
 </div>
 
+<!-- Capture FAB -->
 <button class="fab" id="fab" onclick="openSheet()"><span style="font-size:19px;line-height:1">+</span> Capture</button>
 
+<!-- Capture sheet -->
 <div class="sheet-bg" id="sheet-bg" onclick="bgClick(event)">
   <div class="sheet">
     <div class="sheet-drag"></div>
     <div class="sheet-body">
       <div class="sheet-detect" id="detect-hint">What needs to happen?</div>
-      <textarea class="cap-ta" id="cap-in" placeholder="Type anything and save — the system figures out the rest." oninput="onCapIn()" rows="3"></textarea>
+      <textarea class="cap-ta" id="cap-in" placeholder="Type anything — or end with /folder/path to organise." oninput="onCapIn()" rows="3"></textarea>
       <button class="adv-toggle" id="adv-btn" onclick="toggleAdv()">▸ Options</button>
       <div class="sheet-advanced" id="sheet-adv">
         <div class="srow">
@@ -339,463 +387,787 @@ body.stopped .stop-zone{display:block}
   </div>
 </div>
 
+<!-- Undo / toast -->
 <div class="undo-bar" id="undo-bar">
   <span>Marked done</span><button class="undo-act" onclick="undoDone()">Undo</button>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-const{createClient}=supabase;
-const SB=createClient(
+/* ═══════════════════════════════════════════════════════════════════════════
+   STREAMOS v11
+   Sections: State · Utils · Time · VFS · DB · Scoring · Render · Actions · Capture
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const { createClient } = supabase;
+const SB = createClient(
   'https://ityciofmpvqsqhonhxvd.supabase.co',
   'sb_publishable_tpsNlUn2PEKoFUgcUdyTNg_0gZKyELZ',
-  {auth:{storage:window.localStorage,storageKey:'sos-v3',autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}}
+  { auth: { storage: window.localStorage, storageKey: 'sos-v3', autoRefreshToken: true, persistSession: true, detectSessionInUrl: true } }
 );
 
-// ── State ──────────────────────────────────────────────────────────────────
-let STATE='booting',USER=null,items=[],mode='focus',ovr=null,capCtx='work'; let currentFolderId = null;
-let undoStack=null,undoTimer=null,loadedAt=0;
-let bMem={low:0,med:0,high:0,avoided:0};
-let actionsLocked=false,expandedCards=new Set();
-let stopOverride=false,continueQuota=0;
-let dayClosed=false;
+/* ── State ────────────────────────────────────────────────────────────────── */
+let STATE = 'booting';
+let USER = null;
+let items = [];          // All rows from stream_items (items + folders)
+let mode = 'focus';
+let ovr = null;          // Capture type override
+let capCtx = 'work';
+let undoStack = null;
+let undoTimer = null;
+let loadedAt = 0;
+let bMem = { low: 0, med: 0, high: 0, avoided: 0 };
+let actionsLocked = false;
+let expandedCards = new Set();
+let stopOverride = false;
+let continueQuota = 0;
+let dayClosed = false;
 
-// ── Part C: Work loop control ──────────────────────────────────────────────
-let consecutiveCompletions=0;
-let lastActionTime=Date.now();
-let idleTimer=null;
+// Work loop control (Part C)
+let consecutiveCompletions = 0;
+let lastActionTime = Date.now();
+let idleTimer = null;
 
-function resetIdleTimer(){
-  clearTimeout(idleTimer);
-  lastActionTime=Date.now();
-  idleTimer=setTimeout(()=>{consecutiveCompletions=0},15*60*1000);
+// In-progress expand timer (Part E)
+let expandTimer = null;
+
+// VFS navigation state
+let currentFolderId = null;  // null = root
+
+/* ── Utils ───────────────────────────────────────────────────────────────── */
+function withTimeout(p, ms, label) {
+  let t;
+  return Promise.race([
+    p,
+    new Promise((_, rej) => { t = setTimeout(() => rej(new Error(`Timeout:${label}`)), ms); })
+  ]).finally(() => clearTimeout(t));
 }
 
-// ── Part E: In-progress state ──────────────────────────────────────────────
-// Tracks {id, timer} for current expand-timer
-let expandTimer=null;
+function isAuthErr(e) {
+  if (!e) return false;
+  const m = (e.message || '').toLowerCase() + (e.code || '').toLowerCase();
+  return /jwt|auth|expired|token|refresh|session|invalid.*claim|not authenticated/.test(m);
+}
 
-// ── Part A: Dynamic time variables ────────────────────────────────────────
-let NOW,H,todayStr,isMorning,isEvening,isNight;
+const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const trunc = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n) + '…' : s; };
+const fmt = ts => {
+  const d = new Date(ts), df = Date.now() - d;
+  if (df < 60000) return 'just now';
+  if (df < 3600000) return Math.floor(df / 60000) + 'm';
+  if (df < 86400000) return Math.floor(df / 3600000) + 'h';
+  return Math.floor(df / 86400000) + 'd';
+};
+const ageDays = ts => Math.floor((Date.now() - new Date(ts)) / 86400000);
+const isToday = ts => ts && String(ts).slice(0, 10) === todayStr;
+const isOverdue = ts => ts && String(ts) < todayStr;
+const isUrgent = i =>
+  isActionable(i) &&
+  i.status === 'active' && (
+    i.priority === 'high' ||
+    (i.type === 'task' && (isOverdue(i.content?.due) || isToday(i.content?.due))) ||
+    (i.type === 'obligation' && (isOverdue(i.content?.due) || isToday(i.content?.due)))
+  );
 
-function recomputeTime(){
-  const prev=todayStr;
-  NOW=new Date();
-  H=NOW.getHours();
-  todayStr=NOW.toISOString().slice(0,10);
-  isMorning=H<12;
-  isEvening=H>=18;
-  isNight=H>=21;
-  // If day rolled over, reset day-state
-  if(prev&&prev!==todayStr){
-    dayClosed=false;
-    consecutiveCompletions=0;
+const routineND = i => {
+  const f = i.content?.frequency, l = i.content?.last_completed;
+  if (!f || !l) return null;
+  const d = new Date(l);
+  if (f === 'daily') d.setDate(d.getDate() + 1);
+  else if (f === 'weekly') d.setDate(d.getDate() + 7);
+  else if (f === 'monthly') d.setMonth(d.getMonth() + 1);
+  else if (f === 'yearly') d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().slice(0, 10);
+};
+
+const routineDue = i =>
+  i.type === 'routine' && i.status === 'active' && isActionable(i) && (() => {
+    const nd = routineND(i);
+    return !nd || nd <= todayStr;
+  })();
+
+const iTitle = i => {
+  if (i.node_type === 'folder') return i.name || 'Folder';
+  if (i.type === 'task') return i.content?.title;
+  if (i.type === 'communication') return (i.content?.category || 'Email') + ' email';
+  if (i.type === 'routine') return i.content?.title || i.content?.text;
+  if (i.type === 'obligation') return i.content?.title || i.content?.text;
+  return trunc(i.content?.text, 52);
+};
+
+function dCtx(txt) {
+  return /\b(buy|gym|dinner|family|rest|holiday|kids?|home|cook|sleep|relax|mum|dad|wife|husband|partner|friends?|weekend|grocery|groceries|birthday|health|doctor|dentist|exercise|run|walk|movie|date night|lunch|breakfast|clean|laundry|bank|renew|garden|pet|school|journal|meditate)\b/i.test(String(txt || ''))
+    ? 'personal' : 'work';
+}
+
+function dType(txt) {
+  if (!txt || txt.trim().length < 2) return null;
+  const t = txt.trim(), s = t.toLowerCase();
+  if (t.length > 80 && /from:|to:|subject:|dear |hi,|hello,|regards,|sincerely,/.test(s)) return 'communication';
+  if (/\b(feel|feeling|felt|i am|i'm feeling|sad|anxious|grateful|overwhelmed|tired|happy|worried|stressed|frustrated|excited|hopeful|lonely|angry|proud|ashamed|confused|need to process)\b/i.test(s)) return 'reflection';
+  if (/\b(pay|bill|renew|renewal|deadline|appointment|insurance|roadtax|tax|subscription|due|expiry|expires|visa|passport|registration|rent|mortgage|utilities|invoice)\b/i.test(s)) return 'obligation';
+  if (/\b(gym|run|jog|journal|meditate|clean|tidy|family dinner|weekly review|workout|exercise|stretch|water plants)\b/i.test(s)) return 'routine';
+  if (/^(call|follow up|followup|send|email|write|ping|remind|buy|book|schedule|prepare|review|check|fix|update|submit|complete|talk|meet|order|pay|register|sign|fill|collect|research|draft)\b/i.test(t)) return 'task';
+  return 'idea';
+}
+
+function dEffort(txt, type) {
+  if (!txt) return 'medium';
+  const t = String(txt).toLowerCase();
+  if (type === 'idea' || type === 'reflection' || type === 'routine') return 'low';
+  if (/\b(call|meeting|plan|review|report|discuss|present|proposal|analyse|analyze|design|strategy|interview|prepare)\b/.test(t)) return 'high';
+  if (t.length < 40 && /\b(send|reply|buy|pay|book|ping|check|read|confirm|update)\b/.test(t)) return 'low';
+  if (t.length < 40) return 'low';
+  return 'medium';
+}
+
+function dImp(txt) {
+  return /\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt || ''));
+}
+
+function enrich(i) {
+  // VFS: folders skip task-like enrichment entirely
+  if (i.node_type === 'folder') return i;
+  if (!i.effort) {
+    const t = i.content?.text || i.content?.title || i.content?.preview || '';
+    i.effort = dEffort(t, i.type);
   }
-}
-recomputeTime();
-
-// Interval refresh every 60s
-setInterval(()=>{
-  recomputeTime();
-  if(USER&&STATE==='ready')render();
-},60000);
-
-// Midnight boundary check
-function scheduleNextMidnight(){
-  const n=new Date(),midnight=new Date(n);
-  midnight.setHours(24,0,0,500);
-  setTimeout(()=>{recomputeTime();if(USER&&STATE==='ready')render();scheduleNextMidnight()},midnight-n);
-}
-scheduleNextMidnight();
-
-// ── Utils ──────────────────────────────────────────────────────────────────
-// ── VFS Core ──────────────────────────────────────────────────────────────
-function isFolder(i){
-  return i.node_type === 'folder';
-}
-
-function getParentId(i){
-  return i.parent_id || null;
-}
-
-function inCurrentFolder(i){
-  return getParentId(i) === currentFolderId;
-}
-
-function getFolderById(id){
-  return items.find(i => i.id === id && isFolder(i)) || null;
-}
-
-function getFolderChildren(parentId){
-  return items.filter(i => (i.parent_id || null) === parentId);
-}
-
-function getRootItems(){
-  return items.filter(i => !i.parent_id);
-}
-function isActionable(i){
-  return !i.node_type || i.node_type === 'item';
-}
-function withTimeout(p,ms,l){let t;return Promise.race([p,new Promise((_,rej)=>{t=setTimeout(()=>rej(new Error(`Timeout:${l}`)),ms)})]).finally(()=>clearTimeout(t))}
-function isAuthErr(e){if(!e)return false;const m=(e.message||'').toLowerCase()+(e.code||'').toLowerCase();return/jwt|auth|expired|token|refresh|session|invalid.*claim|not authenticated/.test(m)}
-
-const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const trunc=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n)+'…':s};
-const fmt=ts=>{const d=new Date(ts),df=Date.now()-d;if(df<60000)return'just now';if(df<3600000)return Math.floor(df/60000)+'m';if(df<86400000)return Math.floor(df/3600000)+'h';return Math.floor(df/86400000)+'d'};
-const ageDays=ts=>Math.floor((Date.now()-new Date(ts))/86400000);
-const isToday=ts=>ts&&String(ts).slice(0,10)===todayStr;
-const isOverdue=ts=>ts&&String(ts)<todayStr;
-const isUrgent=i=>i.status==='active' && isActionable(i)&&(i.priority==='high'||(i.type==='task'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))||((i.type==='obligation')&&(isOverdue(i.content?.due)||isToday(i.content?.due))));
-const routineND=i=>{const f=i.content?.frequency,l=i.content?.last_completed;if(!f||!l)return null;const d=new Date(l);if(f==='daily')d.setDate(d.getDate()+1);else if(f==='weekly')d.setDate(d.getDate()+7);else if(f==='monthly')d.setMonth(d.getMonth()+1);else if(f==='yearly')d.setFullYear(d.getFullYear()+1);return d.toISOString().slice(0,10)};
-const routineDue=i=>i.type==='routine'&&i.status==='active'&&(()=>{const nd=routineND(i);return!nd||nd<=todayStr})();
-const iTitle=i=>{if(i.type==='task')return i.content?.title;if(i.type==='communication')return(i.content?.category||'Email')+' email';if(i.type==='routine')return i.content?.title||i.content?.text;if(i.type==='obligation')return i.content?.title||i.content?.text;return trunc(i.content?.text,52)};
-function dCtx(txt){return/\b(buy|gym|dinner|family|rest|holiday|kids?|home|cook|sleep|relax|mum|dad|wife|husband|partner|friends?|weekend|grocery|groceries|birthday|health|doctor|dentist|exercise|run|walk|movie|date night|lunch|breakfast|clean|laundry|bank|renew|garden|pet|school|journal|meditate)\b/i.test(String(txt||''))?'personal':'work'}
-function dType(txt){
-  if(!txt||txt.trim().length<2)return null;
-  const t=txt.trim(),s=t.toLowerCase();
-  if(t.length>80&&/from:|to:|subject:|dear |hi,|hello,|regards,|sincerely,/.test(s))return'communication';
-  if(/\b(feel|feeling|felt|i am|i'm feeling|sad|anxious|grateful|overwhelmed|tired|happy|worried|stressed|frustrated|excited|hopeful|lonely|angry|proud|ashamed|confused|need to process)\b/i.test(s))return'reflection';
-  if(/\b(pay|bill|renew|renewal|deadline|appointment|insurance|roadtax|tax|subscription|due|expiry|expires|visa|passport|registration|rent|mortgage|utilities|invoice)\b/i.test(s))return'obligation';
-  if(/\b(gym|run|jog|journal|meditate|clean|tidy|family dinner|weekly review|workout|exercise|stretch|water plants)\b/i.test(s))return'routine';
-  if(/^(call|follow up|followup|send|email|write|ping|remind|buy|book|schedule|prepare|review|check|fix|update|submit|complete|talk|meet|order|pay|register|sign|fill|collect|research|draft)\b/i.test(t))return'task';
-  return'idea';
-}
-function dEffort(txt,type){if(!txt)return'medium';const t=String(txt).toLowerCase();if(type==='idea'||type==='reflection'||type==='routine')return'low';if(/\b(call|meeting|plan|review|report|discuss|present|proposal|analyse|analyze|design|strategy|interview|prepare)\b/.test(t))return'high';if(t.length<40&&/\b(send|reply|buy|pay|book|ping|check|read|confirm|update)\b/.test(t))return'low';if(t.length<40)return'low';return'medium'}
-function extractFolderPath(input){
-  const m = input.match(/^(.*?)(\s+\/[A-Za-z0-9._\-\/]+)\s*$/);
-  if(!m) return { text: input.trim(), path: null };
-
-  return {
-    text: m[1].trim(),
-    path: m[2].trim()
-  };
-}
-  function extractFolderPath(input){
-  const m = input.match(/^(.*?)(\s+\/[A-Za-z0-9._\-\/]+)\s*$/);
-  if(!m){
-    return {
-      text: input.trim(),
-      path: null
-    };
-  }
-
-  return {
-    text: m[1].trim(),
-    path: m[2].trim()
-  };
-}
-  function dImp(txt){return/\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt||''))}
-function enrich(i){
-  if(i.node_type === 'folder') return i;
-  if(!i.effort){
-    const t=i.content?.text||i.content?.title||i.content?.preview||'';
-    i.effort=dEffort(t,i.type);
-  }
-  if(i.important_personal==null){
-    const t=i.content?.text||i.content?.title||'';
-    i.important_personal=i.context==='personal'&&dImp(t);
+  if (i.important_personal == null) {
+    const t = i.content?.text || i.content?.title || '';
+    i.important_personal = i.context === 'personal' && dImp(t);
   }
   return i;
 }
 
-// ── Part A: Energy decay (D) ────────────────────────────────────────────────
-function energyDecayedEffort(base){
-  const idle=(Date.now()-lastActionTime)/60000; // minutes
-  if(idle>40)return new Set(['low']);
-  if(idle>20){const s=new Set(base);s.delete('high');return s}
+/* ── Time engine (recomputed dynamically) ────────────────────────────────── */
+let NOW, H, todayStr, isMorning, isEvening, isNight;
+
+function recomputeTime() {
+  const prev = todayStr;
+  NOW = new Date();
+  H = NOW.getHours();
+  todayStr = NOW.toISOString().slice(0, 10);
+  isMorning = H < 12;
+  isEvening = H >= 18;
+  isNight = H >= 21;
+  if (prev && prev !== todayStr) {
+    dayClosed = false;
+    consecutiveCompletions = 0;
+  }
+}
+recomputeTime();
+
+// 60-second interval refresh
+setInterval(() => {
+  recomputeTime();
+  if (USER && STATE === 'ready') render();
+}, 60000);
+
+// Midnight boundary scheduler
+function scheduleNextMidnight() {
+  const n = new Date(), midnight = new Date(n);
+  midnight.setHours(24, 0, 0, 500);
+  setTimeout(() => {
+    recomputeTime();
+    if (USER && STATE === 'ready') render();
+    scheduleNextMidnight();
+  }, midnight - n);
+}
+scheduleNextMidnight();
+
+// Energy decay (Part D)
+function energyDecayedEffort(base) {
+  const idle = (Date.now() - lastActionTime) / 60000;
+  if (idle > 40) return new Set(['low']);
+  if (idle > 20) { const s = new Set(base); s.delete('high'); return s; }
   return base;
 }
 
-// ── State machine ──────────────────────────────────────────────────────────
-function applyState(s,msg){
-  STATE=s;
-  const dot=document.getElementById('sync-dot'),fab=document.getElementById('fab'),saveBtn=document.getElementById('save-btn'),banner=document.getElementById('banner');
-  dot.className='sync-dot'+({saving:' saving',session_expired:' err',error:' err',reconnecting:' reconn'}[s]||'');
-  dot.title={ready:'Synced',saving:'Saving…',reconnecting:'Reconnecting…',session_expired:'Session expired',error:'Error'}[s]||s;
-  actionsLocked=s==='session_expired'||s==='error'||s==='reconnecting';
-  if(fab)fab.disabled=actionsLocked;if(saveBtn)saveBtn.disabled=actionsLocked;
-  if(s==='session_expired'||s==='error'){banner.classList.add('show');document.getElementById('banner-msg').textContent=msg||(s==='session_expired'?'Session expired.':'Something went wrong.')}
-  else banner.classList.remove('show');
-  document.querySelectorAll('.card:not(.done)').forEach(c=>c.classList.toggle('locked',actionsLocked));
-  if(s==='saving')setTimeout(()=>{if(STATE==='saving')applyState('ready')},4000);
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  lastActionTime = Date.now();
+  idleTimer = setTimeout(() => { consecutiveCompletions = 0; }, 15 * 60 * 1000);
 }
-function requireSession(){if(!USER||actionsLocked){applyState('session_expired','Session lost.');return false}return true}
 
-// ── Boot ───────────────────────────────────────────────────────────────────
-function bootSpinner(l){const b=document.getElementById('boot');b.classList.remove('off');document.getElementById('boot-spin').style.display='block';document.getElementById('boot-lbl').style.display='block';document.getElementById('boot-err').style.display='none';document.getElementById('boot-lbl').textContent=l||'Loading…'}
-function bootError(m){document.getElementById('boot-spin').style.display='none';document.getElementById('boot-lbl').style.display='none';document.getElementById('boot-err').style.display='block';document.getElementById('boot-err-p').textContent=m||'Something went wrong.'}
-function hideBoot(){document.getElementById('boot').classList.add('off')}
-async function retryBoot(){bootSpinner('Retrying…');await bootstrap()}
+/* ═══════════════════════════════════════════════════════════════════════════
+   VFS HELPERS
+   All VFS logic is isolated here. Nothing outside this section should
+   know about node_type or folder structure directly — use these helpers.
+   ═══════════════════════════════════════════════════════════════════════════ */
 
-async function bootstrap(){
-  applyState('booting');bootSpinner('Starting up…');
-  try{
-    const{data:{session},error}=await withTimeout(SB.auth.getSession(),8000,'getSession');
-    if(error)throw error;
-    if(session?.user){USER=session.user;showApp();bootSpinner('Loading…');const res=await Promise.allSettled([loadBMem().catch(e=>console.warn(e)),loadItems()]);hideBoot();if(res[1].status==='rejected')applyState('error','Could not load.');else applyState('ready')}
-    else{hideBoot();showAuth()}
-  }catch(e){bootError(e.message.includes('Timeout')?'Connection timed out.':e.message||'Could not connect.');applyState('error',e.message)}
+/** True if this row is a VFS folder node */
+const isFolder = i => i.node_type === 'folder';
+
+/** True if this row is an actionable item (not a folder) */
+const isActionable = i => !isFolder(i);
+
+/** Get parent_id for a row */
+const getParentId = i => i.parent_id || null;
+
+/** Find a folder by id */
+const getFolderById = id => items.find(i => isFolder(i) && i.id === id) || null;
+
+/** Get direct children of a folder (or root items if parentId=null) */
+const getFolderChildren = parentId =>
+  items.filter(i => (i.parent_id || null) === (parentId || null));
+
+/** Get root-level items (parent_id = null) */
+const getRootItems = () => items.filter(i => (i.parent_id || null) === null);
+
+/**
+ * Parse a trailing folder path from raw capture input.
+ * e.g. "Task A /projects/website" → { text: "Task A", path: ["projects","website"] }
+ * Returns { text: raw, path: [] } if no path present.
+ */
+function extractFolderPath(raw) {
+  const match = raw.match(/^([\s\S]*?)\s+((?:\/[^\/\s][^\s]*)+)\s*$/);
+  if (!match) return { text: raw.trim(), path: [] };
+  const pathStr = match[2]; // e.g. "/projects/website"
+  const segments = pathStr.split('/').filter(s => s.trim().length > 0).map(s => s.trim());
+  if (!segments.length) return { text: raw.trim(), path: [] };
+  return { text: match[1].trim(), path: segments };
 }
-SB.auth.onAuthStateChange(async(event,session)=>{
-  if(event==='INITIAL_SESSION')return;
-  if(event==='SIGNED_IN'&&session?.user&&!USER){USER=session.user;showApp();bootSpinner('Loading…');await Promise.allSettled([loadBMem().catch(()=>{}),loadItems()]);hideBoot();applyState('ready')}
-  else if(event==='TOKEN_REFRESHED'&&session?.user){USER=session.user;if(STATE==='session_expired'||STATE==='reconnecting')applyState('ready')}
-  else if(event==='SIGNED_OUT'){USER=null;items=[];hideBoot();showAuth();applyState('ready')}
+
+/**
+ * Find an existing folder by name under a given parent.
+ * Case-insensitive match on name field.
+ */
+function findFolderByName(name, parentId) {
+  const pid = parentId || null;
+  return items.find(i =>
+    isFolder(i) &&
+    (i.parent_id || null) === pid &&
+    (i.name || '').toLowerCase() === name.toLowerCase()
+  ) || null;
+}
+
+/**
+ * Create a single folder in DB and add to local items.
+ * Returns the saved folder row.
+ */
+async function createFolder(name, parentId) {
+  const row = {
+    node_type: 'folder',
+    name,
+    parent_id: parentId || null,
+    status: 'active',
+    created_at: new Date().toISOString(),
+    context: 'work',
+    priority: 'low',
+    effort: 'low',
+    important_personal: false,
+    type: null,
+    content: null,
+  };
+  const saved = await dbSave(row);
+  if (saved) items.unshift(saved);
+  return saved;
+}
+
+/**
+ * Resolve a folder path, creating missing segments.
+ * e.g. ["projects","website"] → id of /projects/website folder
+ * Returns the final folder's id, or null on failure.
+ */
+async function ensureFolderPath(segments) {
+  if (!segments || !segments.length) return null;
+  let parentId = null;
+  for (const seg of segments) {
+    let folder = findFolderByName(seg, parentId);
+    if (!folder) {
+      folder = await createFolder(seg, parentId);
+      if (!folder) return null; // DB failure — abort
+    }
+    parentId = folder.id;
+  }
+  return parentId;
+}
+
+/**
+ * Build a breadcrumb trail for a given folderId.
+ * Returns array of { id, name } from root → current.
+ */
+function buildBreadcrumb(folderId) {
+  const trail = [];
+  let id = folderId;
+  const visited = new Set();
+  while (id) {
+    if (visited.has(id)) break; // Cycle guard
+    visited.add(id);
+    const folder = getFolderById(id);
+    if (!folder) break;
+    trail.unshift({ id: folder.id, name: folder.name || 'Folder' });
+    id = folder.parent_id || null;
+  }
+  return trail;
+}
+
+/* ── State machine ────────────────────────────────────────────────────────── */
+function applyState(s, msg) {
+  STATE = s;
+  const dot = document.getElementById('sync-dot');
+  const fab = document.getElementById('fab');
+  const saveBtn = document.getElementById('save-btn');
+  const banner = document.getElementById('banner');
+  dot.className = 'sync-dot' + ({ saving: ' saving', session_expired: ' err', error: ' err', reconnecting: ' reconn' }[s] || '');
+  dot.title = { ready: 'Synced', saving: 'Saving…', reconnecting: 'Reconnecting…', session_expired: 'Session expired', error: 'Error' }[s] || s;
+  actionsLocked = s === 'session_expired' || s === 'error' || s === 'reconnecting';
+  if (fab) fab.disabled = actionsLocked;
+  if (saveBtn) saveBtn.disabled = actionsLocked;
+  if (s === 'session_expired' || s === 'error') {
+    banner.classList.add('show');
+    document.getElementById('banner-msg').textContent = msg || (s === 'session_expired' ? 'Session expired.' : 'Something went wrong.');
+  } else {
+    banner.classList.remove('show');
+  }
+  document.querySelectorAll('.card:not(.done)').forEach(c => c.classList.toggle('locked', actionsLocked));
+  if (s === 'saving') setTimeout(() => { if (STATE === 'saving') applyState('ready'); }, 4000);
+}
+
+function requireSession() {
+  if (!USER || actionsLocked) { applyState('session_expired', 'Session lost.'); return false; }
+  return true;
+}
+
+/* ── Boot / auth ──────────────────────────────────────────────────────────── */
+function bootSpinner(l) {
+  const b = document.getElementById('boot');
+  b.classList.remove('off');
+  document.getElementById('boot-spin').style.display = 'block';
+  document.getElementById('boot-lbl').style.display = 'block';
+  document.getElementById('boot-err').style.display = 'none';
+  document.getElementById('boot-lbl').textContent = l || 'Loading…';
+}
+
+function bootError(m) {
+  document.getElementById('boot-spin').style.display = 'none';
+  document.getElementById('boot-lbl').style.display = 'none';
+  document.getElementById('boot-err').style.display = 'block';
+  document.getElementById('boot-err-p').textContent = m || 'Something went wrong.';
+}
+
+function hideBoot() { document.getElementById('boot').classList.add('off'); }
+async function retryBoot() { bootSpinner('Retrying…'); await bootstrap(); }
+
+async function bootstrap() {
+  applyState('booting'); bootSpinner('Starting up…');
+  try {
+    const { data: { session }, error } = await withTimeout(SB.auth.getSession(), 8000, 'getSession');
+    if (error) throw error;
+    if (session?.user) {
+      USER = session.user; showApp(); bootSpinner('Loading…');
+      const res = await Promise.allSettled([loadBMem().catch(e => console.warn(e)), loadItems()]);
+      hideBoot();
+      if (res[1].status === 'rejected') applyState('error', 'Could not load.');
+      else applyState('ready');
+    } else { hideBoot(); showAuth(); }
+  } catch (e) {
+    bootError(e.message.includes('Timeout') ? 'Connection timed out.' : e.message || 'Could not connect.');
+    applyState('error', e.message);
+  }
+}
+
+SB.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'INITIAL_SESSION') return;
+  if (event === 'SIGNED_IN' && session?.user && !USER) {
+    USER = session.user; showApp(); bootSpinner('Loading…');
+    await Promise.allSettled([loadBMem().catch(() => {}), loadItems()]);
+    hideBoot(); applyState('ready');
+  } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+    USER = session.user;
+    if (STATE === 'session_expired' || STATE === 'reconnecting') applyState('ready');
+  } else if (event === 'SIGNED_OUT') {
+    USER = null; items = []; hideBoot(); showAuth(); applyState('ready');
+  }
 });
-function showApp(){
+
+function showApp() {
   document.getElementById('auth').classList.remove('show');
   document.getElementById('app').classList.add('show');
-  if(USER){document.getElementById('profile-name').textContent=USER.email.split('@')[0];document.getElementById('profile-email-label').textContent=USER.email}
+  if (USER) {
+    document.getElementById('profile-name').textContent = USER.email.split('@')[0];
+    document.getElementById('profile-email-label').textContent = USER.email;
+  }
 }
-function showAuth(){document.getElementById('app').classList.remove('show');document.getElementById('auth').classList.add('show')}
-function showPwForm(){document.getElementById('auth-magic').style.display='none';document.getElementById('auth-pw').style.display='block';setAuthMsg('')}
-function showMagicForm(){document.getElementById('auth-pw').style.display='none';document.getElementById('auth-magic').style.display='block';setAuthMsg('')}
-async function sendMagicLink(){const email=document.getElementById('auth-email').value.trim();if(!email){setAuthMsg('Enter your email.','err');return}const{error}=await SB.auth.signInWithOtp({email,options:{emailRedirectTo:location.href}});if(error)setAuthMsg(error.message,'err');else setAuthMsg('Magic link sent — check your inbox.','ok')}
-async function signInPw(){const email=document.getElementById('pw-email').value.trim(),pw=document.getElementById('pw-pass').value;if(!email||!pw){setAuthMsg('Enter email and password.','err');return}const{error}=await SB.auth.signInWithPassword({email,password:pw});if(error)setAuthMsg(error.message,'err')}
-async function signOut(){try{await SB.auth.signOut()}catch(e){}USER=null;items=[];localStorage.removeItem('sos-v3');hideBoot();showAuth();applyState('ready');document.getElementById('auth-msg').textContent='';closeProfileMenu()}
-async function handleReconnect(){applyState('reconnecting','Reconnecting…');try{const{data,error}=await withTimeout(SB.auth.refreshSession(),8000,'refresh');if(error||!data.session)throw new Error('Failed');USER=data.session.user;applyState('ready');if(Date.now()-loadedAt>60000)loadItems().catch(()=>{})}catch(e){USER=null;applyState('session_expired','Could not reconnect.')}}
-function setAuthMsg(msg,cls=''){const e=document.getElementById('auth-msg');e.textContent=msg;e.className='auth-msg'+(cls?' '+cls:'')}
-function toggleProfileMenu(){document.getElementById('profile-menu').classList.toggle('open')}
-function closeProfileMenu(){document.getElementById('profile-menu').classList.remove('open')}
-document.addEventListener('click',e=>{if(!e.target.closest('#profile-btn')&&!e.target.closest('#profile-menu'))closeProfileMenu()});
 
-// ── Part A: Visibility change — recompute time, refresh if stale ───────────
-document.addEventListener('visibilitychange',async()=>{
-  if(document.hidden||!USER)return;
-  recomputeTime();
-  try{
-    const{data:{session}}=await withTimeout(SB.auth.getSession(),5000,'vis');
-    if(!session){USER=null;applyState('session_expired','Session expired.')}
-    else{
-      if(STATE==='session_expired'||STATE==='error')applyState('ready');
-      if(Date.now()-loadedAt>120000)loadItems().catch(()=>{});
-      else render(); // Rerender with updated time even if data is fresh
-    }
-  }catch(e){if(STATE==='ready')applyState('reconnecting','No connection')}
+function showAuth() { document.getElementById('app').classList.remove('show'); document.getElementById('auth').classList.add('show'); }
+function showPwForm() { document.getElementById('auth-magic').style.display = 'none'; document.getElementById('auth-pw').style.display = 'block'; setAuthMsg(''); }
+function showMagicForm() { document.getElementById('auth-pw').style.display = 'none'; document.getElementById('auth-magic').style.display = 'block'; setAuthMsg(''); }
+
+async function sendMagicLink() {
+  const email = document.getElementById('auth-email').value.trim();
+  if (!email) { setAuthMsg('Enter your email.', 'err'); return; }
+  const { error } = await SB.auth.signInWithOtp({ email, options: { emailRedirectTo: location.href } });
+  if (error) setAuthMsg(error.message, 'err'); else setAuthMsg('Magic link sent — check your inbox.', 'ok');
+}
+
+async function signInPw() {
+  const email = document.getElementById('pw-email').value.trim(), pw = document.getElementById('pw-pass').value;
+  if (!email || !pw) { setAuthMsg('Enter email and password.', 'err'); return; }
+  const { error } = await SB.auth.signInWithPassword({ email, password: pw });
+  if (error) setAuthMsg(error.message, 'err');
+}
+
+async function signOut() {
+  try { await SB.auth.signOut(); } catch (e) {}
+  USER = null; items = []; localStorage.removeItem('sos-v3');
+  hideBoot(); showAuth(); applyState('ready');
+  document.getElementById('auth-msg').textContent = '';
+  closeProfileMenu();
+}
+
+async function handleReconnect() {
+  applyState('reconnecting', 'Reconnecting…');
+  try {
+    const { data, error } = await withTimeout(SB.auth.refreshSession(), 8000, 'refresh');
+    if (error || !data.session) throw new Error('Failed');
+    USER = data.session.user; applyState('ready');
+    if (Date.now() - loadedAt > 60000) loadItems().catch(() => {});
+  } catch (e) { USER = null; applyState('session_expired', 'Could not reconnect.'); }
+}
+
+function setAuthMsg(msg, cls = '') {
+  const e = document.getElementById('auth-msg');
+  e.textContent = msg; e.className = 'auth-msg' + (cls ? ' ' + cls : '');
+}
+
+function toggleProfileMenu() { document.getElementById('profile-menu').classList.toggle('open'); }
+function closeProfileMenu() { document.getElementById('profile-menu').classList.remove('open'); }
+document.addEventListener('click', e => {
+  if (!e.target.closest('#profile-btn') && !e.target.closest('#profile-menu')) closeProfileMenu();
 });
-window.addEventListener('online',()=>{if(STATE==='error'||STATE==='reconnecting')handleReconnect()});
-window.addEventListener('offline',()=>{if(STATE==='ready')applyState('reconnecting','No internet')});
 
-// ── DB ─────────────────────────────────────────────────────────────────────
-async function dbSave(item){
-  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
-  if(actionsLocked)throw new Error('locked');
-  applyState('saving');
-  try{const{data,error}=await withTimeout(SB.from('stream_items').insert({...item,user_id:USER.id}).select().single(),10000,'save');if(error)throw error;applyState('ready');return data}
-  catch(e){if(isAuthErr(e)){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Save failed.');throw e}
-}
-async function dbUpdate(id,patch){
-  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
-  if(actionsLocked)throw new Error('locked');
-  applyState('saving');
-  try{const{error}=await withTimeout(SB.from('stream_items').update(patch).eq('id',id).eq('user_id',USER.id),10000,'update');if(error)throw error;applyState('ready')}
-  catch(e){if(isAuthErr(e)){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Update failed.');throw e}
-}
-async function dbDelete(id){
-  if(!USER){applyState('session_expired','Session lost.');throw new Error('no_session')}
-  if(actionsLocked)throw new Error('locked');
-  applyState('saving');
-  try{const{error}=await withTimeout(SB.from('stream_items').delete().eq('id',id).eq('user_id',USER.id),10000,'delete');if(error)throw error;applyState('ready')}
-  catch(e){if(isAuthErr(e)){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Delete failed.');throw e}
-}
-async function loadItems(){
-  if(!USER)return;
-  document.getElementById('stream-area').innerHTML=`<div style="text-align:center;padding:40px 20px;color:var(--on-s3);font-size:13px">Loading…</div>`;
-  try{const{data,error}=await withTimeout(SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),8000,'load');if(error)throw error;items=(data||[]).map(i=>{   i.node_type = i.node_type || 'item';   i.parent_id = i.parent_id || null;   return enrich(i); });loadedAt=Date.now();await autoConvertStaleIdeas();render()}
-  catch(e){const isAuth=isAuthErr(e);if(isAuth){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Could not load.');document.getElementById('stream-area').innerHTML=`<div class="stream-err"><p>${isAuth?'Session expired.':'Could not load your stream.'}</p>${isAuth?`<button class="btn b-fill b-sm" onclick="signOut()">Sign in again</button>`:`<button class="btn b-fill b-sm" onclick="loadItems()">Retry</button>`}</div>`;throw e}
-}
-async function loadBMem(){if(!USER)return;const{data}=await withTimeout(SB.from('user_memory').select('*').eq('user_id',USER.id).maybeSingle(),5000,'bMem');if(data)bMem={low:data.completed_low||0,med:data.completed_medium||0,high:data.completed_high||0,avoided:data.avoided_high||0};else{try{await SB.from('user_memory').insert({user_id:USER.id,completed_low:0,completed_medium:0,completed_high:0,avoided_high:0})}catch(e){}}}
-async function saveBMem(){if(!USER)return;try{await SB.from('user_memory').upsert({user_id:USER.id,completed_low:bMem.low,completed_medium:bMem.med,completed_high:bMem.high,avoided_high:bMem.avoided},{onConflict:'user_id'})}catch(e){}}
+// Visibility change: recompute time, check auth, reload if stale
+document.addEventListener('visibilitychange', async () => {
+  if (document.hidden || !USER) return;
+  recomputeTime();
+  try {
+    const { data: { session } } = await withTimeout(SB.auth.getSession(), 5000, 'vis');
+    if (!session) { USER = null; applyState('session_expired', 'Session expired.'); }
+    else {
+      if (STATE === 'session_expired' || STATE === 'error') applyState('ready');
+      if (Date.now() - loadedAt > 120000) loadItems().catch(() => {});
+      else render();
+    }
+  } catch (e) { if (STATE === 'ready') applyState('reconnecting', 'No connection'); }
+});
 
-// ── Auto-convert stale ideas ───────────────────────────────────────────────
-async function autoConvertStaleIdeas(){
-  const stale=items.filter(i=>i.type==='idea'&&i.status==='active'&&ageDays(i.created_at)>=7&&!i.reviewed_at);
-  if(!stale.length)return;
-  for(const i of stale){
-    const txt=i.content?.text||'Task from idea';
-    const snapshot={type:i.type,content:{...i.content},effort:i.effort,reviewed_at:i.reviewed_at};
-    const updated={type:'task',content:{title:txt,due:''},effort:dEffort(txt,'task'),reviewed_at:new Date().toISOString()};
-    Object.assign(i,updated);
-    try{await dbUpdate(i.id,updated)}
-    catch(e){Object.assign(i,snapshot);console.warn('Auto-convert failed for',i.id,e.message)}
+window.addEventListener('online', () => { if (STATE === 'error' || STATE === 'reconnecting') handleReconnect(); });
+window.addEventListener('offline', () => { if (STATE === 'ready') applyState('reconnecting', 'No internet'); });
+
+/* ── DB helpers ───────────────────────────────────────────────────────────── */
+async function dbSave(item) {
+  if (!USER) { applyState('session_expired', 'Session lost.'); throw new Error('no_session'); }
+  if (actionsLocked) throw new Error('locked');
+  applyState('saving');
+  try {
+    const { data, error } = await withTimeout(
+      SB.from('stream_items').insert({ ...item, user_id: USER.id }).select().single(),
+      10000, 'save'
+    );
+    if (error) throw error;
+    applyState('ready'); return data;
+  } catch (e) {
+    if (isAuthErr(e)) { USER = null; applyState('session_expired', 'Session expired.'); }
+    else applyState('error', 'Save failed.');
+    throw e;
+  }
+}
+
+async function dbUpdate(id, patch) {
+  if (!USER) { applyState('session_expired', 'Session lost.'); throw new Error('no_session'); }
+  if (actionsLocked) throw new Error('locked');
+  applyState('saving');
+  try {
+    const { error } = await withTimeout(
+      SB.from('stream_items').update(patch).eq('id', id).eq('user_id', USER.id),
+      10000, 'update'
+    );
+    if (error) throw error;
+    applyState('ready');
+  } catch (e) {
+    if (isAuthErr(e)) { USER = null; applyState('session_expired', 'Session expired.'); }
+    else applyState('error', 'Update failed.');
+    throw e;
+  }
+}
+
+async function dbDelete(id) {
+  if (!USER) { applyState('session_expired', 'Session lost.'); throw new Error('no_session'); }
+  if (actionsLocked) throw new Error('locked');
+  applyState('saving');
+  try {
+    const { error } = await withTimeout(
+      SB.from('stream_items').delete().eq('id', id).eq('user_id', USER.id),
+      10000, 'delete'
+    );
+    if (error) throw error;
+    applyState('ready');
+  } catch (e) {
+    if (isAuthErr(e)) { USER = null; applyState('session_expired', 'Session expired.'); }
+    else applyState('error', 'Delete failed.');
+    throw e;
+  }
+}
+
+async function loadItems() {
+  if (!USER) return;
+  document.getElementById('stream-area').innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--on-s3);font-size:13px">Loading…</div>`;
+  try {
+    const { data, error } = await withTimeout(
+      SB.from('stream_items').select('*').eq('user_id', USER.id).order('created_at', { ascending: false }),
+      8000, 'load'
+    );
+    if (error) throw error;
+    // Normalize: ensure node_type and parent_id exist on all rows
+    items = (data || []).map(row => {
+      row.node_type = row.node_type || 'item';
+      row.parent_id = row.parent_id || null;
+      return enrich(row);
+    });
+    loadedAt = Date.now();
+    await autoConvertStaleIdeas();
+    render();
+  } catch (e) {
+    const isAuth = isAuthErr(e);
+    if (isAuth) { USER = null; applyState('session_expired', 'Session expired.'); }
+    else applyState('error', 'Could not load.');
+    document.getElementById('stream-area').innerHTML = `<div class="stream-err">
+      <p>${isAuth ? 'Session expired.' : 'Could not load your stream.'}</p>
+      ${isAuth
+        ? `<button class="btn b-fill b-sm" onclick="signOut()">Sign in again</button>`
+        : `<button class="btn b-fill b-sm" onclick="loadItems()">Retry</button>`}
+    </div>`;
+    throw e;
+  }
+}
+
+async function loadBMem() {
+  if (!USER) return;
+  const { data } = await withTimeout(SB.from('user_memory').select('*').eq('user_id', USER.id).maybeSingle(), 5000, 'bMem');
+  if (data) bMem = { low: data.completed_low || 0, med: data.completed_medium || 0, high: data.completed_high || 0, avoided: data.avoided_high || 0 };
+  else {
+    try { await SB.from('user_memory').insert({ user_id: USER.id, completed_low: 0, completed_medium: 0, completed_high: 0, avoided_high: 0 }); } catch (e) {}
+  }
+}
+
+async function saveBMem() {
+  if (!USER) return;
+  try {
+    await SB.from('user_memory').upsert(
+      { user_id: USER.id, completed_low: bMem.low, completed_medium: bMem.med, completed_high: bMem.high, avoided_high: bMem.avoided },
+      { onConflict: 'user_id' }
+    );
+  } catch (e) {}
+}
+
+// Auto-convert stale ideas (sequential, isolated error handling)
+async function autoConvertStaleIdeas() {
+  const stale = items.filter(i => isActionable(i) && i.type === 'idea' && i.status === 'active' && ageDays(i.created_at) >= 7 && !i.reviewed_at);
+  if (!stale.length) return;
+  for (const i of stale) {
+    const txt = i.content?.text || 'Task from idea';
+    const snapshot = { type: i.type, content: { ...i.content }, effort: i.effort, reviewed_at: i.reviewed_at };
+    const updated = { type: 'task', content: { title: txt, due: '' }, effort: dEffort(txt, 'task'), reviewed_at: new Date().toISOString() };
+    Object.assign(i, updated);
+    try { await dbUpdate(i.id, updated); }
+    catch (e) { Object.assign(i, snapshot); console.warn('Auto-convert failed for', i.id, e.message); }
   }
   render();
 }
 
-// ── Guidance ───────────────────────────────────────────────────────────────
-function allowedEffort(){
+/* ── Scoring ──────────────────────────────────────────────────────────────── */
+// All scoring functions guard against folders using isActionable()
+
+function allowedEffort() {
   let base;
-  if(mode==='overwhelmed')base=new Set(['low']);
-  else if(mode==='manage')base=new Set(['low','medium','high']);
-  else if(isMorning)base=new Set(['low','medium']); // Part B
-  else if(isEvening)base=new Set(['low']);           // Part F
-  else base=new Set(['low','medium','high']);
-  return energyDecayedEffort(base);                  // Part D overlay
+  if (mode === 'overwhelmed') base = new Set(['low']);
+  else if (mode === 'manage') base = new Set(['low', 'medium', 'high']);
+  else if (isMorning) base = new Set(['low', 'medium']);
+  else if (isEvening) base = new Set(['low']);
+  else base = new Set(['low', 'medium', 'high']);
+  return energyDecayedEffort(base);
 }
 
-// ── Part B/F: Personal Anchor priority score ───────────────────────────────
-function pmScore(i){
-  let s=0;
+function pmScore(i) {
+  if (!isActionable(i)) return -9999;
+  let s = 0;
   // Explicit priority order: obligation > health/critical > routine > personal task
-  if(i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))s+=80;
-  else if(i.type==='obligation')s+=40;
-  if(i.important_personal){
-    // Health/critical personal outranks generic important
-    const txt=(i.content?.text||i.content?.title||'').toLowerCase();
-    const isHealth=/\b(doctor|dentist|hospital|therapy|medication|health|medical|appointment)\b/.test(txt);
-    s+=isHealth?70:50;
+  if (i.type === 'obligation' && (isOverdue(i.content?.due) || isToday(i.content?.due))) s += 80;
+  else if (i.type === 'obligation') s += 40;
+  if (i.important_personal) {
+    const txt = (i.content?.text || i.content?.title || '').toLowerCase();
+    const isHealth = /\b(doctor|dentist|hospital|therapy|medication|health|medical|appointment)\b/.test(txt);
+    s += isHealth ? 70 : 50;
   }
-  if(routineDue(i)){
-    s+=30;
-    if(isMorning)s+=20; // Part B: morning routine boost
+  if (routineDue(i)) { s += 30; if (isMorning) s += 20; }
+  if (i.context === 'personal') { s += 15; if (isMorning) s += 10; if (isEvening) s += 15; }
+  if (isOverdue(i.content?.due)) s += 40;
+  if (isToday(i.content?.due)) s += 25;
+  if (i.priority === 'high') s += 15;
+  if (i.type === 'reflection') {
+    if (isEvening) {
+      const hasUrgent = items.some(x => isActionable(x) && isUrgent(x));
+      if (!hasUrgent) s += 20; else s -= 50;
+    } else { s -= 50; }
   }
-  if(i.context==='personal'){
-    s+=15;
-    if(isMorning)s+=10; // Part B: morning personal boost
-    if(isEvening)s+=15; // Part F: evening personal boost (additional)
-  }
-  if(isOverdue(i.content?.due))s+=40;
-  if(isToday(i.content?.due))s+=25;
-  if(i.priority==='high')s+=15;
-  // Part F: reflections can surface as PA in evening when no urgent items
-  if(i.type==='reflection'){
-    if(isEvening){
-      const hasUrgent=items.some(x=>x.status==='active'&&isUrgent(x));
-      if(!hasUrgent)s+=20;
-      else s-=50;
-    }else{
-      s-=50;
-    }
-  }
-  // Part F: evening — multiply personal weight
-  if(isEvening&&(i.context==='personal'||i.type==='routine'))s=Math.floor(s*1.5);
+  if (isEvening && (i.context === 'personal' || i.type === 'routine')) s = Math.floor(s * 1.5);
   return s;
 }
 
-// ── Part C: Strategic override detection ──────────────────────────────────
-function isStrategicItem(i){
-  const t=(i.content?.title||i.content?.text||'').toLowerCase();
-  return(i.effort==='high'||i.effort==='medium')||(
-    /\b(plan|review|strategy|proposal|discuss|prepare|analyse|analyze|design|report)\b/.test(t)
+function naScore(i) {
+  if (!isActionable(i)) return -9999;
+  if (i.type === 'reflection' && !i.important_personal) return -100;
+  let s = 0;
+  if (i.important_personal) s += 100;
+  if (i.context === 'personal') s += 20;
+  if (isOverdue(i.content?.due)) s += 50;
+  if (isToday(i.content?.due)) s += 30;
+  if (i.type === 'obligation' && (isOverdue(i.content?.due) || isToday(i.content?.due))) s += 60;
+  if (routineDue(i)) s += 35;
+  if (i.priority === 'high') s += 15;
+  if (i.type === 'communication') s += 5;
+  const e = i.effort || 'medium';
+  const ae = allowedEffort();
+  if (ae.has(e)) s += 10; else s -= 20;
+  if (e === 'low' && bMem.low > bMem.high) s += 5;
+  if (i.in_progress) s += 10;
+  if (isEvening && i.context !== 'personal' && i.type !== 'obligation') {
+    const overdue = isOverdue(i.content?.due) || isToday(i.content?.due);
+    if (!overdue) s -= 60;
+  }
+  if (isMorning && i.type === 'routine' && routineDue(i)) s += 25;
+  return s;
+}
+
+function isStrategicItem(i) {
+  if (!isActionable(i)) return false;
+  const t = (i.content?.title || i.content?.text || '').toLowerCase();
+  return (i.effort === 'high' || i.effort === 'medium') ||
+    /\b(plan|review|strategy|proposal|discuss|prepare|analyse|analyze|design|report)\b/.test(t);
+}
+
+function pickNA() {
+  const a = items.filter(i => isActionable(i) && i.status === 'active');
+  if (!a.length) return null;
+  let candidates = a.slice().sort((a, b) => naScore(b) - naScore(a));
+  if (consecutiveCompletions >= 3) {
+    const strategic = candidates.find(i => isStrategicItem(i));
+    if (strategic) return strategic;
+  }
+  if (isMorning) {
+    const dueRoutine = candidates.find(i => i.type === 'routine' && routineDue(i));
+    const overdueObligation = candidates.find(i => i.type === 'obligation' && (isOverdue(i.content?.due) || isToday(i.content?.due)));
+    if (dueRoutine && !overdueObligation) return dueRoutine;
+  }
+  return candidates[0] || null;
+}
+
+function pickPM() {
+  const base = items.filter(i =>
+    isActionable(i) && i.status === 'active' && (
+      i.context === 'personal' || i.type === 'routine' || i.type === 'obligation' ||
+      (i.type === 'reflection' && isEvening)
+    )
+  );
+  if (!base.length) return null;
+  return base.slice().sort((a, b) => pmScore(b) - pmScore(a))[0];
+}
+
+function pickNudge() {
+  const a = items.filter(i => isActionable(i) && i.status === 'active');
+  const dt = items.filter(i => isActionable(i) && i.status === 'done' && isToday(i.completed_at || i.created_at));
+  const dtP = dt.filter(i => i.context === 'personal');
+  const oob = a.filter(i => i.type === 'obligation' && isOverdue(i.content?.due));
+  const dr = a.filter(i => routineDue(i));
+  const oi = a.filter(i => i.type === 'idea' && ageDays(i.created_at) >= 3);
+  const op = a.filter(i => i.type === 'task' && i.context === 'personal' && isOverdue(i.content?.due));
+  if (oob.length) return `${oob.length} overdue obligation${oob.length > 1 ? 's' : ''}.`;
+  if (dr.length) return `${dr[0].content?.title || 'A routine'} is due.`;
+  if (op.length) return `${op.length} personal task${op.length > 1 ? 's' : ''} overdue.`;
+  if (isNight) return 'Capture anything left, then stop.';
+  if (isEvening && !dtP.length && a.some(i => i.context === 'personal')) return 'Close what you can today.';
+  if (isEvening) return 'Close what you can today.';
+  if (isMorning && dt.length === 0) return 'Start with one small thing.';
+  if (oi.length >= 3) return `${oi.length} ideas getting old.`;
+  return 'Start with one small thing.';
+}
+
+function checkStop() {
+  if (stopOverride) return false;
+  const a = items.filter(i => isActionable(i) && i.status === 'active');
+  return (
+    !a.some(i => isOverdue(i.content?.due) && i.type !== 'reflection') &&
+    !a.some(i => i.context !== 'personal' && i.priority === 'high' && i.type !== 'reflection') &&
+    items.some(i => isActionable(i) && i.status === 'done' && i.context === 'personal' && isToday(i.completed_at || i.created_at))
   );
 }
 
-function naScore(i){
-  if(i.type==='reflection'&&!i.important_personal)return-100;
-  let s=0;
-  if(i.important_personal)s+=100;
-  if(i.context==='personal')s+=20;
-  if(isOverdue(i.content?.due))s+=50;
-  if(isToday(i.content?.due))s+=30;
-  if(i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due)))s+=60;
-  if(routineDue(i))s+=35;
-  if(i.priority==='high')s+=15;
-  if(i.type==='communication')s+=5;
-  const e=i.effort||'medium';
-  const ae=allowedEffort();
-  if(ae.has(e))s+=10;else s-=20;
-  if(e==='low'&&bMem.low>bMem.high)s+=5;
-  // Part E: in-progress boost
-  if(i.in_progress)s+=10;
-  // Part F: evening — non-personal items cannot override unless obligation overdue
-  if(isEvening&&i.context!=='personal'&&i.type!=='obligation'){
-    const overdue=isOverdue(i.content?.due)||isToday(i.content?.due);
-    if(!overdue)s-=60;
+/* ── Render ───────────────────────────────────────────────────────────────── */
+function render() {
+  recomputeTime();
+  const stop = checkStop() && mode !== 'manage';
+  document.body.classList.toggle('stopped', stop);
+  const na = pickNA(), pm = pickPM(), naIspm = na && pm && na.id === pm.id;
+  renderFolderBar();
+  renderPersonalAnchor(pm, na);
+  renderStop(stop);
+  renderNA(na, naIspm);
+  renderNudge();
+  renderStream();
+}
+
+// VFS: breadcrumb bar (shown when inside a folder)
+function renderFolderBar() {
+  const el = document.getElementById('folder-bar');
+  if (!currentFolderId) { el.className = ''; el.innerHTML = ''; return; }
+  const trail = buildBreadcrumb(currentFolderId);
+  const segs = [{ id: null, name: 'Stream' }, ...trail];
+  el.className = 'folder-bar show';
+  el.innerHTML = `<div class="folder-crumb">
+    ${segs.map((seg, i) => {
+      if (i === segs.length - 1) return `<span style="color:var(--on-s2)">${esc(seg.name)}</span>`;
+      return `<span class="folder-crumb-seg" onclick="navigateToFolder(${JSON.stringify(seg.id)})">${esc(seg.name)}</span>
+              <span class="folder-crumb-sep">/</span>`;
+    }).join('')}
+  </div>`;
+}
+
+function navigateToFolder(id) {
+  currentFolderId = id;
+  expandedCards.clear();
+  render();
+}
+
+function renderPersonalAnchor(pm, na) {
+  const el = document.getElementById('personal-anchor');
+  if (!pm) {
+    el.innerHTML = `<div class="personal-anchor no-item"><div class="pa-left"><div class="pa-eyebrow">🌿 Personal</div><div class="pa-title" style="font-style:italic;font-weight:400">Nothing personal active</div></div></div>`;
+    return;
   }
-  // Part B: morning — routines get priority unless obligation overdue
-  if(isMorning&&i.type==='routine'&&routineDue(i))s+=25;
-  return s;
-}
-
-function pickNA(){
-  const a = items.filter(i => i.status === 'active' && isActionable(i));
-  if(!a.length)return null;
-  let candidates=a.slice().sort((a,b)=>naScore(b)-naScore(a));
-  // Part C: if on a reactive streak, force strategic item
-  if(consecutiveCompletions>=3){
-    const strategic=candidates.find(i=>isStrategicItem(i));
-    if(strategic)return strategic;
-  }
-  // Part B: morning — don't override due routine unless obligation is overdue
-  if(isMorning){
-    const dueRoutine=candidates.find(i=>i.type==='routine'&&routineDue(i));
-    const overdueObligation=candidates.find(i=>i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due)));
-    if(dueRoutine&&!overdueObligation)return dueRoutine;
-  }
-  return candidates[0]||null;
-}
-
-function pickPM(){
-  const base=items.filter(i=>i.status==='active' && isActionable(i)&&(
-    i.context==='personal'||i.type==='routine'||i.type==='obligation'||
-    (i.type==='reflection'&&isEvening)
-  ));
-  if(!base.length)return null;
-  return base.slice().sort((a,b)=>pmScore(b)-pmScore(a))[0];
-}
-
-function pickNudge(){
-  const a = items.filter(i => i.status === 'active' && isActionable(i));
-  const dt=items.filter(i=>i.status==='done'&&isToday(i.completed_at||i.created_at));
-  const dtP=dt.filter(i=>i.context==='personal');
-  const oob=a.filter(i=>i.type==='obligation'&&isOverdue(i.content?.due));
-  const dr=a.filter(i=>routineDue(i));
-  const oi=a.filter(i=>i.type==='idea'&&ageDays(i.created_at)>=3);
-  const op=a.filter(i=>i.type==='task'&&i.context==='personal'&&isOverdue(i.content?.due));
-  if(oob.length)return`${oob.length} overdue obligation${oob.length>1?'s':''}.`;
-  if(dr.length)return`${dr[0].content?.title||'A routine'} is due.`;
-  if(op.length)return`${op.length} personal task${op.length>1?'s':''} overdue.`;
-  // Part F/B time-aware nudges
-  if(isNight)return'Capture anything left, then stop.';
-  if(isEvening&&!dtP.length&&a.some(i=>i.context==='personal'))return'Close what you can today.';
-  if(isEvening)return'Close what you can today.';
-  if(isMorning&&dt.length===0)return'Start with one small thing.';
-  if(oi.length>=3)return`${oi.length} ideas getting old.`;
-  return'Start with one small thing.';
-}
-
-// ── Part G: Stop state with continueQuota ─────────────────────────────────
-function checkStop(){
-  if(stopOverride)return false;
-  const a=items.filter(i=>i.status==='active' && isActionable(i));
-  return!a.some(i=>isOverdue(i.content?.due)&&i.type!=='reflection')
-    &&!a.some(i=>i.context!=='personal'&&i.priority==='high'&&i.type!=='reflection')
-    &&items.some(i=>i.status==='done'&&i.context==='personal'&&isToday(i.completed_at||i.created_at));
-}
-
-// ── Render ─────────────────────────────────────────────────────────────────
-function render(){
-  recomputeTime(); // Always fresh on render
-  const stop=checkStop()&&mode!=='manage';
-  document.body.classList.toggle('stopped',stop);
-  const na=pickNA(),pm=pickPM(),naIspm=na&&pm&&na.id===pm.id;
-  renderPersonalAnchor(pm,na);renderStop(stop);renderNA(na,naIspm);renderNudge();renderStream();
-}
-
-function renderPersonalAnchor(pm,na){
-  const el=document.getElementById('personal-anchor');
-  if(!pm){el.innerHTML=`<div class="personal-anchor no-item"><div class="pa-left"><div class="pa-eyebrow">🌿 Personal</div><div class="pa-title" style="font-style:italic;font-weight:400">Nothing personal active</div></div></div>`;return}
-  const pmMeta=routineDue(pm)?'Due now':isOverdue(pm.content?.due)?'Overdue':isToday(pm.content?.due)?'Due today':'Personal';
-  const pmAct=pm.type==='routine'?`completeRoutine('${pm.id}')`:pm.type==='task'||pm.type==='obligation'?`markDone('${pm.id}')`:null;
-  const actionBtn=pmAct?`<button class="pa-action ca-lock" onclick="${pmAct};event.stopPropagation()" ${actionsLocked?'disabled':''}>${pm.type==='routine'?'Done today':'Mark done'}</button>`:'';
-  el.innerHTML=`<div class="personal-anchor" onclick="focusCard('${pm.id}')">
+  const pmMeta = routineDue(pm) ? 'Due now' : isOverdue(pm.content?.due) ? 'Overdue' : isToday(pm.content?.due) ? 'Due today' : 'Personal';
+  const pmAct = pm.type === 'routine' ? `completeRoutine('${pm.id}')` : (pm.type === 'task' || pm.type === 'obligation') ? `markDone('${pm.id}')` : null;
+  const actionBtn = pmAct
+    ? `<button class="pa-action ca-lock" onclick="${pmAct};event.stopPropagation()" ${actionsLocked ? 'disabled' : ''}>${pm.type === 'routine' ? 'Done today' : 'Mark done'}</button>`
+    : '';
+  const timeLabel = isEvening ? ' · Evening' : isMorning ? ' · Morning' : '';
+  el.innerHTML = `<div class="personal-anchor" onclick="focusCard('${pm.id}')">
     <div class="pa-left">
-      <div class="pa-eyebrow">🌿 Personal${pm.important_personal?' · 🌟':''}${isEvening?' · Evening':''}${isMorning?' · Morning':''}</div>
+      <div class="pa-eyebrow">🌿 Personal${pm.important_personal ? ' · 🌟' : ''}${timeLabel}</div>
       <div class="pa-title">${esc(iTitle(pm))}</div>
       <div class="pa-meta">${pmMeta}</div>
     </div>${actionBtn}
   </div>`;
 }
 
-function renderStop(stop){
-  const el=document.getElementById('stop-zone');
-  if(!stop){el.innerHTML='';return}
-  const activeCount=items.filter(i=>i.status==='active' && isActionable(i)).length;
-  // Part I: night shutdown nudge
-  const nightExtra=isNight&&activeCount>0
-    ?`<div style="font-size:12px;color:var(--green);opacity:.75;margin-bottom:10px">${activeCount} item${activeCount>1?'s':''} still active — capture anything urgent, then close.</div>`
-    :'';
-  el.innerHTML=`<div class="stop-card">
+function renderStop(stop) {
+  const el = document.getElementById('stop-zone');
+  if (!stop) { el.innerHTML = ''; return; }
+  const activeCount = items.filter(i => isActionable(i) && i.status === 'active').length;
+  const nightExtra = isNight && activeCount > 0
+    ? `<div style="font-size:12px;color:var(--green);opacity:.75;margin-bottom:10px">${activeCount} item${activeCount > 1 ? 's' : ''} still active — capture anything urgent, then close.</div>`
+    : '';
+  el.innerHTML = `<div class="stop-card">
     <div class="stop-title">Good place to stop ✓</div>
     <div class="stop-sub">No overdue items. No urgent work. You've completed something personal today.</div>
     ${nightExtra}
@@ -806,515 +1178,665 @@ function renderStop(stop){
   </div>`;
 }
 
-// Part G: controlled continuation
-function doContinue(){
-  continueQuota=1;
-  stopOverride=true;
+function doContinue() {
+  continueQuota = 1;
+  stopOverride = true;
   document.body.classList.remove('stopped');
   showToast('Continuing…');
   render();
 }
 
-function renderNA(na,naIspm){
-  const el=document.getElementById('na-area');
-  // Part H: day closed — suppress Next Action
-  if(dayClosed&&!items.some(i=>i.status==='active' && isActionable(i) && isUrgent(i))){
-    el.innerHTML='';return;
-  }
-  if(!na||naIspm){el.innerHTML='';return}
-  const isUrg=isUrgent(na);
-  const meta=isOverdue(na.content?.due)?'Overdue':isToday(na.content?.due)?'Due today':routineDue(na)?'Due now':na.type==='communication'?(na.content?.category||''):'';
-  const act=na.type==='task'||na.type==='obligation'?`markDone('${na.id}')`:na.type==='communication'?`copyReply('${na.id}')`:na.type==='routine'?`completeRoutine('${na.id}')`:` convertToTask('${na.id}')`;
-  const aLbl=na.type==='task'||na.type==='obligation'?'Mark done':na.type==='communication'?'Copy reply':na.type==='routine'?'Done for today':'Convert to task';
-  const btnCls=isUrg?'r':na.context==='personal'?'g':'';
-  const stratBadge=consecutiveCompletions>=3?`<span style="font-size:10px;color:var(--orange);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-left:6px">strategic pick</span>`:'';
-  el.innerHTML=`<div class="na-card${isUrg?' urgent':''}">
+function renderNA(na, naIspm) {
+  const el = document.getElementById('na-area');
+  if (dayClosed && !items.some(i => isActionable(i) && i.status === 'active' && isUrgent(i))) { el.innerHTML = ''; return; }
+  if (!na || naIspm) { el.innerHTML = ''; return; }
+  const isUrg = isUrgent(na);
+  const meta = isOverdue(na.content?.due) ? 'Overdue' : isToday(na.content?.due) ? 'Due today' : routineDue(na) ? 'Due now' : na.type === 'communication' ? (na.content?.category || '') : '';
+  const act = na.type === 'task' || na.type === 'obligation' ? `markDone('${na.id}')` : na.type === 'communication' ? `copyReply('${na.id}')` : na.type === 'routine' ? `completeRoutine('${na.id}')` : `convertToTask('${na.id}')`;
+  const aLbl = na.type === 'task' || na.type === 'obligation' ? 'Mark done' : na.type === 'communication' ? 'Copy reply' : na.type === 'routine' ? 'Done for today' : 'Convert to task';
+  const btnCls = isUrg ? 'r' : na.context === 'personal' ? 'g' : '';
+  const stratBadge = consecutiveCompletions >= 3 ? `<span style="font-size:10px;color:var(--orange);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-left:6px">strategic pick</span>` : '';
+  el.innerHTML = `<div class="na-card${isUrg ? ' urgent' : ''}">
     <div class="na-eyebrow">→ Next action${stratBadge}</div>
-    <div class="na-title" onclick="focusCard('${na.id}')">${esc(iTitle(na))}${na.important_personal?' 🌟':''}</div>
-    <div class="na-meta">${na.context==='personal'?'Personal':'Work'}${meta?' · '+meta:''}</div>
-    <button class="na-btn ${btnCls} ca-lock" onclick="${act}" ${actionsLocked?'disabled':''}>${aLbl}</button>
+    <div class="na-title" onclick="focusCard('${na.id}')">${esc(iTitle(na))}${na.important_personal ? ' 🌟' : ''}</div>
+    <div class="na-meta">${na.context === 'personal' ? 'Personal' : 'Work'}${meta ? ' · ' + meta : ''}</div>
+    <button class="na-btn ${btnCls} ca-lock" onclick="${act}" ${actionsLocked ? 'disabled' : ''}>${aLbl}</button>
   </div>`;
 }
 
-function renderNudge(){
-  const el=document.getElementById('nudge-area');
-  if(mode==='overwhelmed'){el.innerHTML='';return}
-  const nudge=pickNudge();
-  el.innerHTML=nudge?`<div class="nudge-strip"><div class="nudge-txt">${esc(nudge)}</div></div>`:'';
+function renderNudge() {
+  const el = document.getElementById('nudge-area');
+  if (mode === 'overwhelmed') { el.innerHTML = ''; return; }
+  const nudge = pickNudge();
+  el.innerHTML = nudge ? `<div class="nudge-strip"><div class="nudge-txt">${esc(nudge)}</div></div>` : '';
 }
 
-// ── getVisible ─────────────────────────────────────────────────────────────
-function getVisible(){
-  const a = items.filter(i => i.status === 'active' && isActionable(i));
-  if(mode==='overwhelmed'){
-    const slots=[],used=new Set();
+// getVisible: folders shown only in manage mode
+function getVisible() {
+  const a = items.filter(i => isActionable(i) && i.status === 'active');
+
+  if (mode === 'overwhelmed') {
+    const slots = [], used = new Set();
     // Slot 1: soonest overdue/due-today obligation
-    const ob=a.filter(i=>i.type==='obligation'&&(isOverdue(i.content?.due)||isToday(i.content?.due))).sort((a,b)=>new Date(a.content?.due||0)-new Date(b.content?.due||0));
-    if(ob.length){slots.push(ob[0]);used.add(ob[0].id)}
+    const ob = a.filter(i => i.type === 'obligation' && (isOverdue(i.content?.due) || isToday(i.content?.due)))
+      .sort((a, b) => new Date(a.content?.due || 0) - new Date(b.content?.due || 0));
+    if (ob.length) { slots.push(ob[0]); used.add(ob[0].id); }
     // Slot 2: most urgent task
-    const urg=a.filter(i=>i.type==='task'&&isUrgent(i)&&!used.has(i.id)).sort((a,b)=>{const ao=isOverdue(a.content?.due)?0:1,bo=isOverdue(b.content?.due)?0:1;return ao-bo||new Date(a.content?.due||0)-new Date(b.content?.due||0)});
-    if(urg.length&&slots.length<4){slots.push(urg[0]);used.add(urg[0].id)}
+    const urg = a.filter(i => i.type === 'task' && isUrgent(i) && !used.has(i.id))
+      .sort((a, b) => { const ao = isOverdue(a.content?.due) ? 0 : 1, bo = isOverdue(b.content?.due) ? 0 : 1; return ao - bo || new Date(a.content?.due || 0) - new Date(b.content?.due || 0); });
+    if (urg.length && slots.length < 4) { slots.push(urg[0]); used.add(urg[0].id); }
     // Slot 3: most important personal
-    const imp=a.filter(i=>i.important_personal&&!used.has(i.id)).sort((a,b)=>(b.priority==='high'?1:0)-(a.priority==='high'?1:0));
-    if(imp.length&&slots.length<4){slots.push(imp[0]);used.add(imp[0].id)}
+    const imp = a.filter(i => i.important_personal && !used.has(i.id))
+      .sort((a, b) => (b.priority === 'high' ? 1 : 0) - (a.priority === 'high' ? 1 : 0));
+    if (imp.length && slots.length < 4) { slots.push(imp[0]); used.add(imp[0].id); }
     // Slot 4: most overdue routine
-    const rtn=a.filter(i=>i.type==='routine'&&routineDue(i)&&!used.has(i.id)).sort((a,b)=>{const an=routineND(a)||'9999',bn=routineND(b)||'9999';return an<bn?-1:1});
-    if(rtn.length&&slots.length<4){slots.push(rtn[0]);used.add(rtn[0].id)}
-    // Part J fix: backfill to min 3 (or all available if <3) with highest naScore
-    if(slots.length<3){
-      const remaining=a.filter(i=>!used.has(i.id)&&i.type!=='reflection').sort((a,b)=>naScore(b)-naScore(a));
-      for(const r of remaining){
-        if(slots.length>=3)break;
-        slots.push(r);used.add(r.id);
-      }
+    const rtn = a.filter(i => i.type === 'routine' && routineDue(i) && !used.has(i.id))
+      .sort((a, b) => { const an = routineND(a) || '9999', bn = routineND(b) || '9999'; return an < bn ? -1 : 1; });
+    if (rtn.length && slots.length < 4) { slots.push(rtn[0]); used.add(rtn[0].id); }
+    // Backfill to minimum 3 (excluding reflections)
+    if (slots.length < 3) {
+      const remaining = a.filter(i => !used.has(i.id) && i.type !== 'reflection')
+        .sort((a, b) => naScore(b) - naScore(a));
+      for (const r of remaining) { if (slots.length >= 3) break; slots.push(r); used.add(r.id); }
     }
     return slots;
   }
-  const base=a.filter(i=>i.type!=='reflection');
-  if(mode==='manage')return[...base,...items.filter(i=>i.status==='done'||i.status==='archived'),...a.filter(i=>i.type==='reflection')];
+
+  const base = a.filter(i => i.type !== 'reflection');
+  if (mode === 'manage') {
+    // In manage: show items + folders at current folder level
+    const allItems = [
+      ...base,
+      ...items.filter(i => isActionable(i) && (i.status === 'done' || i.status === 'archived')),
+      ...a.filter(i => i.type === 'reflection'),
+    ];
+    // Also show folders at current level
+    const folders = items.filter(i => isFolder(i) && (i.parent_id || null) === (currentFolderId || null));
+    return [...folders, ...allItems];
+  }
+
   return base;
 }
 
-function sortItems(arr){const o=i=>{if(i.status==='done'||i.status==='archived')return 10;if(i.important_personal)return 0;if(i.type==='routine'&&routineDue(i))return 1;if(i.type==='obligation'&&isUrgent(i))return 1;if(i.context==='personal')return 2;if(isUrgent(i))return 3;if(i.type==='communication')return 4;if(i.type==='task')return 5;if(i.type==='reflection')return 8;return 6};return[...arr].sort((a,b)=>o(a)-o(b)||new Date(b.created_at)-new Date(a.created_at))}
-
-function renderStream(){
-  const el=document.getElementById('stream-area');
-  const vis=getVisible();
-  if(!vis.length){el.innerHTML=`<div class="empty">🌊 Stream is clear.</div>`;return}
-  const sorted=sortItems(vis);
-  const sections=[];let curSec=null,curItems=[];
-  sorted.forEach(i=>{const sec=i.status==='done'?'done':i.status==='archived'?'archived':i.important_personal?'important':i.type==='routine'?'routine':i.type==='obligation'?'obligation':i.type==='reflection'?'reflection':i.context==='personal'?'personal':isUrgent(i)?'urgent':i.type==='communication'?'inbox':i.type==='task'?'tasks':'ideas';if(sec!==curSec){if(curItems.length)sections.push({sec:curSec,items:[...curItems]});curSec=sec;curItems=[]}curItems.push(i)});
-  if(curItems.length)sections.push({sec:curSec,items:curItems});
-  const lblMap={important:'Important',routine:'Routines',obligation:'Obligations',reflection:'Reflections',personal:'Personal',urgent:'Urgent',inbox:'Inbox',tasks:'Tasks',ideas:'Ideas',done:'Completed today',archived:'Archived'};
-  el.innerHTML=sections.map(({sec,items:grp})=>`<div><div class="slbl">${lblMap[sec]||sec}</div><div class="stream-group">${grp.map(i=>renderCard(i)).join('')}</div></div>`).join('');
+function sortItems(arr) {
+  const o = i => {
+    if (isFolder(i)) return -1; // Folders float to top in manage
+    if (i.status === 'done' || i.status === 'archived') return 10;
+    if (i.important_personal) return 0;
+    if (i.type === 'routine' && routineDue(i)) return 1;
+    if (i.type === 'obligation' && isUrgent(i)) return 1;
+    if (i.context === 'personal') return 2;
+    if (isUrgent(i)) return 3;
+    if (i.type === 'communication') return 4;
+    if (i.type === 'task') return 5;
+    if (i.type === 'reflection') return 8;
+    return 6;
+  };
+  return [...arr].sort((a, b) => o(a) - o(b) || new Date(b.created_at) - new Date(a.created_at));
 }
 
-// ── setMode: clears state, resets override ────────────────────────────────
-function setMode(m){
-  mode=m;stopOverride=false;continueQuota=0;consecutiveCompletions=0;
-  document.querySelectorAll('.mode-opt').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase().startsWith(m)));
-  const visibleIds=new Set(getVisible().map(i=>i.id));
-  expandedCards=new Set([...expandedCards].filter(id=>visibleIds.has(id)));
+function renderStream() {
+  const el = document.getElementById('stream-area');
+  const vis = getVisible();
+  if (!vis.length) { el.innerHTML = `<div class="empty">🌊 Stream is clear.</div>`; return; }
+  const sorted = sortItems(vis);
+  const sections = [];
+  let curSec = null, curItems = [];
+  sorted.forEach(i => {
+    const sec = isFolder(i) ? 'folders'
+      : i.status === 'done' ? 'done'
+      : i.status === 'archived' ? 'archived'
+      : i.important_personal ? 'important'
+      : i.type === 'routine' ? 'routine'
+      : i.type === 'obligation' ? 'obligation'
+      : i.type === 'reflection' ? 'reflection'
+      : i.context === 'personal' ? 'personal'
+      : isUrgent(i) ? 'urgent'
+      : i.type === 'communication' ? 'inbox'
+      : i.type === 'task' ? 'tasks'
+      : 'ideas';
+    if (sec !== curSec) {
+      if (curItems.length) sections.push({ sec: curSec, items: [...curItems] });
+      curSec = sec; curItems = [];
+    }
+    curItems.push(i);
+  });
+  if (curItems.length) sections.push({ sec: curSec, items: curItems });
+  const lblMap = {
+    folders: 'Folders', important: 'Important', routine: 'Routines', obligation: 'Obligations',
+    reflection: 'Reflections', personal: 'Personal', urgent: 'Urgent', inbox: 'Inbox',
+    tasks: 'Tasks', ideas: 'Ideas', done: 'Completed today', archived: 'Archived'
+  };
+  el.innerHTML = sections.map(({ sec, items: grp }) =>
+    `<div><div class="slbl">${lblMap[sec] || sec}</div><div class="stream-group">${grp.map(i => renderCard(i)).join('')}</div></div>`
+  ).join('');
+}
+
+function setMode(m) {
+  mode = m; stopOverride = false; continueQuota = 0; consecutiveCompletions = 0;
+  document.querySelectorAll('.mode-opt').forEach(b => b.classList.toggle('on', b.textContent.toLowerCase().startsWith(m)));
+  const visibleIds = new Set(getVisible().map(i => i.id));
+  expandedCards = new Set([...expandedCards].filter(id => visibleIds.has(id)));
   render();
 }
 
-// ── focusCard: render in-place without mode switch ────────────────────────
-function focusCard(id){
-  const exists=items.find(i=>i.id===id);
-  if(!exists)return;
+// focusCard: expand in-place, switch to manage only if truly hidden
+function focusCard(id) {
+  const exists = items.find(i => i.id === id);
+  if (!exists) return;
   expandedCards.add(id);
-  // Check if card is currently in rendered DOM
-  const existing=document.getElementById('card-'+id);
-  if(!existing){
-    // Only switch to manage if truly necessary (not in current visible set)
-    const visibleIds=new Set(getVisible().map(i=>i.id));
-    if(!visibleIds.has(id)){
-      mode='manage';
-      document.querySelectorAll('.mode-opt').forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase().startsWith('manage')));
-      const newVis=new Set(getVisible().map(i=>i.id));
-      expandedCards=new Set([...expandedCards].filter(id=>newVis.has(id)));
+  const existing = document.getElementById('card-' + id);
+  if (!existing) {
+    const visibleIds = new Set(getVisible().map(i => i.id));
+    if (!visibleIds.has(id)) {
+      mode = 'manage';
+      document.querySelectorAll('.mode-opt').forEach(b => b.classList.toggle('on', b.textContent.toLowerCase().startsWith('manage')));
+      const newVis = new Set(getVisible().map(i => i.id));
+      expandedCards = new Set([...expandedCards].filter(id => newVis.has(id)));
       expandedCards.add(id);
     }
   }
   render();
-  setTimeout(()=>{const el=document.getElementById('card-'+id);if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--accent)';setTimeout(()=>el.style.outline='none',1600)}},80);
+  setTimeout(() => {
+    const el = document.getElementById('card-' + id);
+    if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.style.outline = '2px solid var(--accent)'; setTimeout(() => el.style.outline = 'none', 1600); }
+  }, 80);
 }
 
-// ── Card render ────────────────────────────────────────────────────────────
-function renderCard(item){
-  const done=item.status==='done'||item.status==='archived';
-  const c=item.content||{};
-  const ctx=item.context||'work';
-  const ov=isOverdue(c.due),tod=isToday(c.due);
-  const expanded=expandedCards.has(item.id);
-  const lk=actionsLocked||done;
-  const isFocus=mode==='focus';
+/* ── Card rendering ───────────────────────────────────────────────────────── */
+function renderCard(item) {
+  // VFS: folder cards have a simplified render
+  if (isFolder(item)) return renderFolderCard(item);
 
-  let wCls='w-normal';
-  if(!done){if(ov||(item.type==='obligation'&&(ov||tod)))wCls='w-urgent';else if(item.priority==='high'||tod)wCls='w-high';else if(item.context==='personal'||item.type==='routine')wCls='w-personal'}
-  let typeCls='';
-  if(item.type==='reflection')typeCls=' type-reflection';
-  if(item.type==='routine')typeCls=' type-routine';
-  if(item.type==='obligation'&&wCls==='w-urgent')typeCls=' type-obligation';
-  const ipCls=item.in_progress&&!done?' in-progress-card':'';
+  const done = item.status === 'done' || item.status === 'archived';
+  const c = item.content || {};
+  const ctx = item.context || 'work';
+  const ov = isOverdue(c.due), tod = isToday(c.due);
+  const expanded = expandedCards.has(item.id);
+  const lk = actionsLocked || done;
+  const isFocus = mode === 'focus';
 
-  const sub=()=>{
-    if(ov)return`<div class="card-sub urgent">Overdue${c.due?' · '+c.due:''}</div>`;
-    if(tod)return`<div class="card-sub urgent">Due today</div>`;
-    if(item.type==='routine'){const nd=routineND(item);return`<div class="card-sub">${c.last_completed?'Last: '+c.last_completed:'Not started'}${nd?' · Next: '+nd:''}</div>`}
-    if(item.type==='communication')return`<div class="card-sub">${c.category||'Email'} · ${fmt(item.created_at)}</div>`;
-    if(item.type==='reflection')return`<div class="card-sub">${fmt(item.created_at)}</div>`;
-    if(c.due)return`<div class="card-sub">Due ${c.due}</div>`;
-    return'';
+  let wCls = 'w-normal';
+  if (!done) {
+    if (ov || (item.type === 'obligation' && (ov || tod))) wCls = 'w-urgent';
+    else if (item.priority === 'high' || tod) wCls = 'w-high';
+    else if (item.context === 'personal' || item.type === 'routine') wCls = 'w-personal';
+  }
+  let typeCls = '';
+  if (item.type === 'reflection') typeCls = ' type-reflection';
+  if (item.type === 'routine') typeCls = ' type-routine';
+  if (item.type === 'obligation' && wCls === 'w-urgent') typeCls = ' type-obligation';
+  const ipCls = item.in_progress && !done ? ' in-progress-card' : '';
+
+  const sub = () => {
+    if (ov) return `<div class="card-sub urgent">Overdue${c.due ? ' · ' + c.due : ''}</div>`;
+    if (tod) return `<div class="card-sub urgent">Due today</div>`;
+    if (item.type === 'routine') { const nd = routineND(item); return `<div class="card-sub">${c.last_completed ? 'Last: ' + c.last_completed : 'Not started'}${nd ? ' · Next: ' + nd : ''}</div>`; }
+    if (item.type === 'communication') return `<div class="card-sub">${c.category || 'Email'} · ${fmt(item.created_at)}</div>`;
+    if (item.type === 'reflection') return `<div class="card-sub">${fmt(item.created_at)}</div>`;
+    if (c.due) return `<div class="card-sub">Due ${c.due}</div>`;
+    return '';
   };
 
-  const primaryBtn=()=>{
-    if(done)return'';
-    if(item.type==='communication')return`<button class="card-act copy ca-lock" onclick="copyReply('${item.id}');event.stopPropagation()" ${lk?'disabled':''}>Copy reply</button>`;
-    if(item.type==='routine')return`<button class="card-act routine ca-lock" onclick="completeRoutine('${item.id}');event.stopPropagation()" ${lk?'disabled':''}>Done today</button>`;
-    if(item.type==='reflection')return'';
-    return`<button class="card-act done ca-lock" onclick="markDone('${item.id}');event.stopPropagation()" ${lk?'disabled':''}>Done</button>`;
+  const primaryBtn = () => {
+    if (done) return '';
+    if (item.type === 'communication') return `<button class="card-act copy ca-lock" onclick="copyReply('${item.id}');event.stopPropagation()" ${lk ? 'disabled' : ''}>Copy reply</button>`;
+    if (item.type === 'routine') return `<button class="card-act routine ca-lock" onclick="completeRoutine('${item.id}');event.stopPropagation()" ${lk ? 'disabled' : ''}>Done today</button>`;
+    if (item.type === 'reflection') return '';
+    return `<button class="card-act done ca-lock" onclick="markDone('${item.id}');event.stopPropagation()" ${lk ? 'disabled' : ''}>Done</button>`;
   };
 
-  let detail='';
-  if(expanded){
-    if(item.type==='reflection'){
-      detail=`<div class="rfl-body">${esc(c.text||'')}</div>
-      <div class="card-detail-actions">
-        <button class="ca ca-muted" onclick="keepItem('${item.id}')">Keep</button>
-        <button class="ca ca-accent ca-lock" onclick="convertToTask('${item.id}')" ${lk?'disabled':''}>→ Task</button>
-        ${!isFocus?`<button class="ca ca-muted ca-lock" onclick="archiveItem('${item.id}')" ${lk?'disabled':''}>Archive</button>`:''}
-        ${!isFocus?`<button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>`:''}
-      </div>`;
-    }else if(item.type==='communication'){
-      const tone=c.tone||'normal';
-      detail=`<div class="tone-row"><span class="tlbl">Tone</span>
-        <button class="tbtn${tone==='soft'?' on':''}" onclick="setTone('${item.id}','soft')">Soft</button>
-        <button class="tbtn${tone==='normal'?' on':''}" onclick="setTone('${item.id}','normal')">Normal</button>
-        <button class="tbtn${tone==='firm'?' on':''}" onclick="setTone('${item.id}','firm')">Firm</button>
+  let detail = '';
+  if (expanded) {
+    if (item.type === 'reflection') {
+      detail = `<div class="rfl-body">${esc(c.text || '')}</div>
+        <div class="card-detail-actions">
+          <button class="ca ca-muted" onclick="keepItem('${item.id}')">Keep</button>
+          <button class="ca ca-accent ca-lock" onclick="convertToTask('${item.id}')" ${lk ? 'disabled' : ''}>→ Task</button>
+          ${!isFocus ? `<button class="ca ca-muted ca-lock" onclick="archiveItem('${item.id}')" ${lk ? 'disabled' : ''}>Archive</button>` : ''}
+          ${!isFocus ? `<button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>` : ''}
+        </div>`;
+    } else if (item.type === 'communication') {
+      const tone = c.tone || 'normal';
+      detail = `<div class="tone-row"><span class="tlbl">Tone</span>
+        <button class="tbtn${tone === 'soft' ? ' on' : ''}" onclick="setTone('${item.id}','soft')">Soft</button>
+        <button class="tbtn${tone === 'normal' ? ' on' : ''}" onclick="setTone('${item.id}','normal')">Normal</button>
+        <button class="tbtn${tone === 'firm' ? ' on' : ''}" onclick="setTone('${item.id}','firm')">Firm</button>
       </div>
       <div class="reply-wrap"><div class="reply-ey">Suggested reply</div>
-        <div class="reply-body" id="rt-${item.id}">${esc(c.reply||'')}</div>
-        <textarea class="reply-edit" id="re-${item.id}" style="display:none">${esc(c.reply||'')}</textarea>
+        <div class="reply-body" id="rt-${item.id}">${esc(c.reply || '')}</div>
+        <textarea class="reply-edit" id="re-${item.id}" style="display:none">${esc(c.reply || '')}</textarea>
       </div>
       <div class="card-detail-actions">
         <button class="ca ca-muted" onclick="toggleEdit('${item.id}')">Edit reply</button>
-        <button class="ca ca-muted ca-lock" onclick="markDone('${item.id}')" ${lk?'disabled':''}>Mark done</button>
-        ${!isFocus?`<button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>`:''}
+        <button class="ca ca-muted ca-lock" onclick="markDone('${item.id}')" ${lk ? 'disabled' : ''}>Mark done</button>
+        ${!isFocus ? `<button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>` : ''}
       </div>`;
-    }else{
-      const focusActions=`
-        ${item._editing?`<button class="ca ca-accent ca-lock" onclick="saveIE('${item.id}')" ${lk?'disabled':''}>Save</button><button class="ca ca-muted" onclick="cancelIE('${item.id}')">Cancel</button>`:`<button class="ca ca-muted ca-lock" onclick="startIE('${item.id}')" ${lk?'disabled':''}>Edit</button>`}
-        <button class="ca ca-muted ca-lock ca-imp${item.important_personal?' on':''}" onclick="toggleImp('${item.id}')" ${lk?'disabled':''}>${item.important_personal?'🌟 Important':'Mark important'}</button>
-        <button class="ca ca-muted ca-lock" onclick="toggleCtx('${item.id}')" ${lk?'disabled':''}>${ctx==='personal'?'→ Work':'→ Personal'}</button>`;
-      const manageExtra=!isFocus?`
-        ${item.type==='idea'?`<button class="ca ca-accent ca-lock" onclick="convertToTask('${item.id}')" ${lk?'disabled':''}>→ Task</button>`:''}
-        ${item.type==='task'||item.type==='obligation'||item.type==='idea'?`<button class="ca ca-muted ca-lock" onclick="archiveItem('${item.id}')" ${lk?'disabled':''}>Archive</button>`:''}
-        <button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>`:'';
-      detail=`${item._editing?`<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title||c.text||iTitle(item))}" onkeydown="if(event.key==='Enter')saveIE('${item.id}');if(event.key==='Escape')cancelIE('${item.id}')">`:''}
+    } else {
+      const focusActions = `
+        ${item._editing
+          ? `<button class="ca ca-accent ca-lock" onclick="saveIE('${item.id}')" ${lk ? 'disabled' : ''}>Save</button><button class="ca ca-muted" onclick="cancelIE('${item.id}')">Cancel</button>`
+          : `<button class="ca ca-muted ca-lock" onclick="startIE('${item.id}')" ${lk ? 'disabled' : ''}>Edit</button>`}
+        <button class="ca ca-muted ca-lock ca-imp${item.important_personal ? ' on' : ''}" onclick="toggleImp('${item.id}')" ${lk ? 'disabled' : ''}>${item.important_personal ? '🌟 Important' : 'Mark important'}</button>
+        <button class="ca ca-muted ca-lock" onclick="toggleCtx('${item.id}')" ${lk ? 'disabled' : ''}>${ctx === 'personal' ? '→ Work' : '→ Personal'}</button>`;
+      const manageExtra = !isFocus ? `
+        ${item.type === 'idea' ? `<button class="ca ca-accent ca-lock" onclick="convertToTask('${item.id}')" ${lk ? 'disabled' : ''}>→ Task</button>` : ''}
+        ${item.type === 'task' || item.type === 'obligation' || item.type === 'idea' ? `<button class="ca ca-muted ca-lock" onclick="archiveItem('${item.id}')" ${lk ? 'disabled' : ''}>Archive</button>` : ''}
+        <button class="ca ca-danger" onclick="deleteItem('${item.id}')">Delete</button>` : '';
+      detail = `${item._editing ? `<input class="inline-edit" id="ie-${item.id}" value="${esc(c.title || c.text || iTitle(item))}" onkeydown="if(event.key==='Enter')saveIE('${item.id}');if(event.key==='Escape')cancelIE('${item.id}')">` : ''}
         <div class="card-detail-actions">${focusActions}${manageExtra}</div>`;
     }
   }
 
-  // Part E: in-progress dot indicator
-  const ipDot=item.in_progress&&!done?`<span class="ip-dot" title="In progress"></span>`:'';
+  const ipDot = item.in_progress && !done ? `<span class="ip-dot" title="In progress"></span>` : '';
 
-  return`<div class="card${done?' done':''}${typeCls} ${wCls}${ipCls}" id="card-${item.id}">
+  return `<div class="card${done ? ' done' : ''}${typeCls} ${wCls}${ipCls}" id="card-${item.id}">
     <div class="card-in" onclick="toggleCardExpand('${item.id}')">
       <div class="card-left">
-        <div class="card-title">${esc(iTitle(item))}${item.important_personal&&!done?' 🌟':''}${ipDot}</div>
+        <div class="card-title">${esc(iTitle(item))}${item.important_personal && !done ? ' 🌟' : ''}${ipDot}</div>
         ${sub()}
       </div>${primaryBtn()}
     </div>
-    ${!done?`<div class="card-detail${expanded?' open':''}"><div style="padding-top:0">${detail}</div></div>`:''}
+    ${!done ? `<div class="card-detail${expanded ? ' open' : ''}"><div style="padding-top:0">${detail}</div></div>` : ''}
   </div>`;
 }
 
-// ── Part E: expand tracking with in-progress timer ────────────────────────
-function toggleCardExpand(id){
-  if(expandedCards.has(id)){
+// VFS folder card (manage mode only)
+function renderFolderCard(folder) {
+  const childCount = getFolderChildren(folder.id).length;
+  return `<div class="card type-folder w-normal" id="card-${folder.id}">
+    <div class="card-in" onclick="navigateToFolder('${folder.id}')">
+      <div class="card-left">
+        <div class="card-title">📁 ${esc(folder.name || 'Folder')}</div>
+        <div class="card-sub">${childCount} item${childCount !== 1 ? 's' : ''}</div>
+      </div>
+      <button class="card-act folder-open" onclick="navigateToFolder('${folder.id}');event.stopPropagation()">Open</button>
+    </div>
+  </div>`;
+}
+
+function toggleCardExpand(id) {
+  if (expandedCards.has(id)) {
     expandedCards.delete(id);
-    // Clear in-progress timer if collapsing before threshold
-    if(expandTimer&&expandTimer.id===id){
-      clearTimeout(expandTimer.t);
-      expandTimer=null;
-    }
-  }else{
+    if (expandTimer && expandTimer.id === id) { clearTimeout(expandTimer.t); expandTimer = null; }
+  } else {
     expandedCards.add(id);
-    // Start 10s timer to mark in-progress
-    if(expandTimer){clearTimeout(expandTimer.t);expandTimer=null}
-    expandTimer={
+    if (expandTimer) { clearTimeout(expandTimer.t); expandTimer = null; }
+    expandTimer = {
       id,
-      t:setTimeout(()=>{
-        const i=items.find(x=>x.id===id);
-        if(i&&!i.in_progress&&i.status==='active'&&i.type!=='reflection'){
-          i.in_progress=true;
+      t: setTimeout(() => {
+        const i = items.find(x => x.id === id);
+        if (i && !i.in_progress && i.status === 'active' && i.type !== 'reflection' && isActionable(i)) {
+          i.in_progress = true;
           render();
         }
-        expandTimer=null;
-      },10000)
+        expandTimer = null;
+      }, 10000)
     };
   }
   resetIdleTimer();
   render();
 }
 
-// ── Card actions ───────────────────────────────────────────────────────────
-function startIE(id){
-  const i=items.find(x=>x.id===id);if(!i)return;
-  i._editing=true;
-  resetIdleTimer();
-  consecutiveCompletions=0; // Reset streak on edit
+/* ── Item actions ─────────────────────────────────────────────────────────── */
+function startIE(id) {
+  const i = items.find(x => x.id === id); if (!i) return;
+  i._editing = true; consecutiveCompletions = 0; resetIdleTimer();
   render();
-  setTimeout(()=>{const e=document.getElementById('ie-'+id);if(e){e.focus();e.select()}},50);
+  setTimeout(() => { const e = document.getElementById('ie-' + id); if (e) { e.focus(); e.select(); } }, 50);
 }
-function cancelIE(id){const i=items.find(x=>x.id===id);if(i){i._editing=false;render()}}
-async function saveIE(id){
-  const i=items.find(x=>x.id===id);if(!i)return;
-  const el=document.getElementById('ie-'+id);if(!el)return;
-  const prev={content:{...i.content},effort:i.effort};
-  i.content.title=el.value;i._editing=false;i.effort=dEffort(el.value,i.type);
-  consecutiveCompletions=0; // Reset streak on edit
-  resetIdleTimer();
-  render();
-  try{await dbUpdate(id,{content:i.content,effort:i.effort});showToast('Saved')}
-  catch(e){Object.assign(i,prev);render();showToast('Sync issue — retry')}
+
+function cancelIE(id) { const i = items.find(x => x.id === id); if (i) { i._editing = false; render(); } }
+
+async function saveIE(id) {
+  const i = items.find(x => x.id === id); if (!i) return;
+  const el = document.getElementById('ie-' + id); if (!el) return;
+  const prev = { content: { ...i.content }, effort: i.effort };
+  i.content.title = el.value; i._editing = false; i.effort = dEffort(el.value, i.type);
+  consecutiveCompletions = 0; resetIdleTimer(); render();
+  try { await dbUpdate(id, { content: i.content, effort: i.effort }); showToast('Saved'); }
+  catch (e) { Object.assign(i, prev); render(); showToast('Sync issue — retry'); }
 }
-async function toggleCtx(id){
-  if(!requireSession())return;
-  const i=items.find(x=>x.id===id);if(!i)return;
-  const prev={context:i.context,important_personal:i.important_personal};
-  i.context=i.context==='personal'?'work':'personal';if(i.context!=='personal')i.important_personal=false;
-  resetIdleTimer();
-  render();
-  try{await dbUpdate(id,{context:i.context,important_personal:i.important_personal})}
-  catch(e){Object.assign(i,prev);render();showToast('Sync issue — retry')}
+
+async function toggleCtx(id) {
+  if (!requireSession()) return;
+  const i = items.find(x => x.id === id); if (!i) return;
+  const prev = { context: i.context, important_personal: i.important_personal };
+  i.context = i.context === 'personal' ? 'work' : 'personal';
+  if (i.context !== 'personal') i.important_personal = false;
+  resetIdleTimer(); render();
+  try { await dbUpdate(id, { context: i.context, important_personal: i.important_personal }); }
+  catch (e) { Object.assign(i, prev); render(); showToast('Sync issue — retry'); }
 }
-async function toggleImp(id){
-  if(!requireSession())return;
-  const i=items.find(x=>x.id===id);if(!i)return;
-  const prev={important_personal:i.important_personal,context:i.context};
-  i.important_personal=!i.important_personal;if(i.important_personal)i.context='personal';
-  resetIdleTimer();
-  render();
-  try{await dbUpdate(id,{important_personal:i.important_personal,context:i.context});showToast(i.important_personal?'Marked important':'Removed')}
-  catch(e){Object.assign(i,prev);render();showToast('Sync issue — retry')}
+
+async function toggleImp(id) {
+  if (!requireSession()) return;
+  const i = items.find(x => x.id === id); if (!i) return;
+  const prev = { important_personal: i.important_personal, context: i.context };
+  i.important_personal = !i.important_personal;
+  if (i.important_personal) i.context = 'personal';
+  resetIdleTimer(); render();
+  try { await dbUpdate(id, { important_personal: i.important_personal, context: i.context }); showToast(i.important_personal ? 'Marked important' : 'Removed'); }
+  catch (e) { Object.assign(i, prev); render(); showToast('Sync issue — retry'); }
 }
-function setTone(id,tone){
-  const i=items.find(x=>x.id===id);if(!i)return;
-  const n=extractName(i.content.full||i.content.preview||''),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';
-  const T={soft:{Neutering:`${g}Thank you for reaching out about neutering. Our subsidised programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}We understand. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}Thank you! New volunteers complete our Pet Care Programme (PCP) first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Your support means everything. Donate at [INSERT DONATION LINK].${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`},normal:{Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK].${sign}`,General:`${g}Thank you. We'll respond within 2–3 working days.${sign}`},firm:{Neutering:`${g}Our subsidised programme, Potong Royong, is slot-based. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Intake is on a strict waiting list. Provide: species, breed, age, reason, photo.${sign}`,Volunteering:`${g}All volunteers complete PCP first. Register at [INSERT PCP LINK].${sign}`,Donation:`${g}Donate via [INSERT DONATION LINK] only.${sign}`,General:`${g}We respond within 2–3 working days.${sign}`}};
-  const prev={tone:i.content.tone,reply:i.content.reply};
-  i.content.tone=tone;i.content.reply=(T[tone]||T.normal)[i.content.category]||(T[tone]||T.normal).General;
-  const rt=document.getElementById('rt-'+id),re=document.getElementById('re-'+id);
-  if(rt)rt.textContent=i.content.reply;if(re)re.value=i.content.reply;
-  document.querySelectorAll(`#card-${id} .tbtn`).forEach(b=>b.classList.toggle('on',b.textContent.toLowerCase()===tone));
+
+function setTone(id, tone) {
+  const i = items.find(x => x.id === id); if (!i) return;
+  const n = extractName(i.content.full || i.content.preview || '');
+  const g = n ? `Dear ${n},\n\n` : 'Dear valued supporter,\n\n';
+  const sign = '\n\nWarm regards,\nSPCA Selangor';
+  const T = {
+    soft: {
+      Neutering: `${g}Thank you for reaching out about neutering. Our subsidised programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,
+      Surrender: `${g}We understand. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,
+      Volunteering: `${g}Thank you! New volunteers complete our Pet Care Programme (PCP) first. Register at [INSERT PCP LINK].${sign}`,
+      Donation: `${g}Your support means everything. Donate at [INSERT DONATION LINK].${sign}`,
+      General: `${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`,
+    },
+    normal: {
+      Neutering: `${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,
+      Surrender: `${g}Thank you. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,
+      Volunteering: `${g}All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,
+      Donation: `${g}Thank you. Donate via [INSERT DONATION LINK].${sign}`,
+      General: `${g}Thank you. We'll respond within 2–3 working days.${sign}`,
+    },
+    firm: {
+      Neutering: `${g}Our subsidised programme, Potong Royong, is slot-based. Register at [INSERT POTONG ROYONG LINK].${sign}`,
+      Surrender: `${g}Intake is on a strict waiting list. Provide: species, breed, age, reason, photo.${sign}`,
+      Volunteering: `${g}All volunteers complete PCP first. Register at [INSERT PCP LINK].${sign}`,
+      Donation: `${g}Donate via [INSERT DONATION LINK] only.${sign}`,
+      General: `${g}We respond within 2–3 working days.${sign}`,
+    },
+  };
+  const prev = { tone: i.content.tone, reply: i.content.reply };
+  i.content.tone = tone;
+  i.content.reply = (T[tone] || T.normal)[i.content.category] || (T[tone] || T.normal).General;
+  const rt = document.getElementById('rt-' + id), re = document.getElementById('re-' + id);
+  if (rt) rt.textContent = i.content.reply;
+  if (re) re.value = i.content.reply;
+  document.querySelectorAll(`#card-${id} .tbtn`).forEach(b => b.classList.toggle('on', b.textContent.toLowerCase() === tone));
   resetIdleTimer();
-  dbUpdate(id,{content:i.content}).catch(()=>{i.content.tone=prev.tone;i.content.reply=prev.reply;showToast('Sync issue — retry')});
+  dbUpdate(id, { content: i.content }).catch(() => { i.content.tone = prev.tone; i.content.reply = prev.reply; showToast('Sync issue — retry'); });
   showToast('Tone updated');
 }
-function extractName(text){const m=text.match(/(?:my name is|i am|i'm|from|regards,|sincerely,|cheers,)\s*([A-Z][a-z]+(?: [A-Z][a-z]+)?)/i);if(m)return m[1];for(const l of text.split('\n').slice(-5)){const nm=l.trim().match(/^([A-Z][a-z]+(?: [A-Z][a-z]+)?)$/);if(nm&&nm[1].length<30)return nm[1]}return null}
-function toggleEdit(id){const te=document.getElementById('rt-'+id),ee=document.getElementById('re-'+id);if(!te||!ee)return;if(ee.style.display==='none'){ee.style.display='block';te.style.display='none'}else{const v=ee.value;te.textContent=v;ee.style.display='none';te.style.display='block';const i=items.find(x=>x.id===id);if(i){const prev=i.content.reply;i.content.reply=v;dbUpdate(id,{content:i.content}).catch(()=>{i.content.reply=prev;showToast('Sync issue — retry')})}}}
-function copyReply(id){const i=items.find(x=>x.id===id);if(!i)return;navigator.clipboard.writeText(i.content?.reply||'').catch(()=>{const ta=document.createElement('textarea');ta.value=i.content?.reply||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta)});resetIdleTimer();showToast('Reply copied')}
 
-async function markDone(id){
-  if(!requireSession())return;
-  const idx=items.findIndex(i=>i.id===id);if(idx<0)return;
-  const prev=JSON.parse(JSON.stringify(items[idx]));
-  const ts=new Date().toISOString();
-  const eff=items[idx].effort||'medium';
-  if(eff==='low')bMem.low++;else if(eff==='medium')bMem.med++;else bMem.high++;
-  items[idx].status='done';items[idx].completed_at=ts;
+function extractName(text) {
+  const m = text.match(/(?:my name is|i am|i'm|from|regards,|sincerely,|cheers,)\s*([A-Z][a-z]+(?: [A-Z][a-z]+)?)/i);
+  if (m) return m[1];
+  for (const l of text.split('\n').slice(-5)) { const nm = l.trim().match(/^([A-Z][a-z]+(?: [A-Z][a-z]+)?)$/); if (nm && nm[1].length < 30) return nm[1]; }
+  return null;
+}
+
+function toggleEdit(id) {
+  const te = document.getElementById('rt-' + id), ee = document.getElementById('re-' + id);
+  if (!te || !ee) return;
+  if (ee.style.display === 'none') { ee.style.display = 'block'; te.style.display = 'none'; }
+  else {
+    const v = ee.value; te.textContent = v; ee.style.display = 'none'; te.style.display = 'block';
+    const i = items.find(x => x.id === id);
+    if (i) { const prev = i.content.reply; i.content.reply = v; dbUpdate(id, { content: i.content }).catch(() => { i.content.reply = prev; showToast('Sync issue — retry'); }); }
+  }
+}
+
+function copyReply(id) {
+  const i = items.find(x => x.id === id); if (!i) return;
+  navigator.clipboard.writeText(i.content?.reply || '').catch(() => {
+    const ta = document.createElement('textarea'); ta.value = i.content?.reply || '';
+    document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  });
+  resetIdleTimer(); showToast('Reply copied');
+}
+
+async function markDone(id) {
+  if (!requireSession()) return;
+  const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
+  const prev = JSON.parse(JSON.stringify(items[idx]));
+  const ts = new Date().toISOString();
+  const eff = items[idx].effort || 'medium';
+  if (eff === 'low') bMem.low++; else if (eff === 'medium') bMem.med++; else bMem.high++;
+  items[idx].status = 'done'; items[idx].completed_at = ts;
   expandedCards.delete(id);
-
-  // Part C: increment streak
   consecutiveCompletions++;
   resetIdleTimer();
-
   // Part G: controlled continuation decrement
-    if(stopOverride&&continueQuota>0){
-    continueQuota--;
-    if(continueQuota<=0){
-      stopOverride=false;
-      continueQuota=0;
-    }
-  }
-
-  stopOverride=stopOverride&&continueQuota>0; // Recalculate
+  if (stopOverride && continueQuota > 0) { continueQuota--; if (continueQuota <= 0) { stopOverride = false; continueQuota = 0; } }
   render();
-  try{await dbUpdate(id,{status:'done',completed_at:ts});saveBMem()}
-  catch(e){
-    if(eff==='low'&&bMem.low>0)bMem.low--;else if(eff==='medium'&&bMem.med>0)bMem.med--;else if(bMem.high>0)bMem.high--;
-    consecutiveCompletions=Math.max(0,consecutiveCompletions-1);
-    items[idx]=prev;render();showToast('Sync issue — retry');return;
+  try { await dbUpdate(id, { status: 'done', completed_at: ts }); saveBMem(); }
+  catch (e) {
+    if (eff === 'low' && bMem.low > 0) bMem.low--; else if (eff === 'medium' && bMem.med > 0) bMem.med--; else if (bMem.high > 0) bMem.high--;
+    consecutiveCompletions = Math.max(0, consecutiveCompletions - 1);
+    items[idx] = prev; render(); showToast('Sync issue — retry'); return;
   }
-  showUndo(id,prev);
-  setTimeout(()=>{renderNA(pickNA(),((na,pm)=>na&&pm&&na.id===pm.id)(pickNA(),pickPM()));renderPersonalAnchor(pickPM(),pickNA())},300);
+  showUndo(id, prev);
+  setTimeout(() => {
+    renderNA(pickNA(), ((na, pm) => na && pm && na.id === pm.id)(pickNA(), pickPM()));
+    renderPersonalAnchor(pickPM(), pickNA());
+  }, 300);
 }
 
-async function completeRoutine(id){
-  if(!requireSession())return;
-  const i=items.find(x=>x.id===id);if(!i)return;
-  const prev={content:{...i.content},completed_at:i.completed_at};
-  i.content.last_completed=todayStr;i.completed_at=new Date().toISOString();
+async function completeRoutine(id) {
+  if (!requireSession()) return;
+  const i = items.find(x => x.id === id); if (!i) return;
+  const prev = { content: { ...i.content }, completed_at: i.completed_at };
+  i.content.last_completed = todayStr; i.completed_at = new Date().toISOString();
   consecutiveCompletions++;
   resetIdleTimer();
-  if(stopOverride&&continueQuota>0){continueQuota--;if(continueQuota<=0){stopOverride=false;continueQuota=0}}
-  render();showToast('Routine done ✓');
-  try{await dbUpdate(id,{content:i.content,completed_at:i.completed_at})}
-  catch(e){i.content=prev.content;i.completed_at=prev.completed_at;consecutiveCompletions=Math.max(0,consecutiveCompletions-1);render();showToast('Sync issue — retry')}
+  if (stopOverride && continueQuota > 0) { continueQuota--; if (continueQuota <= 0) { stopOverride = false; continueQuota = 0; } }
+  render(); showToast('Routine done ✓');
+  try { await dbUpdate(id, { content: i.content, completed_at: i.completed_at }); }
+  catch (e) { i.content = prev.content; i.completed_at = prev.completed_at; consecutiveCompletions = Math.max(0, consecutiveCompletions - 1); render(); showToast('Sync issue — retry'); }
 }
 
-async function keepItem(id){const i=items.find(x=>x.id===id);if(!i)return;const prev={reviewed_at:i.reviewed_at};const ts=new Date().toISOString();i.reviewed_at=ts;try{await dbUpdate(id,{reviewed_at:ts});expandedCards.delete(id);render();showToast('Kept')}catch(e){i.reviewed_at=prev.reviewed_at;render();showToast('Sync issue — retry')}}
-
-async function archiveItem(id){
-  if(!requireSession())return;
-  const idx=items.findIndex(i=>i.id===id);if(idx<0)return;
-  const prev=items[idx].status;
-  items[idx].status='archived';expandedCards.delete(id);resetIdleTimer();render();
-  try{await dbUpdate(id,{status:'archived'});showToast('Archived')}
-  catch(e){items[idx].status=prev;render();showToast('Sync issue — retry')}
+async function keepItem(id) {
+  const i = items.find(x => x.id === id); if (!i) return;
+  const prev = { reviewed_at: i.reviewed_at };
+  const ts = new Date().toISOString(); i.reviewed_at = ts;
+  try { await dbUpdate(id, { reviewed_at: ts }); expandedCards.delete(id); render(); showToast('Kept'); }
+  catch (e) { i.reviewed_at = prev.reviewed_at; render(); showToast('Sync issue — retry'); }
 }
 
-async function convertToTask(id){
-  if(!requireSession())return;
-  const i=items.find(x=>x.id===id);if(!i)return;
-  const txt=i.content.text||i.content.title||'Task from idea';
-  try{const saved=await dbSave({type:'task',content:{title:txt,due:''},priority:'medium',context:i.context||'work',important_personal:i.important_personal||false,effort:dEffort(txt,'task'),status:'active',created_at:new Date().toISOString()});if(saved){items.unshift(enrich(saved));stopOverride=false;continueQuota=0;consecutiveCompletions=0;await markDone(id);render();showToast('Converted to task')}}catch(e){}
+async function archiveItem(id) {
+  if (!requireSession()) return;
+  const idx = items.findIndex(i => i.id === id); if (idx < 0) return;
+  const prev = items[idx].status;
+  items[idx].status = 'archived'; expandedCards.delete(id); resetIdleTimer(); render();
+  try { await dbUpdate(id, { status: 'archived' }); showToast('Archived'); }
+  catch (e) { items[idx].status = prev; render(); showToast('Sync issue — retry'); }
 }
-async function createFolder(name, parentId=null){
-  if(!requireSession()) return;
 
-  const now = new Date().toISOString();
+async function convertToTask(id) {
+  if (!requireSession()) return;
+  const i = items.find(x => x.id === id); if (!i) return;
+  const txt = i.content.text || i.content.title || 'Task from idea';
+  try {
+    const saved = await dbSave({ type: 'task', content: { title: txt, due: '' }, priority: 'medium', context: i.context || 'work', important_personal: i.important_personal || false, effort: dEffort(txt, 'task'), status: 'active', node_type: 'item', parent_id: i.parent_id || null, created_at: new Date().toISOString() });
+    if (saved) { items.unshift(enrich(saved)); stopOverride = false; continueQuota = 0; consecutiveCompletions = 0; await markDone(id); render(); showToast('Converted to task'); }
+  } catch (e) {}
+}
 
-  const folder = {
-    name,
-    node_type: 'folder',
-    parent_id: parentId,
-    status: 'active',
-    created_at: now,
-    context: 'work',
-    priority: 'low',
-    effort: 'low',
-    important_personal: false
-  };
+async function deleteItem(id) {
+  if (!confirm('Delete permanently?')) return;
+  const snapshot = [...items];
+  items = items.filter(i => i.id !== id); expandedCards.delete(id); resetIdleTimer(); render();
+  try { await dbDelete(id); showToast('Deleted'); }
+  catch (e) { items = snapshot; render(); showToast('Sync issue — retry'); }
+}
 
-  try{
-    const saved = await dbSave(folder);
-    if(saved){
-      items.unshift(enrich(saved));
-      render();
-      return saved;
-    }
-  }catch(e){
-    showToast('Failed to create folder');
+function showUndo(id, prev) {
+  clearTimeout(undoTimer);
+  undoStack = { id, prev };
+  document.getElementById('undo-bar').classList.add('show');
+  undoTimer = setTimeout(() => { document.getElementById('undo-bar').classList.remove('show'); undoStack = null; }, 5000);
+}
+
+async function undoDone() {
+  if (!undoStack) return;
+  const { id, prev } = undoStack;
+  const idx = items.findIndex(i => i.id === id);
+  if (idx >= 0) {
+    const eff = items[idx].effort || 'medium';
+    if (eff === 'low' && bMem.low > 0) bMem.low--; else if (eff === 'medium' && bMem.med > 0) bMem.med--; else if (bMem.high > 0) bMem.high--;
+    consecutiveCompletions = Math.max(0, consecutiveCompletions - 1);
+    items[idx] = prev;
+    try { await dbUpdate(id, { status: 'active', completed_at: null }); saveBMem(); render(); showToast('Undone'); }
+    catch (e) { render(); showToast('Sync issue — retry'); }
   }
+  document.getElementById('undo-bar').classList.remove('show'); undoStack = null; clearTimeout(undoTimer);
 }
 
-async function ensureFolderPath(path){
-  if(!path) return null;
-
-  const parts = path.replace(/^\//,'').split('/').filter(Boolean);
-  let parentId = null;
-
-  for(const part of parts){
-    let existing = items.find(i =>
-      i.node_type === 'folder' &&
-      i.name === part &&
-      (i.parent_id || null) === parentId
-    );
-
-    if(!existing){
-      const created = await createFolder(part, parentId);
-      if(!created) return null;
-      parentId = created.id;
-    }else{
-      parentId = existing.id;
-    }
-  }
-
-  return parentId;
-}
-  if(!requireSession()) return;
-
-  const now = new Date().toISOString();
-
-  const folder = {
-    name,
-    node_type: 'folder',
-    parent_id: parentId,
-    status: 'active',
-    created_at: now,
-    context: 'work',
-    priority: 'low',
-    effort: 'low',
-    important_personal: false
-  };
-
-  try{
-    const saved = await dbSave(folder);
-    if(saved){
-      items.unshift(enrich(saved));
-      render();
-      return saved;
-    }
-  }catch(e){
-    showToast('Failed to create folder');
-  }
-}
-async function deleteItem(id){
-  if(!confirm('Delete permanently?'))return;
-  const snapshot=[...items];
-  items=items.filter(i=>i.id!==id);expandedCards.delete(id);resetIdleTimer();render();
-  try{await dbDelete(id);showToast('Deleted')}
-  catch(e){items=snapshot;render();showToast('Sync issue — retry')}
+/* ── Capture ──────────────────────────────────────────────────────────────── */
+function onCapIn() {
+  if (ovr) return;
+  const raw = document.getElementById('cap-in').value;
+  const { text } = extractFolderPath(raw);
+  const det = dType(text);
+  const sugCtx = text.length > 2 ? dCtx(text) : null;
+  const el = document.getElementById('detect-hint');
+  if (!det) { el.innerHTML = 'What needs to happen?'; return; }
+  const lbl = { task: 'Task', idea: 'Idea', reflection: 'Reflection', obligation: 'Obligation', routine: 'Routine', communication: 'Email' };
+  const pathHint = raw !== text ? ` · <span style="color:var(--green)">folder path detected</span>` : '';
+  el.innerHTML = `<span>${lbl[det] || det} detected</span>${sugCtx === 'personal' ? ' · Personal?' : ''}${pathHint}`;
+  const fw = document.getElementById('freq-w');
+  if (fw) fw.style.display = (det === 'routine' || det === 'obligation') ? 'block' : 'none';
+  if (sugCtx && sugCtx !== capCtx) setCtx(sugCtx);
 }
 
-function showUndo(id,prev){clearTimeout(undoTimer);undoStack={id,prev};document.getElementById('undo-bar').classList.add('show');undoTimer=setTimeout(()=>{document.getElementById('undo-bar').classList.remove('show');undoStack=null},5000)}
-async function undoDone(){
-  if(!undoStack)return;
-  const{id,prev}=undoStack;const idx=items.findIndex(i=>i.id===id);
-  if(idx>=0){
-    const eff=items[idx].effort||'medium';if(eff==='low'&&bMem.low>0)bMem.low--;else if(eff==='medium'&&bMem.med>0)bMem.med--;else if(bMem.high>0)bMem.high--;
-    consecutiveCompletions=Math.max(0,consecutiveCompletions-1);
-    items[idx]=prev;
-    try{await dbUpdate(id,{status:'active',completed_at:null});saveBMem();render();showToast('Undone')}
-    catch(e){render();showToast('Sync issue — retry')}
-  }
-  document.getElementById('undo-bar').classList.remove('show');undoStack=null;clearTimeout(undoTimer);
+function setOvr(type, btn) {
+  ovr = type === ovr ? null : type;
+  document.querySelectorAll('.sc:not(#ctx-work):not(#ctx-personal)').forEach(b => b.classList.remove('on'));
+  if (ovr) btn.classList.add('on');
+  const fw = document.getElementById('freq-w');
+  if (fw) fw.style.display = (ovr === 'routine' || ovr === 'obligation') ? 'block' : 'none';
+  const el = document.getElementById('detect-hint');
+  if (ovr) { const lbl = { task: 'Task', idea: 'Idea', reflection: 'Reflection', obligation: 'Obligation', routine: 'Routine', communication: 'Email' }; el.innerHTML = `<span>Set to: ${lbl[ovr]}</span>`; }
+  else onCapIn();
 }
 
-// ── Capture ────────────────────────────────────────────────────────────────
-function onCapIn(){if(ovr)return;const val=document.getElementById('cap-in').value,det=dType(val),sugCtx=val.length>2?dCtx(val):null,el=document.getElementById('detect-hint');if(!det){el.innerHTML='What needs to happen?';return}const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};el.innerHTML=`<span>${lbl[det]||det} detected</span>${sugCtx==='personal'?' · Personal?':''}`;const fw=document.getElementById('freq-w');if(fw)fw.style.display=(det==='routine'||det==='obligation')?'block':'none';if(sugCtx&&sugCtx!==capCtx)setCtx(sugCtx)}
-function setOvr(type,btn){ovr=type===ovr?null:type;document.querySelectorAll('.sc:not(#ctx-work):not(#ctx-personal)').forEach(b=>b.classList.remove('on'));if(ovr)btn.classList.add('on');const fw=document.getElementById('freq-w');if(fw)fw.style.display=(ovr==='routine'||ovr==='obligation')?'block':'none';const el=document.getElementById('detect-hint');if(ovr){const lbl={task:'Task',idea:'Idea',reflection:'Reflection',obligation:'Obligation',routine:'Routine',communication:'Email'};el.innerHTML=`<span>Set to: ${lbl[ovr]}</span>`}else onCapIn()}
-function setCtx(ctx){capCtx=ctx;document.getElementById('ctx-work').className='sc'+(ctx==='work'?' on':'');document.getElementById('ctx-personal').className='sc ctx-p'+(ctx==='personal'?' on':'')}
-function toggleAdv(){const b=document.getElementById('sheet-adv'),btn=document.getElementById('adv-btn');const open=b.classList.toggle('open');btn.textContent=(open?'▾':'▸')+' Options'}
-function openSheet(){
-  if(!requireSession())return;
+function setCtx(ctx) {
+  capCtx = ctx;
+  document.getElementById('ctx-work').className = 'sc' + (ctx === 'work' ? ' on' : '');
+  document.getElementById('ctx-personal').className = 'sc ctx-p' + (ctx === 'personal' ? ' on' : '');
+}
+
+function toggleAdv() {
+  const b = document.getElementById('sheet-adv'), btn = document.getElementById('adv-btn');
+  const open = b.classList.toggle('open');
+  btn.textContent = (open ? '▾' : '▸') + ' Options';
+}
+
+function openSheet() {
+  if (!requireSession()) return;
   document.getElementById('sheet-bg').classList.add('open');
-  ovr=null;capCtx='work';document.querySelectorAll('.sc').forEach(b=>b.classList.remove('on'));setCtx('work');
-  document.getElementById('detect-hint').innerHTML='What needs to happen?';
-  document.getElementById('sheet-adv').classList.remove('open');document.getElementById('adv-btn').textContent='▸ Options';
-  document.getElementById('cap-in').value='';document.getElementById('cap-due').value='';document.getElementById('cap-freq').value='';document.getElementById('cap-pri').value='medium';
-  const fw=document.getElementById('freq-w');if(fw)fw.style.display='none';
-  setTimeout(()=>document.getElementById('cap-in').focus(),80);
+  ovr = null; capCtx = 'work';
+  document.querySelectorAll('.sc').forEach(b => b.classList.remove('on'));
+  setCtx('work');
+  document.getElementById('detect-hint').innerHTML = 'What needs to happen?';
+  document.getElementById('sheet-adv').classList.remove('open');
+  document.getElementById('adv-btn').textContent = '▸ Options';
+  document.getElementById('cap-in').value = '';
+  document.getElementById('cap-due').value = '';
+  document.getElementById('cap-freq').value = '';
+  document.getElementById('cap-pri').value = 'medium';
+  const fw = document.getElementById('freq-w'); if (fw) fw.style.display = 'none';
+  setTimeout(() => document.getElementById('cap-in').focus(), 80);
 }
-function closeSheet(){document.getElementById('sheet-bg').classList.remove('open')}
-function bgClick(e){if(e.target===document.getElementById('sheet-bg'))closeSheet()}
 
-async function submitCap(){
-  if(!requireSession())return;
-  const raw=document.getElementById('cap-in').value.trim(); const { text: txt, path } = extractFolderPath(raw);if(!txt){showToast('Type something first');return}
-  const type=ovr||dType(txt)||'idea',pri=document.getElementById('cap-pri').value||'medium',ctx=capCtx||'work';
-    const due=document.getElementById('cap-due').value,freq=document.getElementById('cap-freq').value;
-  const effort=dEffort(txt,type),impP=ctx==='personal'&&dImp(txt),now=new Date().toISOString();
+function closeSheet() { document.getElementById('sheet-bg').classList.remove('open'); }
+function bgClick(e) { if (e.target === document.getElementById('sheet-bg')) closeSheet(); }
 
-  let item={
-    status:'active',
-    created_at:now,
-    context:ctx,
-    priority:pri,
-    effort,
-    important_personal:impP,
-    node_type:'item',
-    parent_id:currentFolderId
+async function submitCap() {
+  if (!requireSession()) return;
+  const raw = document.getElementById('cap-in').value.trim();
+  if (!raw) { showToast('Type something first'); return; }
+
+  // VFS: parse trailing folder path from raw input
+  const { text, path } = extractFolderPath(raw);
+  const cleanText = text || raw; // Fallback if parsing strips everything
+
+  const type = ovr || dType(cleanText) || 'idea';
+  const pri = document.getElementById('cap-pri').value || 'medium';
+  const ctx = capCtx || 'work';
+  const due = document.getElementById('cap-due').value;
+  const freq = document.getElementById('cap-freq').value;
+  const effort = dEffort(cleanText, type);
+  const impP = ctx === 'personal' && dImp(cleanText);
+  const now = new Date().toISOString();
+
+  // Base item skeleton (node_type and parent_id always set)
+  let item = {
+    status: 'active', created_at: now, context: ctx, priority: pri,
+    effort, important_personal: impP,
+    node_type: 'item',
+    parent_id: currentFolderId || null,
   };
-  if(type==='communication'){const s=txt.toLowerCase();let sc=0,cat='General';if(/neuter|mandul|spay|castrat|potong/.test(s)){cat='Neutering';sc=2}else if(/surrender|rehome|re-home|give up/.test(s)){cat='Surrender';sc=2}else if(/volunteer|volunteering/.test(s)){cat='Volunteering';sc=2}else if(/donat|contribut|fund/.test(s)){cat='Donation';sc=2}const n=extractName(txt),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';const replies={Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK].${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`};item={...item,type:'communication',content:{preview:txt.replace(/\s+/g,' ').slice(0,300),category:cat,confidence:sc>=2?'medium':'low',reply:replies[cat]||replies.General,full:txt,tone:'normal'}}}
-  else if(type==='task')item={...item,type:'task',content:{title:txt,due}}
-  else if(type==='reflection')item={...item,type:'reflection',context:'personal',content:{text:txt}}
-  else if(type==='obligation')item={...item,type:'obligation',context:ctx,content:{title:txt,due,frequency:freq||null}}
-  else if(type==='routine')item={...item,type:'routine',context:'personal',content:{title:txt,frequency:freq||'weekly',last_completed:null}}
-  else item={...item,type:'idea',content:{text:txt}}
-  document.getElementById('save-btn').disabled=true;
-  // Part G/H: reset override on new item
-  stopOverride=false;continueQuota=0;consecutiveCompletions=0;
-  const folderId = await ensureFolderPath(path); if(folderId){   item.parent_id = folderId; }  try{   const saved = await dbSave(item);   if(saved){     items.unshift(enrich(saved));     render();     closeSheet();     showToast('Saved');   } }catch(e){}
-  document.getElementById('save-btn').disabled=false;
+
+  // Build type-specific content
+  if (type === 'communication') {
+    const s = cleanText.toLowerCase(); let sc = 0, cat = 'General';
+    if (/neuter|mandul|spay|castrat|potong/.test(s)) { cat = 'Neutering'; sc = 2; }
+    else if (/surrender|rehome|re-home|give up/.test(s)) { cat = 'Surrender'; sc = 2; }
+    else if (/volunteer|volunteering/.test(s)) { cat = 'Volunteering'; sc = 2; }
+    else if (/donat|contribut|fund/.test(s)) { cat = 'Donation'; sc = 2; }
+    const n = extractName(cleanText), g = n ? `Dear ${n},\n\n` : 'Dear valued supporter,\n\n', sign = '\n\nWarm regards,\nSPCA Selangor';
+    const replies = {
+      Neutering: `${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,
+      Surrender: `${g}Thank you. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,
+      Volunteering: `${g}All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,
+      Donation: `${g}Thank you. Donate via [INSERT DONATION LINK].${sign}`,
+      General: `${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`,
+    };
+    item = { ...item, type: 'communication', content: { preview: cleanText.replace(/\s+/g, ' ').slice(0, 300), category: cat, confidence: sc >= 2 ? 'medium' : 'low', reply: replies[cat] || replies.General, full: cleanText, tone: 'normal' } };
+  } else if (type === 'task') {
+    item = { ...item, type: 'task', content: { title: cleanText, due } };
+  } else if (type === 'reflection') {
+    item = { ...item, type: 'reflection', context: 'personal', content: { text: cleanText } };
+  } else if (type === 'obligation') {
+    item = { ...item, type: 'obligation', content: { title: cleanText, due, frequency: freq || null } };
+  } else if (type === 'routine') {
+    item = { ...item, type: 'routine', context: 'personal', content: { title: cleanText, frequency: freq || 'weekly', last_completed: null } };
+  } else {
+    item = { ...item, type: 'idea', content: { text: cleanText } };
+  }
+
+  document.getElementById('save-btn').disabled = true;
+
+  // VFS: resolve folder path if present, overrides currentFolderId
+  if (path.length > 0) {
+    try {
+      const folderId = await ensureFolderPath(path);
+      if (folderId) item.parent_id = folderId;
+    } catch (e) {
+      showToast('Folder path error — saving to root');
+      item.parent_id = null;
+    }
+  }
+
+  // Reset overrides on new capture
+  stopOverride = false; continueQuota = 0; consecutiveCompletions = 0;
+
+  try {
+    const saved = await dbSave(item);
+    if (saved) { items.unshift(enrich(saved)); render(); closeSheet(); showToast('Saved'); }
+  } catch (e) {}
+
+  document.getElementById('save-btn').disabled = false;
 }
 
+/* ── Toast / keyboard ─────────────────────────────────────────────────────── */
 let toastT;
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2000)}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openSheet()}});
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSheet();
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSheet(); }
+});
+
+/* ── Init ─────────────────────────────────────────────────────────────────── */
 bootstrap();
 </script>
 </body>
