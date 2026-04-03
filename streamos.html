@@ -1163,7 +1163,35 @@ async function convertToTask(id){
   try{const saved=await dbSave({type:'task',content:{title:txt,due:''},priority:'medium',context:i.context||'work',important_personal:i.important_personal||false,effort:dEffort(txt,'task'),status:'active',created_at:new Date().toISOString()});if(saved){items.unshift(enrich(saved));stopOverride=false;continueQuota=0;consecutiveCompletions=0;await markDone(id);render();showToast('Converted to task')}}catch(e){}
 }
 async function createFolder(name, parentId=null){
-  async function ensureFolderPath(path){
+  if(!requireSession()) return;
+
+  const now = new Date().toISOString();
+
+  const folder = {
+    name,
+    node_type: 'folder',
+    parent_id: parentId,
+    status: 'active',
+    created_at: now,
+    context: 'work',
+    priority: 'low',
+    effort: 'low',
+    important_personal: false
+  };
+
+  try{
+    const saved = await dbSave(folder);
+    if(saved){
+      items.unshift(enrich(saved));
+      render();
+      return saved;
+    }
+  }catch(e){
+    showToast('Failed to create folder');
+  }
+}
+
+async function ensureFolderPath(path){
   if(!path) return null;
 
   const parts = path.replace(/^\//,'').split('/').filter(Boolean);
@@ -1280,7 +1308,7 @@ async function submitCap(){
   document.getElementById('save-btn').disabled=true;
   // Part G/H: reset override on new item
   stopOverride=false;continueQuota=0;consecutiveCompletions=0;
-  try{const saved=await dbSave(item);if(saved){items.unshift(enrich(saved));render();closeSheet();showToast('Saved')}}catch(e){}
+  const folderId = await ensureFolderPath(path); if(folderId){   item.parent_id = folderId; }  try{   const saved = await dbSave(item);   if(saved){     items.unshift(enrich(saved));     render();     closeSheet();     showToast('Saved');   } }catch(e){}
   document.getElementById('save-btn').disabled=false;
 }
 
