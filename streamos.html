@@ -353,7 +353,7 @@ const SB=createClient(
 );
 
 // ── State ──────────────────────────────────────────────────────────────────
-let STATE='booting',USER=null,items=[],mode='focus',ovr=null,capCtx='work';
+let STATE='booting',USER=null,items=[],mode='focus',ovr=null,capCtx='work'; let currentFolderId = null;
 let undoStack=null,undoTimer=null,loadedAt=0;
 let bMem={low:0,med:0,high:0,avoided:0};
 let actionsLocked=false,expandedCards=new Set();
@@ -409,6 +409,30 @@ function scheduleNextMidnight(){
 scheduleNextMidnight();
 
 // ── Utils ──────────────────────────────────────────────────────────────────
+// ── VFS Core ──────────────────────────────────────────────────────────────
+function isFolder(i){
+  return i.node_type === 'folder';
+}
+
+function getParentId(i){
+  return i.parent_id || null;
+}
+
+function inCurrentFolder(i){
+  return getParentId(i) === currentFolderId;
+}
+
+function getFolderById(id){
+  return items.find(i => i.id === id && isFolder(i)) || null;
+}
+
+function getFolderChildren(parentId){
+  return items.filter(i => (i.parent_id || null) === parentId);
+}
+
+function getRootItems(){
+  return items.filter(i => !i.parent_id);
+}
 function isActionable(i){
   return !i.node_type || i.node_type === 'item';
 }
@@ -554,7 +578,7 @@ async function dbDelete(id){
 async function loadItems(){
   if(!USER)return;
   document.getElementById('stream-area').innerHTML=`<div style="text-align:center;padding:40px 20px;color:var(--on-s3);font-size:13px">Loading…</div>`;
-  try{const{data,error}=await withTimeout(SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),8000,'load');if(error)throw error;items=(data||[]).map(enrich);loadedAt=Date.now();await autoConvertStaleIdeas();render()}
+  try{const{data,error}=await withTimeout(SB.from('stream_items').select('*').eq('user_id',USER.id).order('created_at',{ascending:false}),8000,'load');if(error)throw error;items=(data||[]).map(i=>{   i.node_type = i.node_type || 'item';   i.parent_id = i.parent_id || null;   return enrich(i); });loadedAt=Date.now();await autoConvertStaleIdeas();render()}
   catch(e){const isAuth=isAuthErr(e);if(isAuth){USER=null;applyState('session_expired','Session expired.')}else applyState('error','Could not load.');document.getElementById('stream-area').innerHTML=`<div class="stream-err"><p>${isAuth?'Session expired.':'Could not load your stream.'}</p>${isAuth?`<button class="btn b-fill b-sm" onclick="signOut()">Sign in again</button>`:`<button class="btn b-fill b-sm" onclick="loadItems()">Retry</button>`}</div>`;throw e}
 }
 async function loadBMem(){if(!USER)return;const{data}=await withTimeout(SB.from('user_memory').select('*').eq('user_id',USER.id).maybeSingle(),5000,'bMem');if(data)bMem={low:data.completed_low||0,med:data.completed_medium||0,high:data.completed_high||0,avoided:data.avoided_high||0};else{try{await SB.from('user_memory').insert({user_id:USER.id,completed_low:0,completed_medium:0,completed_high:0,avoided_high:0})}catch(e){}}}
@@ -1070,6 +1094,35 @@ async function markDone(id){
     if(continueQuota<=0){
       stopOverride=false;
       continueQuota=0;
+
+  async function createFolder(name, parentId=null){
+  if(!requireSession()) return;
+
+  const now = new Date().toISOString();
+
+  const folder = {
+    name,
+    node_type: 'folder',
+    parent_id: parentId,
+    status: 'active',
+    created_at: now,
+    context: 'work',
+    priority: 'low',
+    effort: 'low',
+    important_personal: false
+  };
+
+  try{
+    const saved = await dbSave(folder);
+    if(saved){
+      items.unshift(enrich(saved));
+      render();
+      return saved;
+    }
+  }catch(e){
+    showToast('Failed to create folder');
+  }
+}
     }
   }
 
@@ -1162,7 +1215,8 @@ async function submitCap(){
   const type=ovr||dType(txt)||'idea',pri=document.getElementById('cap-pri').value||'medium',ctx=capCtx||'work';
   const due=document.getElementById('cap-due').value,freq=document.getElementById('cap-freq').value;
   const effort=dEffort(txt,type),impP=ctx==='personal'&&dImp(txt),now=new Date().toISOString();
-  let item={status:'active',created_at:now,context:ctx,priority:pri,effort,important_personal:impP};
+  item.node_type = 'item';
+item.parent_id = currentFolderId;};
   if(type==='communication'){const s=txt.toLowerCase();let sc=0,cat='General';if(/neuter|mandul|spay|castrat|potong/.test(s)){cat='Neutering';sc=2}else if(/surrender|rehome|re-home|give up/.test(s)){cat='Surrender';sc=2}else if(/volunteer|volunteering/.test(s)){cat='Volunteering';sc=2}else if(/donat|contribut|fund/.test(s)){cat='Donation';sc=2}const n=extractName(txt),g=n?`Dear ${n},\n\n`:'Dear valued supporter,\n\n',sign='\n\nWarm regards,\nSPCA Selangor';const replies={Neutering:`${g}Thank you for contacting SPCA Selangor. Our subsidised neutering programme, Potong Royong, is available. Register at [INSERT POTONG ROYONG LINK].${sign}`,Surrender:`${g}Thank you. Intake is on a waiting list. Please share species, breed, age, and a photo.${sign}`,Volunteering:`${g}All first-time volunteers complete our Pet Care Programme (PCP) at [INSERT PCP LINK].${sign}`,Donation:`${g}Thank you. Donate via [INSERT DONATION LINK].${sign}`,General:`${g}Thank you for reaching out. We'll respond within 2–3 working days.${sign}`};item={...item,type:'communication',content:{preview:txt.replace(/\s+/g,' ').slice(0,300),category:cat,confidence:sc>=2?'medium':'low',reply:replies[cat]||replies.General,full:txt,tone:'normal'}}}
   else if(type==='task')item={...item,type:'task',content:{title:txt,due}}
   else if(type==='reflection')item={...item,type:'reflection',context:'personal',content:{text:txt}}
