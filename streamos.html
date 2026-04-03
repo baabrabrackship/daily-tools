@@ -470,6 +470,20 @@ function extractFolderPath(input){
     path: m[2].trim()
   };
 }
+  function extractFolderPath(input){
+  const m = input.match(/^(.*?)(\s+\/[A-Za-z0-9._\-\/]+)\s*$/);
+  if(!m){
+    return {
+      text: input.trim(),
+      path: null
+    };
+  }
+
+  return {
+    text: m[1].trim(),
+    path: m[2].trim()
+  };
+}
   function dImp(txt){return/\b(family|health|doctor|dentist|partner|wife|husband|rest|kids?|child|children|therapy|medication|hospital|emergency|appointment|mum|dad|parents?)\b/i.test(String(txt||''))}
 function enrich(i){
   if(i.node_type === 'folder') return i;
